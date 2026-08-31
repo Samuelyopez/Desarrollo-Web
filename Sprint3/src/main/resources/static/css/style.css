@@ -1,0 +1,23 @@
+/* 
+  Hoja de estilos personalizada de DogTor
+  Nota: Como estamos utilizando Tailwind CSS, este archivo se usará 
+  únicamente para aplicar el modelo de caja estándar y estilos base obligatorios 
+  como se indica en las restricciones.
+*/
+
+/* Modelo de Caja Obligatorio */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Configuraciones de desplazamiento y accesibilidad si son necesarias */
+:focus-visible {
+    outline: 2px solid #F4A261;
+    outline-offset: 2px;
+}
