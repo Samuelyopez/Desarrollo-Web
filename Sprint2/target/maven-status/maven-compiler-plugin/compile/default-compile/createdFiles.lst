@@ -1,0 +1,7 @@
+com\veterinaria\dogtor\repositorio\MascotaRepository.class
+com\veterinaria\dogtor\servicio\MascotaServiceImpl.class
+com\veterinaria\dogtor\entidad\Mascota.class
+com\veterinaria\dogtor\controlador\WebController.class
+com\veterinaria\dogtor\DogtorApplication.class
+com\veterinaria\dogtor\servicio\MascotaService.class
+com\veterinaria\dogtor\controlador\MascotaController.class
