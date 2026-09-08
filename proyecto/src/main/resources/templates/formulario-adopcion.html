@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Formulario de Adopción - DogTor">
+    <title>DogTor | Formulario de Adopción</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2A9D8F',
+                        secondary: '#F4A261',
+                        accent: '#E9C46A',
+                        bglight: '#FAFAFA',
+                        textdark: '#264653'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-bglight text-textdark font-sans flex flex-col min-h-screen">
+    
+    <!-- Simple Header para Formulario -->
+    <header class="bg-white shadow-md p-4 flex justify-center">
+        <a th:href="@{/}" class="flex items-center gap-2 text-primary font-bold text-2xl hover:opacity-80 transition-opacity">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                <ellipse cx="5" cy="10" rx="2.5" ry="3.5" transform="rotate(-30 5 10)"/>
+                <ellipse cx="9.5" cy="5" rx="2.5" ry="3.5" transform="rotate(-10 9.5 5)"/>
+                <ellipse cx="14.5" cy="5" rx="2.5" ry="3.5" transform="rotate(10 14.5 5)"/>
+                <ellipse cx="19" cy="10" rx="2.5" ry="3.5" transform="rotate(30 19 10)"/>
+                <path d="M 12 11 C 5 11, 3 15, 5 19 C 7 22, 10 21, 12 18 C 14 21, 17 22, 19 19 C 21 15, 19 11, 12 11 Z"/>
+            </svg>
+            DogTor
+        </a>
+    </header>
+
+    <main class="flex-grow py-12 px-4 flex items-center justify-center">
+        <div class="bg-white rounded-3xl shadow-xl p-8 max-w-2xl w-full">
+            
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-primary mb-2">Solicitud de Adopción</h1>
+                <p class="text-gray-600">Estás a punto de darle un hogar lleno de amor a <span class="font-bold text-secondary text-xl" th:text="${mascota.nombre}"></span>.</p>
+            </div>
+
+            <!-- Resumen de Mascota -->
+            <div class="bg-teal-50 border border-teal-100 rounded-xl p-4 flex items-center gap-4 mb-8">
+                <img th:src="${mascota.fotoUrl}" class="w-16 h-16 rounded-full object-cover shadow-sm">
+                <div>
+                    <p class="font-bold text-textdark" th:text="${mascota.nombre}"></p>
+                    <p class="text-sm text-gray-600" th:text="${mascota.raza} + ' • ' + ${mascota.edad}"></p>
+                </div>
+            </div>
+
+            <!-- Formulario real a Spring Boot -->
+            <form th:action="@{/adopciones/formulario}" th:object="${solicitud}" method="post" class="space-y-5">
+                
+                <input type="hidden" name="mascotaId" th:value="${mascota.id}">
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Nombre Completo</label>
+                    <input type="text" th:field="*{nombreAdoptante}" required class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Teléfono / Celular</label>
+                        <input type="tel" th:field="*{telefono}" required class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Dirección de Residencia</label>
+                        <input type="text" th:field="*{direccion}" required class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="flex items-center gap-2 text-sm font-bold text-gray-700 cursor-pointer">
+                        <input type="checkbox" th:field="*{tieneOtrasMascotas}" class="w-5 h-5 text-primary rounded focus:ring-primary">
+                        ¿Tienes otras mascotas actualmente en casa?
+                    </label>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">¿Cuánto tiempo pasará sola la mascota?</label>
+                    <select th:field="*{tiempoLibre}" required class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary bg-white">
+                        <option value="">Selecciona una opción...</option>
+                        <option value="Menos de 2 horas">Menos de 2 horas al día</option>
+                        <option value="De 2 a 5 horas">Entre 2 y 5 horas al día</option>
+                        <option value="Más de 5 horas">Más de 5 horas al día</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">¿Por qué deseas adoptar a <span th:text="${mascota.nombre}"></span>?</label>
+                    <textarea th:field="*{motivo}" required rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary resize-none" placeholder="Cuéntanos un poco sobre ti y el ambiente que le ofrecerías..."></textarea>
+                </div>
+
+                <div class="pt-4 flex gap-4">
+                    <a th:href="@{/adopciones}" class="w-1/3 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-300 transition text-center">Cancelar</a>
+                    <button type="submit" class="w-2/3 bg-secondary text-white font-bold py-3 rounded-xl hover:bg-orange-500 transition shadow-lg hover:shadow-xl">Enviar Solicitud</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+</body>
+</html>
+
+
+
+
+
