@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Diagrama de Navegación | DogTor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+        <h1 class="text-3xl font-bold text-teal-600 mb-6 text-center">Diagrama de Navegación - Clínica DogTor</h1>
+        <p class="text-gray-500 mb-8 text-center">Este mapa es de uso interno exclusivo para administradores.</p>
+        
+        <div class="flex justify-center">
+            <pre class="mermaid">
+                graph TD
+                    A[Inicio /] --> B[Nosotros /nosotros]
+                    A --> C[Equipo /equipo]
+                    A --> D[Tienda /farmacia]
+                    A --> E[Adopciones /adopciones]
+                    A --> F[Pacientes /pacientes]
+                    A --> G[Login /login]
+                    A --> H[Agendar Cita /citas]
+                    
+                    F --> I[Detalle Mascota /pacientes/{id}]
+                    D --> J[Carrito de Compras]
+            </pre>
+        </div>
+        
+        <div class="mt-8 text-center">
+            <a th:href="@{/}" class="text-teal-600 font-bold hover:underline">&larr; Volver a la página principal</a>
+        </div>
+    </div>
+
+    <!-- Script de Mermaid.js para renderizar el diagrama visualmente -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+</body>
+</html>
