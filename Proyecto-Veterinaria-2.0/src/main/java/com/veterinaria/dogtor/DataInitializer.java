@@ -62,6 +62,11 @@ public class DataInitializer {
                 veterinarioLogin = vet1.getUsuario();
             }
 
+            // Se ejecuta siempre (no solo en BD vacía) para reparar bases de datos que ya
+            // tenían usuarios ADMIN/VETERINARIO antes de que estas tablas propias existieran.
+            administradorService.sincronizarConUsuarios();
+            veterinarioService.sincronizarConUsuarios();
+
             if (drogaService.findAll().isEmpty()) {
                 drogaService.save(Droga.builder().nombre("Amoxicilina").descripcion("Antibiótico de amplio espectro.").dosisRecomendada("10-20 mg/kg cada 12 horas").build());
                 drogaService.save(Droga.builder().nombre("Meloxicam").descripcion("Antiinflamatorio no esteroideo.").dosisRecomendada("0.1 mg/kg cada 24 horas").build());

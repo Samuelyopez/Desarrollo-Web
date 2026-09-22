@@ -9,4 +9,5 @@ public interface VeterinarioService {
     Veterinario findByCorreo(String correo);
     Veterinario save(Veterinario veterinario);
     void delete(Integer id);
+    void sincronizarConUsuarios();
 }

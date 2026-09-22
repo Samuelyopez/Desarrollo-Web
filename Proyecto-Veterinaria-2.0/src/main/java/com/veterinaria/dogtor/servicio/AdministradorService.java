@@ -6,4 +6,5 @@ import java.util.List;
 public interface AdministradorService {
     List<Administrador> findAll();
     Administrador save(Administrador administrador);
+    void sincronizarConUsuarios();
 }

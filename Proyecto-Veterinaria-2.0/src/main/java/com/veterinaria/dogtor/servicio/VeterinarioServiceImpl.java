@@ -1,6 +1,9 @@
 package com.veterinaria.dogtor.servicio;
 
+import com.veterinaria.dogtor.entidad.RolUsuario;
+import com.veterinaria.dogtor.entidad.Usuario;
 import com.veterinaria.dogtor.entidad.Veterinario;
+import com.veterinaria.dogtor.repositorio.UsuarioRepository;
 import com.veterinaria.dogtor.repositorio.VeterinarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,7 @@ import java.util.List;
 public class VeterinarioServiceImpl implements VeterinarioService {
 
     private final VeterinarioRepository veterinarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -42,5 +46,18 @@ public class VeterinarioServiceImpl implements VeterinarioService {
     @Transactional
     public void delete(Integer id) {
         veterinarioRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void sincronizarConUsuarios() {
+        // Crea el perfil de Veterinario para usuarios con rol VETERINARIO que quedaron
+        // sin él (bases de datos de antes de que esta tabla existiera).
+        for (Usuario usuario : usuarioRepository.findAll()) {
+            if (usuario.getRol() == RolUsuario.VETERINARIO
+                    && veterinarioRepository.findByUsuario_Correo(usuario.getCorreo()).isEmpty()) {
+                veterinarioRepository.save(Veterinario.builder().usuario(usuario).build());
+            }
+        }
     }
 }
