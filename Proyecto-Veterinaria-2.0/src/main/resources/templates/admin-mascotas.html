@@ -51,10 +51,12 @@
                         <td class="p-4 text-gray-600" th:text="${mascota.edad}"></td>
                         <td class="p-4 text-gray-600" th:text="${mascota.dueno != null ? mascota.dueno.nombre : '—'}"></td>
                         <td class="p-4 text-gray-600" th:text="${mascota.enAdopcion} ? 'Sí' : 'No'"></td>
-                        <td class="p-4 flex gap-2">
+                        <td class="p-4 flex flex-wrap gap-2">
                             <a th:href="@{/admin/mascotas/editar/{id}(id=${mascota.id})}" class="bg-accent text-textdark px-3 py-2 rounded-lg font-bold hover:opacity-80 transition text-sm">Editar</a>
-                            <form th:action="@{/admin/mascotas/{id}/eliminar(id=${mascota.id})}" method="POST" onsubmit="return confirm('¿Eliminar esta mascota?');">
-                                <button type="submit" class="bg-red-500 text-white px-3 py-2 rounded-lg font-bold hover:bg-red-600 transition text-sm">Eliminar</button>
+                            <form th:action="@{/admin/mascotas/{id}/estado(id=${mascota.id})}" method="POST">
+                                <button type="submit"
+                                        th:class="${mascota.activa} ? 'bg-gray-500 text-white px-3 py-2 rounded-lg font-bold hover:bg-gray-600 transition text-sm' : 'bg-green-600 text-white px-3 py-2 rounded-lg font-bold hover:bg-green-700 transition text-sm'"
+                                        th:text="${mascota.activa} ? 'Desactivar' : 'Activar'"></button>
                             </form>
                         </td>
                     </tr>

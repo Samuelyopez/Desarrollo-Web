@@ -11,5 +11,4 @@ public interface MascotaService {
     List<Mascota> findByEnAdopcion(boolean enAdopcion);
     List<Mascota> findByNombreContaining(String nombre);
     Mascota save(Mascota mascota);
-    void delete(Integer id);
 }

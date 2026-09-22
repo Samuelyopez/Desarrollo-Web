@@ -29,9 +29,12 @@ public class VeterinarioController {
     }
 
     @GetMapping
-    public String panel(HttpSession session, Model model) {
+    public String panel(HttpSession session, Model model,
+                         @RequestParam(value = "nombre", required = false) String nombre) {
         if (sinAcceso(session)) return "redirect:/login";
-        model.addAttribute("clientes", duenoService.findAll());
+        boolean buscando = nombre != null && !nombre.isBlank();
+        model.addAttribute("clientes", buscando ? duenoService.findByNombreContaining(nombre) : duenoService.findAll());
+        model.addAttribute("nombre", nombre);
         return "veterinario-dashboard";
     }
 

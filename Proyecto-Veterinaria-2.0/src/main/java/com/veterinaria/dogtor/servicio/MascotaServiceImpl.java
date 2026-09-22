@@ -50,10 +50,4 @@ public class MascotaServiceImpl implements MascotaService {
     public Mascota save(Mascota mascota) {
         return mascotaRepository.save(mascota);
     }
-
-    @Override
-    @Transactional
-    public void delete(Integer id) {
-        mascotaRepository.deleteById(id);
-    }
 }

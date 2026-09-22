@@ -35,6 +35,12 @@ public class DuenoServiceImpl implements DuenoService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Dueno> findByNombreContaining(String nombre) {
+        return duenoRepository.findByNombreContainingIgnoreCase(nombre);
+    }
+
+    @Override
     @Transactional
     public Dueno save(Dueno dueno) {
         return duenoRepository.save(dueno);
@@ -43,10 +49,14 @@ public class DuenoServiceImpl implements DuenoService {
     @Override
     @Transactional
     public void delete(Integer id) {
+        // Las mascotas nunca se borran de la base de datos: si se elimina el dueño,
+        // quedan sin dueño y se marcan inactivas ("en casa") en vez de eliminarse.
         Dueno dueno = duenoRepository.findById(id).orElse(null);
         if (dueno != null) {
             for (Mascota mascota : mascotaService.findByDueno(dueno)) {
-                mascotaService.delete(mascota.getId());
+                mascota.setDueno(null);
+                mascota.setActiva(false);
+                mascotaService.save(mascota);
             }
         }
         duenoRepository.deleteById(id);

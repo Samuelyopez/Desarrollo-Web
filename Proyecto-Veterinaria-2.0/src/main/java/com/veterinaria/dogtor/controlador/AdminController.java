@@ -119,10 +119,12 @@ public class AdminController {
         return "redirect:/admin/mascotas";
     }
 
-    @PostMapping("/mascotas/{id}/eliminar")
-    public String eliminarMascota(HttpSession session, @PathVariable("id") Integer id) {
+    @PostMapping("/mascotas/{id}/estado")
+    public String cambiarEstadoMascota(HttpSession session, @PathVariable("id") Integer id) {
         if (noEsAdmin(session)) return "redirect:/login";
-        mascotaService.delete(id);
+        Mascota mascota = mascotaService.findById(id);
+        mascota.setActiva(!mascota.isActiva());
+        mascotaService.save(mascota);
         return "redirect:/admin/mascotas";
     }
 

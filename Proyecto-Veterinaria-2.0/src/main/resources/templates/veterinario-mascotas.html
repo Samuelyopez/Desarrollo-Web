@@ -44,7 +44,6 @@
                         <th class="p-4 font-bold text-textdark">Raza</th>
                         <th class="p-4 font-bold text-textdark">Edad</th>
                         <th class="p-4 font-bold text-textdark">Dueño</th>
-                        <th class="p-4 font-bold text-textdark">Estado</th>
                         <th class="p-4 font-bold text-textdark">Acciones</th>
                     </tr>
                 </thead>
@@ -55,10 +54,6 @@
                         <td class="p-4 text-gray-600" th:text="${mascota.raza}"></td>
                         <td class="p-4 text-gray-600" th:text="${mascota.edad}"></td>
                         <td class="p-4 text-gray-600" th:text="${mascota.dueno != null ? mascota.dueno.nombre : '—'}"></td>
-                        <td class="p-4">
-                            <span th:if="${mascota.activa}" class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold">En veterinaria</span>
-                            <span th:unless="${mascota.activa}" class="bg-gray-200 text-gray-600 px-3 py-1 rounded-full text-xs font-bold">En casa</span>
-                        </td>
                         <td class="p-4 flex flex-wrap gap-2">
                             <a th:href="@{/veterinario/mascotas/{id}(id=${mascota.id})}" class="bg-primary text-white px-3 py-2 rounded-lg font-bold hover:opacity-90 transition text-sm">Ver</a>
                             <a th:href="@{/veterinario/mascotas/editar/{id}(id=${mascota.id})}" class="bg-accent text-textdark px-3 py-2 rounded-lg font-bold hover:opacity-80 transition text-sm">Editar</a>

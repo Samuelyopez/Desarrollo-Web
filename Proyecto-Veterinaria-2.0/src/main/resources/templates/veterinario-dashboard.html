@@ -30,6 +30,11 @@
             <h2 class="text-3xl font-bold text-textdark">Clientes Registrados</h2>
             <a th:href="@{/veterinario/clientes/nuevo}" class="bg-secondary text-white px-5 py-3 rounded-xl font-bold hover:bg-orange-500 transition shadow-md">+ Nuevo Cliente</a>
         </div>
+        <form method="GET" th:action="@{/veterinario}" class="flex gap-2 mb-6">
+            <input type="text" name="nombre" th:value="${nombre}" placeholder="Buscar cliente por nombre..." class="flex-grow p-3 border rounded-lg">
+            <button type="submit" class="bg-primary text-white px-5 py-3 rounded-lg font-bold hover:opacity-90 transition">Buscar</button>
+            <a th:if="${nombre != null and !nombre.isEmpty()}" th:href="@{/veterinario}" class="bg-gray-200 text-textdark px-5 py-3 rounded-lg font-bold hover:bg-gray-300 transition">Limpiar</a>
+        </form>
         <div class="bg-white rounded-xl shadow-sm border border-gray-100">
             <table class="w-full text-left border-collapse">
                 <thead>

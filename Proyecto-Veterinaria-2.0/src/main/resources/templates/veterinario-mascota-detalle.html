@@ -34,8 +34,11 @@
                     <h2 class="text-3xl font-bold text-primary" th:text="${mascota.nombre}"></h2>
                     <p class="text-gray-600"><span th:text="${mascota.raza}"></span> &bull; <span th:text="${mascota.edad}"></span></p>
                 </div>
-                <span th:if="${mascota.activa}" class="bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-bold h-fit">En veterinaria</span>
-                <span th:unless="${mascota.activa}" class="bg-gray-200 text-gray-600 px-4 py-2 rounded-full text-sm font-bold h-fit">En casa</span>
+                <form th:action="@{/veterinario/mascotas/{id}/estado(id=${mascota.id})}" method="POST">
+                    <button type="submit"
+                            th:class="${mascota.activa} ? 'bg-gray-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-gray-600 transition text-sm' : 'bg-green-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-700 transition text-sm'"
+                            th:text="${mascota.activa} ? 'Desactivar' : 'Activar'"></button>
+                </form>
             </div>
             <div class="bg-teal-50 p-4 rounded-xl">
                 <h3 class="font-bold text-textdark mb-2">Dueño</h3>
@@ -62,7 +65,7 @@
                 <button type="submit" class="w-full md:w-auto self-end bg-secondary text-white font-bold py-3 px-6 rounded-xl hover:bg-orange-500 transition">Agregar Registro</button>
             </form>
             <p th:unless="${mascota.activa}" class="text-gray-600 bg-gray-100 p-4 rounded-xl mb-6">
-                Esta mascota está "en casa" (inactiva). Solo se puede agregar tratamiento a mascotas activas.
+                Esta mascota está desactivada. Solo se puede agregar tratamiento a mascotas activas.
             </p>
 
             <div th:if="${#lists.isEmpty(registros)}" class="text-gray-500">Sin registros médicos todavía.</div>

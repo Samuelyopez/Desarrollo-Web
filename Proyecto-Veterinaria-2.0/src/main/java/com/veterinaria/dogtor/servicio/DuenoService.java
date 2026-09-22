@@ -7,6 +7,7 @@ public interface DuenoService {
     List<Dueno> findAll();
     Dueno findById(Integer id);
     Dueno findByCorreo(String correo);
+    List<Dueno> findByNombreContaining(String nombre);
     Dueno save(Dueno dueno);
     void delete(Integer id);
 }
