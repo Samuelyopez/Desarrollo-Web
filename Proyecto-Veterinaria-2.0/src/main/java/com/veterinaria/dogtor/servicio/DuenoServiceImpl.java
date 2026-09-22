@@ -29,7 +29,7 @@ public class DuenoServiceImpl implements DuenoService {
     @Override
     @Transactional(readOnly = true)
     public Dueno findByCorreo(String correo) {
-        return duenoRepository.findByCorreo(correo).orElse(null);
+        return duenoRepository.findByUsuario_Correo(correo).orElse(null);
     }
 
     @Override
@@ -42,12 +42,5 @@ public class DuenoServiceImpl implements DuenoService {
     @Transactional
     public void delete(Integer id) {
         duenoRepository.deleteById(id);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public boolean authenticate(String correo, String password) {
-        Dueno dueno = findByCorreo(correo);
-        return dueno != null && dueno.getPassword().equals(password);
     }
 }

@@ -33,7 +33,11 @@
                     <li class="nav-item"><a class="nav-link" th:href="@{/equipo}">Equipo</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/farmacia}">Tienda</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/pacientes}">Pacientes</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/login}">Login</a></li>
+                    <li class="nav-item" th:if="${rol == null}"><a class="nav-link" th:href="@{/login}">Login</a></li>
+                    <li class="nav-item" th:if="${rol == 'ADMIN'}"><a class="nav-link" th:href="@{/admin}">Panel Admin</a></li>
+                    <li class="nav-item" th:if="${rol == 'VETERINARIO'}"><a class="nav-link" th:href="@{/veterinario}">Panel Veterinario</a></li>
+                    <li class="nav-item" th:if="${rol == 'DUENO'}"><a class="nav-link" th:href="@{/pacientes/mis-mascotas}">Mis Mascotas</a></li>
+                    <li class="nav-item" th:if="${rol != null}"><a class="nav-link" th:href="@{/logout}">Cerrar sesión</a></li>
                     <li class="nav-item ms-lg-3">
                         <a class="btn btn-warning text-white fw-bold shadow-sm" th:href="@{/citas}">Agendar Cita</a>
                     </li>

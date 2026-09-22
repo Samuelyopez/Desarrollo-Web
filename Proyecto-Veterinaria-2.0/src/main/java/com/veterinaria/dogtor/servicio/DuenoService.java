@@ -9,5 +9,4 @@ public interface DuenoService {
     Dueno findByCorreo(String correo);
     Dueno save(Dueno dueno);
     void delete(Integer id);
-    boolean authenticate(String correo, String password);
 }

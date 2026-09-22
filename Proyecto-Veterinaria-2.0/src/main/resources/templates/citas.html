@@ -49,7 +49,11 @@
                 <a th:href="@{/farmacia}" class="hover:text-primary transition-colors">Tienda</a>
                 <a th:href="@{/adopciones}" class="hover:text-primary transition-colors">Adopciones</a>
                 <a th:href="@{/pacientes}" class="hover:text-primary transition-colors">Pacientes</a>
-                <a th:href="@{/login}" class="hover:text-primary transition-colors">Login</a>
+                <a th:if="${rol == null}" th:href="@{/login}" class="hover:text-primary transition-colors">Login</a>
+                <a th:if="${rol == 'ADMIN'}" th:href="@{/admin}" class="hover:text-primary transition-colors">Panel Admin</a>
+                <a th:if="${rol == 'VETERINARIO'}" th:href="@{/veterinario}" class="hover:text-primary transition-colors">Panel Veterinario</a>
+                <a th:if="${rol == 'DUENO'}" th:href="@{/pacientes/mis-mascotas}" class="hover:text-primary transition-colors">Mis Mascotas</a>
+                <a th:if="${rol != null}" th:href="@{/logout}" class="hover:text-primary transition-colors">Cerrar sesión</a>
                 <a th:href="@{/citas}" class="bg-secondary text-white px-5 py-2 rounded-lg font-bold hover:bg-orange-500 transition shadow-md">Agendar Cita</a>
             </nav>
 
@@ -68,7 +72,11 @@
             <a th:href="@{/farmacia}" class="block hover:text-primary transition-colors py-1">Tienda</a>
             <a th:href="@{/adopciones}" class="block hover:text-primary transition-colors py-1">Adopciones</a>
             <a th:href="@{/pacientes}" class="block hover:text-primary transition-colors py-1">Pacientes</a>
-            <a th:href="@{/login}" class="block hover:text-primary transition-colors py-1">Login</a>
+            <a th:if="${rol == null}" th:href="@{/login}" class="block hover:text-primary transition-colors py-1">Login</a>
+            <a th:if="${rol == 'ADMIN'}" th:href="@{/admin}" class="block hover:text-primary transition-colors py-1">Panel Admin</a>
+            <a th:if="${rol == 'VETERINARIO'}" th:href="@{/veterinario}" class="block hover:text-primary transition-colors py-1">Panel Veterinario</a>
+            <a th:if="${rol == 'DUENO'}" th:href="@{/pacientes/mis-mascotas}" class="block hover:text-primary transition-colors py-1">Mis Mascotas</a>
+            <a th:if="${rol != null}" th:href="@{/logout}" class="block hover:text-primary transition-colors py-1">Cerrar sesión</a>
             <a th:href="@{/citas}" class="block bg-secondary text-white text-center px-4 py-3 rounded-lg font-bold hover:bg-orange-500 transition mt-2">Agendar Cita</a>
         </nav>
     </header>

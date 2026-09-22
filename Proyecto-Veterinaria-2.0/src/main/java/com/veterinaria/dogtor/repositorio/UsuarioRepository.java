@@ -1,12 +1,12 @@
 package com.veterinaria.dogtor.repositorio;
 
-import com.veterinaria.dogtor.entidad.Dueno;
+import com.veterinaria.dogtor.entidad.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface DuenoRepository extends JpaRepository<Dueno, Integer> {
-    Optional<Dueno> findByUsuario_Correo(String correo);
+public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
+    Optional<Usuario> findByCorreo(String correo);
 }

@@ -3,9 +3,12 @@ package com.veterinaria.dogtor;
 import com.veterinaria.dogtor.entidad.Dueno;
 import com.veterinaria.dogtor.entidad.Mascota;
 import com.veterinaria.dogtor.entidad.Producto;
+import com.veterinaria.dogtor.entidad.RolUsuario;
+import com.veterinaria.dogtor.entidad.Usuario;
 import com.veterinaria.dogtor.servicio.DuenoService;
 import com.veterinaria.dogtor.servicio.MascotaService;
 import com.veterinaria.dogtor.servicio.ProductoService;
+import com.veterinaria.dogtor.servicio.UsuarioService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,20 +17,33 @@ import org.springframework.context.annotation.Configuration;
 public class DataInitializer {
 
     @Bean
-    public CommandLineRunner loadData(DuenoService duenoService, MascotaService mascotaService, ProductoService productoService) {
+    public CommandLineRunner loadData(DuenoService duenoService, MascotaService mascotaService,
+                                       ProductoService productoService, UsuarioService usuarioService) {
         return args -> {
+            if (usuarioService.findAll().isEmpty()) {
+                usuarioService.save(Usuario.builder().nombre("Administrador DogTor").correo("administrador@dogtor.com").password("admin123").rol(RolUsuario.ADMIN).build());
+                usuarioService.save(Usuario.builder().nombre("Dr. Andres Felipe").correo("veterinario@dogtor.com").password("vet123").rol(RolUsuario.VETERINARIO).build());
+            }
+
             if (duenoService.findAll().isEmpty()) {
                 
                 // 1. Crear Dueño Administrador (DogTor) para los animales en adopción
-                Dueno admin = Dueno.builder().nombre("Veterinaria DogTor").correo("admin@dogtor.com").password("admin123").build();
+                Dueno admin = Dueno.builder().nombre("Veterinaria DogTor")
+                        .usuario(Usuario.builder().correo("admin@dogtor.com").password("admin123").rol(RolUsuario.DUENO).build())
+                        .build();
                 admin = duenoService.save(admin);
 
                 // 2. Crear 5 Dueños regulares
-                Dueno d1 = duenoService.save(Dueno.builder().nombre("Juan Perez").correo("juan@example.com").password("1234").build());
-                Dueno d2 = duenoService.save(Dueno.builder().nombre("Maria Lopez").correo("maria@example.com").password("1234").build());
-                Dueno d3 = duenoService.save(Dueno.builder().nombre("Carlos Ruiz").correo("carlos@example.com").password("1234").build());
-                Dueno d4 = duenoService.save(Dueno.builder().nombre("Ana Gomez").correo("ana@example.com").password("1234").build());
-                Dueno d5 = duenoService.save(Dueno.builder().nombre("Luis Diaz").correo("luis@example.com").password("1234").build());
+                Dueno d1 = duenoService.save(Dueno.builder().nombre("Juan Perez")
+                        .usuario(Usuario.builder().correo("juan@example.com").password("1234").rol(RolUsuario.DUENO).build()).build());
+                Dueno d2 = duenoService.save(Dueno.builder().nombre("Maria Lopez")
+                        .usuario(Usuario.builder().correo("maria@example.com").password("1234").rol(RolUsuario.DUENO).build()).build());
+                Dueno d3 = duenoService.save(Dueno.builder().nombre("Carlos Ruiz")
+                        .usuario(Usuario.builder().correo("carlos@example.com").password("1234").rol(RolUsuario.DUENO).build()).build());
+                Dueno d4 = duenoService.save(Dueno.builder().nombre("Ana Gomez")
+                        .usuario(Usuario.builder().correo("ana@example.com").password("1234").rol(RolUsuario.DUENO).build()).build());
+                Dueno d5 = duenoService.save(Dueno.builder().nombre("Luis Diaz")
+                        .usuario(Usuario.builder().correo("luis@example.com").password("1234").rol(RolUsuario.DUENO).build()).build());
 
                 // 3. Crear 10 Mascotas (2 por cada dueño regular)
                 mascotaService.save(Mascota.builder().nombre("Max").raza("Golden Retriever").edad("3 años").fotoUrl("https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d1).enAdopcion(false).build());

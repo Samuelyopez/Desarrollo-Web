@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DogTor | Panel Veterinario - Mascota</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { primary: '#2A9D8F', secondary: '#F4A261', accent: '#E9C46A', bglight: '#FAFAFA', textdark: '#264653' } } }
+        }
+    </script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-bglight text-textdark font-sans flex flex-col min-h-screen">
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a th:href="@{/}" class="flex items-center gap-2 text-primary font-bold text-2xl hover:opacity-80 transition-opacity">DogTor</a>
+            <nav class="flex flex-wrap gap-4 items-center text-sm font-medium">
+                <a th:href="@{/veterinario}" class="hover:text-primary transition-colors">Clientes</a>
+                <a th:href="@{/veterinario/mascotas}" class="hover:text-primary transition-colors font-bold text-primary">Mascotas</a>
+                <a th:href="@{/logout}" class="hover:text-primary transition-colors">Cerrar sesión</a>
+            </nav>
+        </div>
+    </header>
+
+<main class="flex-grow flex items-center justify-center bg-teal-50 py-12 px-4">
+    <div class="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full">
+        <h2 class="text-3xl font-bold text-primary mb-6 text-center" th:text="${mascota.id} != null ? 'Editar Mascota' : 'Nueva Mascota'">Mascota</h2>
+        <form class="flex flex-col gap-4"
+              th:action="${mascota.id} != null ? @{/veterinario/mascotas/{id}(id=${mascota.id})} : @{/veterinario/mascotas}"
+              th:object="${mascota}" method="POST">
+            <div>
+                <label class="block text-sm font-bold mb-1">Nombre</label>
+                <input type="text" th:field="*{nombre}" class="w-full p-3 border rounded-lg" required>
+            </div>
+            <div>
+                <label class="block text-sm font-bold mb-1">Raza</label>
+                <input type="text" th:field="*{raza}" class="w-full p-3 border rounded-lg">
+            </div>
+            <div>
+                <label class="block text-sm font-bold mb-1">Edad</label>
+                <input type="text" th:field="*{edad}" class="w-full p-3 border rounded-lg">
+            </div>
+            <div>
+                <label class="block text-sm font-bold mb-1">Foto (URL)</label>
+                <input type="text" th:field="*{fotoUrl}" class="w-full p-3 border rounded-lg">
+            </div>
+            <div>
+                <label class="block text-sm font-bold mb-1">Vacunas</label>
+                <input type="text" th:field="*{vacunas}" class="w-full p-3 border rounded-lg">
+            </div>
+            <div>
+                <label class="block text-sm font-bold mb-1">Dueño</label>
+                <select name="duenoId" class="w-full p-3 border rounded-lg" required>
+                    <option th:each="d : ${duenos}" th:value="${d.id}" th:text="${d.nombre}"
+                            th:selected="${mascota.dueno != null and mascota.dueno.id == d.id}"></option>
+                </select>
+            </div>
+            <button type="submit" class="w-full bg-secondary text-white font-bold py-3 rounded-xl hover:bg-orange-500 mt-2">Guardar</button>
+            <a th:href="@{/veterinario/mascotas}" class="text-center text-sm text-gray-500 hover:text-primary">Cancelar</a>
+        </form>
+    </div>
+</main>
+
+    <footer class="bg-textdark text-gray-300 py-6 px-6 mt-auto text-center text-xs">
+        <p>&copy; 2026 DogTor Clínica Veterinaria. Panel de Veterinario.</p>
+    </footer>
+</body>
+</html>

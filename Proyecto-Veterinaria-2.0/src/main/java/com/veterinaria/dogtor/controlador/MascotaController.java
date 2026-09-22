@@ -28,10 +28,10 @@ public class MascotaController {
 
     @GetMapping("/mis-mascotas")
     public String listarMisMascotas(HttpSession session, Model model) {
-        Dueno dueno = (Dueno) session.getAttribute("usuarioLogueado");
-        if (dueno == null) {
+        if (!"DUENO".equals(session.getAttribute("rol"))) {
             return "redirect:/login";
         }
+        Dueno dueno = (Dueno) session.getAttribute("usuarioLogueado");
         List<Mascota> mascotas = mascotaService.findByDueno(dueno);
         model.addAttribute("mascotas", mascotas);
         model.addAttribute("dueno", dueno);
