@@ -39,7 +39,6 @@
                         <th class="p-4 font-bold text-textdark">Raza</th>
                         <th class="p-4 font-bold text-textdark">Edad</th>
                         <th class="p-4 font-bold text-textdark">Dueño</th>
-                        <th class="p-4 font-bold text-textdark">En adopción</th>
                         <th class="p-4 font-bold text-textdark">Acciones</th>
                     </tr>
                 </thead>
@@ -50,7 +49,6 @@
                         <td class="p-4 text-gray-600" th:text="${mascota.raza}"></td>
                         <td class="p-4 text-gray-600" th:text="${mascota.edad}"></td>
                         <td class="p-4 text-gray-600" th:text="${mascota.dueno != null ? mascota.dueno.nombre : '—'}"></td>
-                        <td class="p-4 text-gray-600" th:text="${mascota.enAdopcion} ? 'Sí' : 'No'"></td>
                         <td class="p-4 flex flex-wrap gap-2">
                             <a th:href="@{/admin/mascotas/editar/{id}(id=${mascota.id})}" class="bg-accent text-textdark px-3 py-2 rounded-lg font-bold hover:opacity-80 transition text-sm">Editar</a>
                             <form th:action="@{/admin/mascotas/{id}/estado(id=${mascota.id})}" method="POST">

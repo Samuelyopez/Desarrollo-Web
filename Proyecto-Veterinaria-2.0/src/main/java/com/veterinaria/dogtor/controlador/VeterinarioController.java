@@ -1,10 +1,12 @@
 package com.veterinaria.dogtor.controlador;
 
+import com.veterinaria.dogtor.entidad.Droga;
 import com.veterinaria.dogtor.entidad.Dueno;
 import com.veterinaria.dogtor.entidad.Mascota;
 import com.veterinaria.dogtor.entidad.RegistroMedico;
 import com.veterinaria.dogtor.entidad.RolUsuario;
 import com.veterinaria.dogtor.entidad.Usuario;
+import com.veterinaria.dogtor.servicio.DrogaService;
 import com.veterinaria.dogtor.servicio.DuenoService;
 import com.veterinaria.dogtor.servicio.MascotaService;
 import com.veterinaria.dogtor.servicio.RegistroMedicoService;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/veterinario")
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ public class VeterinarioController {
     private final DuenoService duenoService;
     private final MascotaService mascotaService;
     private final RegistroMedicoService registroMedicoService;
+    private final DrogaService drogaService;
 
     private boolean sinAcceso(HttpSession session) {
         Object rol = session.getAttribute("rol");
@@ -152,15 +157,20 @@ public class VeterinarioController {
     public String verMascota(HttpSession session, @PathVariable("id") Integer id, Model model) {
         if (sinAcceso(session)) return "redirect:/login";
         Mascota mascota = mascotaService.findById(id);
+        if (mascota == null) {
+            return "redirect:/veterinario/mascotas";
+        }
         model.addAttribute("mascota", mascota);
         model.addAttribute("registros", registroMedicoService.findByMascota(mascota));
         model.addAttribute("registro", new RegistroMedico());
+        model.addAttribute("drogas", drogaService.findAll());
         return "veterinario-mascota-detalle";
     }
 
     @PostMapping("/mascotas/{id}/registros")
     public String crearRegistroMedico(HttpSession session, @PathVariable("id") Integer id,
-                                       @ModelAttribute RegistroMedico registro) {
+                                       @ModelAttribute RegistroMedico registro,
+                                       @RequestParam(value = "drogaIds", required = false) List<Integer> drogaIds) {
         if (sinAcceso(session)) return "redirect:/login";
         Mascota mascota = mascotaService.findById(id);
         if (mascota != null && mascota.isActiva()) {
@@ -169,6 +179,9 @@ public class VeterinarioController {
             registro.setId(null);
             registro.setMascota(mascota);
             registro.setVeterinario((Usuario) session.getAttribute("usuarioLogueado"));
+            if (drogaIds != null) {
+                registro.setDrogas(drogaIds.stream().map(drogaService::findById).toList());
+            }
             registroMedicoService.save(registro);
         }
         return "redirect:/veterinario/mascotas/" + id;

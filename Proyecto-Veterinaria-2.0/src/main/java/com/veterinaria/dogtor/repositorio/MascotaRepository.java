@@ -10,6 +10,5 @@ import java.util.List;
 @Repository
 public interface MascotaRepository extends JpaRepository<Mascota, Integer> {
     List<Mascota> findByDueno(Dueno dueno);
-    List<Mascota> findByEnAdopcion(boolean enAdopcion);
     List<Mascota> findByNombreContainingIgnoreCase(String nombre);
 }

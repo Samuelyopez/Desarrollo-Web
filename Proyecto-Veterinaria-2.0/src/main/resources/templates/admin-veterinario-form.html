@@ -27,25 +27,29 @@
 
 <main class="flex-grow flex items-center justify-center bg-teal-50 py-12 px-4">
     <div class="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full">
-        <h2 class="text-3xl font-bold text-primary mb-6 text-center" th:text="${veterinario.id} != null ? 'Editar Usuario' : 'Nuevo Usuario'">Usuario</h2>
+        <h2 class="text-3xl font-bold text-primary mb-6 text-center" th:text="${veterinario.id} != null ? 'Editar Veterinario' : 'Nuevo Veterinario'">Veterinario</h2>
         <form class="flex flex-col gap-4"
               th:action="${veterinario.id} != null ? @{/admin/veterinarios/{id}(id=${veterinario.id})} : @{/admin/veterinarios}"
               th:object="${veterinario}" method="POST">
             <div>
                 <label class="block text-sm font-bold mb-1">Nombre</label>
-                <input type="text" th:field="*{nombre}" class="w-full p-3 border rounded-lg" required>
+                <input type="text" th:field="*{usuario.nombre}" class="w-full p-3 border rounded-lg" required>
             </div>
             <div>
                 <label class="block text-sm font-bold mb-1">Correo</label>
-                <input type="email" th:field="*{correo}" class="w-full p-3 border rounded-lg" required>
+                <input type="email" th:field="*{usuario.correo}" class="w-full p-3 border rounded-lg" required>
             </div>
             <div>
                 <label class="block text-sm font-bold mb-1">Contraseña</label>
-                <input type="text" th:field="*{password}" class="w-full p-3 border rounded-lg" required>
+                <input type="text" th:field="*{usuario.password}" class="w-full p-3 border rounded-lg" required>
             </div>
-            <div class="flex items-center gap-2">
-                <input type="checkbox" id="activo" th:field="*{activo}" class="w-5 h-5">
-                <label for="activo" class="text-sm font-bold">Cuenta activa</label>
+            <div>
+                <label class="block text-sm font-bold mb-1">Especialidad</label>
+                <input type="text" th:field="*{especialidad}" class="w-full p-3 border rounded-lg">
+            </div>
+            <div>
+                <label class="block text-sm font-bold mb-1">Número de licencia</label>
+                <input type="text" th:field="*{numeroLicencia}" class="w-full p-3 border rounded-lg">
             </div>
             <button type="submit" class="w-full bg-secondary text-white font-bold py-3 rounded-xl hover:bg-orange-500 mt-2">Guardar</button>
             <a th:href="@{/admin/veterinarios}" class="text-center text-sm text-gray-500 hover:text-primary">Cancelar</a>

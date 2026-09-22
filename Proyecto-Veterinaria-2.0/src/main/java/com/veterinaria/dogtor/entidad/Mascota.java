@@ -30,9 +30,6 @@ public class Mascota {
 
     private String vacunas;
 
-    @Column(columnDefinition = "boolean default false")
-    private boolean enAdopcion;
-
     @Builder.Default
     @Column(nullable = false, columnDefinition = "boolean default true")
     private boolean activa = true;

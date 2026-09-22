@@ -22,12 +22,6 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     @Transactional(readOnly = true)
-    public Usuario findById(Integer id) {
-        return usuarioRepository.findById(id).orElse(null);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public Usuario findByCorreo(String correo) {
         return usuarioRepository.findByCorreo(correo).orElse(null);
     }
@@ -36,12 +30,6 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Transactional
     public Usuario save(Usuario usuario) {
         return usuarioRepository.save(usuario);
-    }
-
-    @Override
-    @Transactional
-    public void delete(Integer id) {
-        usuarioRepository.deleteById(id);
     }
 
     @Override

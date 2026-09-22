@@ -1,37 +1,78 @@
 package com.veterinaria.dogtor;
 
+import com.veterinaria.dogtor.entidad.Administrador;
+import com.veterinaria.dogtor.entidad.Droga;
 import com.veterinaria.dogtor.entidad.Dueno;
 import com.veterinaria.dogtor.entidad.Mascota;
-import com.veterinaria.dogtor.entidad.Producto;
 import com.veterinaria.dogtor.entidad.RegistroMedico;
 import com.veterinaria.dogtor.entidad.RolUsuario;
 import com.veterinaria.dogtor.entidad.Usuario;
+import com.veterinaria.dogtor.entidad.Veterinario;
+import com.veterinaria.dogtor.servicio.AdministradorService;
+import com.veterinaria.dogtor.servicio.DrogaService;
 import com.veterinaria.dogtor.servicio.DuenoService;
 import com.veterinaria.dogtor.servicio.MascotaService;
-import com.veterinaria.dogtor.servicio.ProductoService;
 import com.veterinaria.dogtor.servicio.RegistroMedicoService;
 import com.veterinaria.dogtor.servicio.UsuarioService;
+import com.veterinaria.dogtor.servicio.VeterinarioService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 @Configuration
 public class DataInitializer {
 
     @Bean
     public CommandLineRunner loadData(DuenoService duenoService, MascotaService mascotaService,
-                                       ProductoService productoService, UsuarioService usuarioService,
-                                       RegistroMedicoService registroMedicoService) {
+                                       UsuarioService usuarioService,
+                                       RegistroMedicoService registroMedicoService,
+                                       AdministradorService administradorService,
+                                       VeterinarioService veterinarioService,
+                                       DrogaService drogaService) {
         return args -> {
-            Usuario veterinario = null;
+            Usuario veterinarioLogin = null;
+
             if (usuarioService.findAll().isEmpty()) {
-                usuarioService.save(Usuario.builder().nombre("Administrador DogTor").correo("administrador@dogtor.com").password("admin123").rol(RolUsuario.ADMIN).build());
-                veterinario = usuarioService.save(Usuario.builder().nombre("Dr. Andres Felipe").correo("veterinario@dogtor.com").password("vet123").rol(RolUsuario.VETERINARIO).build());
+                // 5 Administradores
+                administradorService.save(Administrador.builder().cargo("Dirección General")
+                        .usuario(Usuario.builder().nombre("Administrador DogTor").correo("administrador@dogtor.com").password("admin123").rol(RolUsuario.ADMIN).build()).build());
+                administradorService.save(Administrador.builder().cargo("Recepción")
+                        .usuario(Usuario.builder().nombre("Camila Torres").correo("recepcion@dogtor.com").password("admin123").rol(RolUsuario.ADMIN).build()).build());
+                administradorService.save(Administrador.builder().cargo("Gerencia General")
+                        .usuario(Usuario.builder().nombre("Diego Ramirez").correo("gerencia@dogtor.com").password("admin123").rol(RolUsuario.ADMIN).build()).build());
+                administradorService.save(Administrador.builder().cargo("Finanzas")
+                        .usuario(Usuario.builder().nombre("Paula Ortiz").correo("finanzas@dogtor.com").password("admin123").rol(RolUsuario.ADMIN).build()).build());
+                administradorService.save(Administrador.builder().cargo("Sistemas")
+                        .usuario(Usuario.builder().nombre("Sergio Vidal").correo("sistemas@dogtor.com").password("admin123").rol(RolUsuario.ADMIN).build()).build());
+
+                // 5 Veterinarios
+                Veterinario vet1 = veterinarioService.save(Veterinario.builder().especialidad("Medicina General").numeroLicencia("VET-001")
+                        .usuario(Usuario.builder().nombre("Dr. Andres Felipe").correo("veterinario@dogtor.com").password("vet123").rol(RolUsuario.VETERINARIO).build()).build());
+                veterinarioService.save(Veterinario.builder().especialidad("Cirugía").numeroLicencia("VET-002")
+                        .usuario(Usuario.builder().nombre("Dra. Laura Jimenez").correo("laura.vet@dogtor.com").password("vet123").rol(RolUsuario.VETERINARIO).build()).build());
+                veterinarioService.save(Veterinario.builder().especialidad("Dermatología").numeroLicencia("VET-003")
+                        .usuario(Usuario.builder().nombre("Dr. Miguel Santos").correo("miguel.vet@dogtor.com").password("vet123").rol(RolUsuario.VETERINARIO).build()).build());
+                veterinarioService.save(Veterinario.builder().especialidad("Odontología").numeroLicencia("VET-004")
+                        .usuario(Usuario.builder().nombre("Dra. Camila Rios").correo("camila.vet@dogtor.com").password("vet123").rol(RolUsuario.VETERINARIO).build()).build());
+                veterinarioService.save(Veterinario.builder().especialidad("Cardiología").numeroLicencia("VET-005")
+                        .usuario(Usuario.builder().nombre("Dr. Felipe Herrera").correo("felipe.vet@dogtor.com").password("vet123").rol(RolUsuario.VETERINARIO).build()).build());
+
+                veterinarioLogin = vet1.getUsuario();
+            }
+
+            if (drogaService.findAll().isEmpty()) {
+                drogaService.save(Droga.builder().nombre("Amoxicilina").descripcion("Antibiótico de amplio espectro.").dosisRecomendada("10-20 mg/kg cada 12 horas").build());
+                drogaService.save(Droga.builder().nombre("Meloxicam").descripcion("Antiinflamatorio no esteroideo.").dosisRecomendada("0.1 mg/kg cada 24 horas").build());
+                drogaService.save(Droga.builder().nombre("Ivermectina").descripcion("Antiparasitario de amplio espectro.").dosisRecomendada("0.2 mg/kg dosis única").build());
+                drogaService.save(Droga.builder().nombre("Prednisona").descripcion("Corticoide para procesos inflamatorios y alérgicos.").dosisRecomendada("0.5-1 mg/kg cada 24 horas").build());
+                drogaService.save(Droga.builder().nombre("Dexametasona").descripcion("Corticoide de acción rápida.").dosisRecomendada("0.1-0.2 mg/kg según indicación").build());
             }
 
             if (duenoService.findAll().isEmpty()) {
-                
-                // 1. Crear Dueño Administrador (DogTor) para los animales en adopción
+
+                // 1. Crear Dueño Administrador (DogTor)
                 Dueno admin = Dueno.builder().nombre("Veterinaria DogTor")
                         .usuario(Usuario.builder().correo("admin@dogtor.com").password("admin123").rol(RolUsuario.DUENO).build())
                         .build();
@@ -50,53 +91,43 @@ public class DataInitializer {
                         .usuario(Usuario.builder().correo("luis@example.com").password("1234").rol(RolUsuario.DUENO).build()).build());
 
                 // 3. Crear 10 Mascotas (2 por cada dueño regular)
-                Mascota max = mascotaService.save(Mascota.builder().nombre("Max").raza("Golden Retriever").edad("3 años").fotoUrl("https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d1).enAdopcion(false).build());
-                mascotaService.save(Mascota.builder().nombre("Luna").raza("Gato Siamés").edad("2 años").fotoUrl("https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=300&q=80").vacunas("Falta rabia").dueno(d1).enAdopcion(false).activa(false).build());
-                
-                mascotaService.save(Mascota.builder().nombre("Rocky").raza("Bulldog").edad("5 años").fotoUrl("https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d2).enAdopcion(false).build());
-                mascotaService.save(Mascota.builder().nombre("Coco").raza("Poodle").edad("1 año").fotoUrl("https://images.unsplash.com/photo-1591768575198-88dac53fbd0a?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d2).enAdopcion(false).build());
-                
-                mascotaService.save(Mascota.builder().nombre("Bella").raza("Gato Persa").edad("4 años").fotoUrl("https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d3).enAdopcion(false).build());
-                mascotaService.save(Mascota.builder().nombre("Toby").raza("Beagle").edad("2 años").fotoUrl("https://images.unsplash.com/photo-1537151608804-ea6f4bc1c9a2?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d3).enAdopcion(false).build());
-                
-                mascotaService.save(Mascota.builder().nombre("Simba").raza("Mestizo").edad("1 año").fotoUrl("https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d4).enAdopcion(false).build());
-                mascotaService.save(Mascota.builder().nombre("Milo").raza("Labrador").edad("6 años").fotoUrl("https://images.unsplash.com/photo-1591324535489-cecc7c5a0833?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d4).enAdopcion(false).build());
-                
-                mascotaService.save(Mascota.builder().nombre("Kira").raza("Husky").edad("3 años").fotoUrl("https://images.unsplash.com/photo-1605568420125-4eb84e554902?auto=format&fit=crop&w=300&q=80").vacunas("Falta refuerzo").dueno(d5).enAdopcion(false).build());
-                mascotaService.save(Mascota.builder().nombre("Thor").raza("Pastor Alemán").edad("4 años").fotoUrl("https://images.unsplash.com/photo-1589952283406-b53a7d1347e8?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d5).enAdopcion(false).build());
+                Mascota max = mascotaService.save(Mascota.builder().nombre("Max").raza("Golden Retriever").edad("3 años").fotoUrl("https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d1).build());
+                mascotaService.save(Mascota.builder().nombre("Luna").raza("Gato Siamés").edad("2 años").fotoUrl("https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=300&q=80").vacunas("Falta rabia").dueno(d1).activa(false).build());
 
-                if (veterinario != null) {
-                    registroMedicoService.save(RegistroMedico.builder().mascota(max).veterinario(veterinario)
+                mascotaService.save(Mascota.builder().nombre("Rocky").raza("Bulldog").edad("5 años").fotoUrl("https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d2).build());
+                mascotaService.save(Mascota.builder().nombre("Coco").raza("Poodle").edad("1 año").fotoUrl("https://images.unsplash.com/photo-1591768575198-88dac53fbd0a?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d2).build());
+
+                mascotaService.save(Mascota.builder().nombre("Bella").raza("Gato Persa").edad("4 años").fotoUrl("https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d3).build());
+                mascotaService.save(Mascota.builder().nombre("Toby").raza("Beagle").edad("2 años").fotoUrl("https://images.unsplash.com/photo-1537151608804-ea6f4bc1c9a2?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d3).build());
+
+                mascotaService.save(Mascota.builder().nombre("Simba").raza("Mestizo").edad("1 año").fotoUrl("https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d4).build());
+                mascotaService.save(Mascota.builder().nombre("Milo").raza("Labrador").edad("6 años").fotoUrl("https://images.unsplash.com/photo-1591324535489-cecc7c5a0833?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d4).build());
+
+                mascotaService.save(Mascota.builder().nombre("Kira").raza("Husky").edad("3 años").fotoUrl("https://images.unsplash.com/photo-1605568420125-4eb84e554902?auto=format&fit=crop&w=300&q=80").vacunas("Falta refuerzo").dueno(d5).build());
+                mascotaService.save(Mascota.builder().nombre("Thor").raza("Pastor Alemán").edad("4 años").fotoUrl("https://images.unsplash.com/photo-1589952283406-b53a7d1347e8?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d5).build());
+
+                // 4. Seis mascotas adicionales de la clínica
+                mascotaService.save(Mascota.builder().nombre("Oreo").raza("Gato Callejero").edad("6 meses").fotoUrl("https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=300&q=80").vacunas("Desparasitado").dueno(admin).build());
+                mascotaService.save(Mascota.builder().nombre("Firulais").raza("Mestizo").edad("2 años").fotoUrl("https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(admin).build());
+                mascotaService.save(Mascota.builder().nombre("Blanquita").raza("Poodle Mix").edad("1 año").fotoUrl("https://images.unsplash.com/photo-1591768575198-88dac53fbd0a?auto=format&fit=crop&w=300&q=80").vacunas("Vacuna múltiple").dueno(admin).build());
+                mascotaService.save(Mascota.builder().nombre("Felix").raza("Gato Naranja").edad("3 años").fotoUrl("https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(admin).build());
+                mascotaService.save(Mascota.builder().nombre("Rufo").raza("Labrador Mix").edad("4 años").fotoUrl("https://images.unsplash.com/photo-1591324535489-cecc7c5a0833?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(admin).build());
+                mascotaService.save(Mascota.builder().nombre("Pelusa").raza("Angora").edad("2 años").fotoUrl("https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(admin).build());
+
+                if (veterinarioLogin != null) {
+                    List<Droga> drogas = drogaService.findAll();
+                    Droga meloxicam = drogas.stream().filter(d -> d.getNombre().equals("Meloxicam")).findFirst().orElse(null);
+                    Droga amoxicilina = drogas.stream().filter(d -> d.getNombre().equals("Amoxicilina")).findFirst().orElse(null);
+
+                    registroMedicoService.save(RegistroMedico.builder().mascota(max).veterinario(veterinarioLogin)
                             .diagnostico("Chequeo general de rutina, sin hallazgos relevantes.")
                             .tratamiento("Ninguno, próximo control en 6 meses.").build());
-                    registroMedicoService.save(RegistroMedico.builder().mascota(max).veterinario(veterinario)
+                    registroMedicoService.save(RegistroMedico.builder().mascota(max).veterinario(veterinarioLogin)
                             .diagnostico("Leve otitis en oído derecho.")
-                            .tratamiento("Gotas óticas cada 12 horas por 7 días.").build());
+                            .tratamiento("Gotas óticas cada 12 horas por 7 días.")
+                            .drogas(amoxicilina != null && meloxicam != null ? List.of(amoxicilina, meloxicam) : List.of())
+                            .build());
                 }
-
-                // 4. Crear 6 Mascotas en Adopción
-                mascotaService.save(Mascota.builder().nombre("Oreo").raza("Gato Callejero").edad("6 meses").fotoUrl("https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=300&q=80").vacunas("Desparasitado").dueno(admin).enAdopcion(true).build());
-                mascotaService.save(Mascota.builder().nombre("Firulais").raza("Mestizo").edad("2 años").fotoUrl("https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(admin).enAdopcion(true).build());
-                mascotaService.save(Mascota.builder().nombre("Blanquita").raza("Poodle Mix").edad("1 año").fotoUrl("https://images.unsplash.com/photo-1591768575198-88dac53fbd0a?auto=format&fit=crop&w=300&q=80").vacunas("Vacuna múltiple").dueno(admin).enAdopcion(true).build());
-                mascotaService.save(Mascota.builder().nombre("Felix").raza("Gato Naranja").edad("3 años").fotoUrl("https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(admin).enAdopcion(true).build());
-                mascotaService.save(Mascota.builder().nombre("Rufo").raza("Labrador Mix").edad("4 años").fotoUrl("https://images.unsplash.com/photo-1591324535489-cecc7c5a0833?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(admin).enAdopcion(true).build());
-                mascotaService.save(Mascota.builder().nombre("Pelusa").raza("Angora").edad("2 años").fotoUrl("https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(admin).enAdopcion(true).build());
-
-                // 5. Crear 6 Productos Medicinales (Farmacia)
-                productoService.save(Producto.builder().nombre("Probiótico Digestivo Plus").descripcion("Mejora la flora intestinal de perros y gatos.").precio(45000.0).categoria("MEDICINAL").fotoUrl("https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=300&q=80").build());
-                productoService.save(Producto.builder().nombre("Vitaminas Caninas Complex").descripcion("Suplemento vitamínico diario para perros activos.").precio(35000.0).categoria("MEDICINAL").fotoUrl("https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=300&q=80").build());
-                productoService.save(Producto.builder().nombre("Desparasitante NexGard").descripcion("Protección mensual contra pulgas y garrapatas.").precio(65000.0).categoria("MEDICINAL").fotoUrl("https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=300&q=80").build());
-                productoService.save(Producto.builder().nombre("Gotas Óticas Limpiadoras").descripcion("Prevención y tratamiento de otitis leve.").precio(25000.0).categoria("MEDICINAL").fotoUrl("https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=300&q=80").build());
-                productoService.save(Producto.builder().nombre("Jarabe para Tos Perrera").descripcion("Alivio rápido de síntomas respiratorios.").precio(38000.0).categoria("MEDICINAL").fotoUrl("https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=300&q=80").build());
-                productoService.save(Producto.builder().nombre("Crema Cicatrizante").descripcion("Crema tópica para heridas superficiales.").precio(22000.0).categoria("MEDICINAL").fotoUrl("https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=300&q=80").build());
-
-                // 6. Crear 6 Productos Recreacionales (Accesorios)
-                productoService.save(Producto.builder().nombre("Pelota de Goma Resistente").descripcion("Ideal para perros de mordida fuerte.").precio(15000.0).categoria("RECREACIONAL").fotoUrl("https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=300&q=80").build());
-                productoService.save(Producto.builder().nombre("Rascador de Torre para Gatos").descripcion("3 niveles con ratón colgante.").precio(120000.0).categoria("RECREACIONAL").fotoUrl("https://images.unsplash.com/photo-1545249390-6bdfa286032f?auto=format&fit=crop&w=300&q=80").build());
-                productoService.save(Producto.builder().nombre("Correa Retráctil 5 Metros").descripcion("Correa con freno automático y linterna.").precio(45000.0).categoria("RECREACIONAL").fotoUrl("https://images.unsplash.com/photo-1601758177266-bc599de87707?auto=format&fit=crop&w=300&q=80").build());
-                productoService.save(Producto.builder().nombre("Cama Acolchada Ortopédica").descripcion("Espuma con memoria para razas grandes.").precio(180000.0).categoria("RECREACIONAL").fotoUrl("https://images.unsplash.com/photo-1541781774459-bb2af280528e?auto=format&fit=crop&w=300&q=80").build());
-                productoService.save(Producto.builder().nombre("Comedero Interactivo Lento").descripcion("Previene problemas gástricos.").precio(32000.0).categoria("RECREACIONAL").fotoUrl("https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=300&q=80").build());
-                productoService.save(Producto.builder().nombre("Ratón a Control Remoto").descripcion("Juguete interactivo para gatos curiosos.").precio(55000.0).categoria("RECREACIONAL").fotoUrl("https://images.unsplash.com/photo-1545249390-6bdfa286032f?auto=format&fit=crop&w=300&q=80").build());
             }
         };
     }

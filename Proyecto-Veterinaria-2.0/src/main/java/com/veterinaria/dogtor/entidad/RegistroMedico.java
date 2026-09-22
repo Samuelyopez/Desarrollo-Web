@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "registros_medicos")
@@ -33,6 +35,13 @@ public class RegistroMedico {
     @ManyToOne
     @JoinColumn(name = "veterinario_id")
     private Usuario veterinario;
+
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(name = "registro_medico_drogas",
+            joinColumns = @JoinColumn(name = "registro_medico_id"),
+            inverseJoinColumns = @JoinColumn(name = "droga_id"))
+    private List<Droga> drogas = new ArrayList<>();
 
     @PrePersist
     protected void alCrear() {

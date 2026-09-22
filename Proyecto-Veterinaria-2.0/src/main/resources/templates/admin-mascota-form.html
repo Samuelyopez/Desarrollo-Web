@@ -87,10 +87,6 @@
                     <li x-show="filtered.length === 0" class="p-3 text-gray-400">Sin resultados</li>
                 </ul>
             </div>
-            <div class="flex items-center gap-2">
-                <input type="checkbox" id="enAdopcion" th:field="*{enAdopcion}" class="w-5 h-5">
-                <label for="enAdopcion" class="text-sm font-bold">En adopción</label>
-            </div>
             <button type="submit" class="w-full bg-secondary text-white font-bold py-3 rounded-xl hover:bg-orange-500 mt-2">Guardar</button>
             <a th:href="@{/admin/mascotas}" class="text-center text-sm text-gray-500 hover:text-primary">Cancelar</a>
         </form>

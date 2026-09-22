@@ -49,14 +49,12 @@ public class DuenoServiceImpl implements DuenoService {
     @Override
     @Transactional
     public void delete(Integer id) {
-        // Las mascotas nunca se borran de la base de datos: si se elimina el dueño,
-        // quedan sin dueño y se marcan inactivas ("en casa") en vez de eliminarse.
+        // Al eliminar un dueño se elimina también la información de sus mascotas
+        // (y sus registros médicos, en cascada vía Mascota.registros).
         Dueno dueno = duenoRepository.findById(id).orElse(null);
         if (dueno != null) {
             for (Mascota mascota : mascotaService.findByDueno(dueno)) {
-                mascota.setDueno(null);
-                mascota.setActiva(false);
-                mascotaService.save(mascota);
+                mascotaService.delete(mascota.getId());
             }
         }
         duenoRepository.deleteById(id);

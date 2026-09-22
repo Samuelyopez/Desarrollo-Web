@@ -38,8 +38,8 @@
                         <th class="p-4 font-bold text-textdark">ID</th>
                         <th class="p-4 font-bold text-textdark">Nombre</th>
                         <th class="p-4 font-bold text-textdark">Correo</th>
-                        <th class="p-4 font-bold text-textdark">Rol</th>
-                        <th class="p-4 font-bold text-textdark">Activo</th>
+                        <th class="p-4 font-bold text-textdark">Especialidad</th>
+                        <th class="p-4 font-bold text-textdark">Licencia</th>
                         <th class="p-4 font-bold text-textdark">Acciones</th>
                     </tr>
                 </thead>
@@ -48,11 +48,11 @@
                         <td class="p-4 text-gray-600" th:text="${v.id}"></td>
                         <td class="p-4 font-bold text-primary" th:text="${v.nombre}"></td>
                         <td class="p-4 text-gray-600" th:text="${v.correo}"></td>
-                        <td class="p-4 text-gray-600" th:text="${v.rol}"></td>
-                        <td class="p-4 text-gray-600" th:text="${v.activo} ? 'Sí' : 'No'"></td>
+                        <td class="p-4 text-gray-600" th:text="${v.especialidad}"></td>
+                        <td class="p-4 text-gray-600" th:text="${v.numeroLicencia}"></td>
                         <td class="p-4 flex gap-2">
                             <a th:href="@{/admin/veterinarios/editar/{id}(id=${v.id})}" class="bg-accent text-textdark px-3 py-2 rounded-lg font-bold hover:opacity-80 transition text-sm">Editar</a>
-                            <form th:action="@{/admin/veterinarios/{id}/eliminar(id=${v.id})}" method="POST" onsubmit="return confirm('¿Eliminar este usuario?');">
+                            <form th:action="@{/admin/veterinarios/{id}/eliminar(id=${v.id})}" method="POST" onsubmit="return confirm('¿Eliminar este veterinario?');">
                                 <button type="submit" class="bg-red-500 text-white px-3 py-2 rounded-lg font-bold hover:bg-red-600 transition text-sm">Eliminar</button>
                             </form>
                         </td>

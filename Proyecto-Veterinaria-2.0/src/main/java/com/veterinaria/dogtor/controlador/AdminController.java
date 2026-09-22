@@ -4,9 +4,10 @@ import com.veterinaria.dogtor.entidad.Dueno;
 import com.veterinaria.dogtor.entidad.Mascota;
 import com.veterinaria.dogtor.entidad.RolUsuario;
 import com.veterinaria.dogtor.entidad.Usuario;
+import com.veterinaria.dogtor.entidad.Veterinario;
 import com.veterinaria.dogtor.servicio.DuenoService;
 import com.veterinaria.dogtor.servicio.MascotaService;
-import com.veterinaria.dogtor.servicio.UsuarioService;
+import com.veterinaria.dogtor.servicio.VeterinarioService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,7 @@ public class AdminController {
 
     private final DuenoService duenoService;
     private final MascotaService mascotaService;
-    private final UsuarioService usuarioService;
+    private final VeterinarioService veterinarioService;
 
     private boolean noEsAdmin(HttpSession session) {
         return !"ADMIN".equals(session.getAttribute("rol"));
@@ -113,7 +114,6 @@ public class AdminController {
         existente.setEdad(mascota.getEdad());
         existente.setFotoUrl(mascota.getFotoUrl());
         existente.setVacunas(mascota.getVacunas());
-        existente.setEnAdopcion(mascota.isEnAdopcion());
         existente.setDueno(duenoService.findById(duenoId));
         mascotaService.save(existente);
         return "redirect:/admin/mascotas";
@@ -133,52 +133,52 @@ public class AdminController {
     @GetMapping("/veterinarios")
     public String listarVeterinarios(HttpSession session, Model model) {
         if (noEsAdmin(session)) return "redirect:/login";
-        model.addAttribute("veterinarios", usuarioService.findAll().stream()
-                .filter(u -> u.getRol() != RolUsuario.DUENO)
-                .toList());
+        model.addAttribute("veterinarios", veterinarioService.findAll());
         return "admin-veterinarios";
     }
 
     @GetMapping("/veterinarios/nuevo")
     public String nuevoVeterinarioForm(HttpSession session, Model model) {
         if (noEsAdmin(session)) return "redirect:/login";
-        Usuario veterinario = new Usuario();
-        veterinario.setActivo(true);
+        Veterinario veterinario = new Veterinario();
+        veterinario.setUsuario(new Usuario());
         model.addAttribute("veterinario", veterinario);
         return "admin-veterinario-form";
     }
 
     @PostMapping("/veterinarios")
-    public String crearVeterinario(HttpSession session, @ModelAttribute Usuario veterinario) {
+    public String crearVeterinario(HttpSession session, @ModelAttribute Veterinario veterinario) {
         if (noEsAdmin(session)) return "redirect:/login";
-        veterinario.setRol(RolUsuario.VETERINARIO);
-        usuarioService.save(veterinario);
+        veterinario.getUsuario().setRol(RolUsuario.VETERINARIO);
+        veterinario.getUsuario().setActivo(true);
+        veterinarioService.save(veterinario);
         return "redirect:/admin/veterinarios";
     }
 
     @GetMapping("/veterinarios/editar/{id}")
     public String editarVeterinarioForm(HttpSession session, @PathVariable("id") Integer id, Model model) {
         if (noEsAdmin(session)) return "redirect:/login";
-        model.addAttribute("veterinario", usuarioService.findById(id));
+        model.addAttribute("veterinario", veterinarioService.findById(id));
         return "admin-veterinario-form";
     }
 
     @PostMapping("/veterinarios/{id}")
-    public String actualizarVeterinario(HttpSession session, @PathVariable("id") Integer id, @ModelAttribute Usuario veterinario) {
+    public String actualizarVeterinario(HttpSession session, @PathVariable("id") Integer id, @ModelAttribute Veterinario veterinario) {
         if (noEsAdmin(session)) return "redirect:/login";
-        Usuario existente = usuarioService.findById(id);
-        existente.setNombre(veterinario.getNombre());
-        existente.setCorreo(veterinario.getCorreo());
-        existente.setPassword(veterinario.getPassword());
-        existente.setActivo(veterinario.isActivo());
-        usuarioService.save(existente);
+        Veterinario existente = veterinarioService.findById(id);
+        existente.setEspecialidad(veterinario.getEspecialidad());
+        existente.setNumeroLicencia(veterinario.getNumeroLicencia());
+        existente.getUsuario().setNombre(veterinario.getUsuario().getNombre());
+        existente.getUsuario().setCorreo(veterinario.getUsuario().getCorreo());
+        existente.getUsuario().setPassword(veterinario.getUsuario().getPassword());
+        veterinarioService.save(existente);
         return "redirect:/admin/veterinarios";
     }
 
     @PostMapping("/veterinarios/{id}/eliminar")
     public String eliminarVeterinario(HttpSession session, @PathVariable("id") Integer id) {
         if (noEsAdmin(session)) return "redirect:/login";
-        usuarioService.delete(id);
+        veterinarioService.delete(id);
         return "redirect:/admin/veterinarios";
     }
 }

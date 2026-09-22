@@ -46,15 +46,12 @@
                 <a th:href="@{/}" class="hover:text-primary transition-colors">Inicio</a>
                 <a th:href="@{/nosotros}" class="hover:text-primary transition-colors">Nosotros</a>
                 <a th:href="@{/equipo}" class="hover:text-primary transition-colors">Equipo</a>
-                <a th:href="@{/farmacia}" class="hover:text-primary transition-colors">Tienda</a>
-                <a th:href="@{/adopciones}" class="hover:text-primary transition-colors">Adopciones</a>
                 <a th:href="@{/pacientes}" class="hover:text-primary transition-colors">Pacientes</a>
                 <a th:if="${rol == null}" th:href="@{/login}" class="hover:text-primary transition-colors">Login</a>
                 <a th:if="${rol == 'ADMIN'}" th:href="@{/admin}" class="hover:text-primary transition-colors">Panel Admin</a>
                 <a th:if="${rol == 'VETERINARIO'}" th:href="@{/veterinario}" class="hover:text-primary transition-colors">Panel Veterinario</a>
                 <a th:if="${rol == 'DUENO'}" th:href="@{/pacientes/mis-mascotas}" class="hover:text-primary transition-colors">Mis Mascotas</a>
                 <a th:if="${rol != null}" th:href="@{/logout}" class="hover:text-primary transition-colors">Cerrar sesión</a>
-                <a th:href="@{/citas}" class="bg-secondary text-white px-5 py-2 rounded-lg font-bold hover:bg-orange-500 transition shadow-md">Agendar Cita</a>
             </nav>
 
             <button class="lg:hidden text-primary focus:outline-none" id="mobile-menu-btn" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
@@ -69,15 +66,12 @@
             <a th:href="@{/}" class="block hover:text-primary transition-colors py-1">Inicio</a>
             <a th:href="@{/nosotros}" class="block hover:text-primary transition-colors py-1">Nosotros</a>
             <a th:href="@{/equipo}" class="block hover:text-primary transition-colors py-1">Equipo</a>
-            <a th:href="@{/farmacia}" class="block hover:text-primary transition-colors py-1">Tienda</a>
-            <a th:href="@{/adopciones}" class="block hover:text-primary transition-colors py-1">Adopciones</a>
             <a th:href="@{/pacientes}" class="block hover:text-primary transition-colors py-1">Pacientes</a>
             <a th:if="${rol == null}" th:href="@{/login}" class="block hover:text-primary transition-colors py-1">Login</a>
             <a th:if="${rol == 'ADMIN'}" th:href="@{/admin}" class="block hover:text-primary transition-colors py-1">Panel Admin</a>
             <a th:if="${rol == 'VETERINARIO'}" th:href="@{/veterinario}" class="block hover:text-primary transition-colors py-1">Panel Veterinario</a>
             <a th:if="${rol == 'DUENO'}" th:href="@{/pacientes/mis-mascotas}" class="block hover:text-primary transition-colors py-1">Mis Mascotas</a>
             <a th:if="${rol != null}" th:href="@{/logout}" class="block hover:text-primary transition-colors py-1">Cerrar sesión</a>
-            <a th:href="@{/citas}" class="block bg-secondary text-white text-center px-4 py-3 rounded-lg font-bold hover:bg-orange-500 transition mt-2">Agendar Cita</a>
         </nav>
     </header>
 
@@ -105,6 +99,10 @@
                 <p class="text-sm text-gray-500" th:text="${#temporals.format(reg.fecha, 'dd/MM/yyyy HH:mm')}"></p>
                 <p class="text-gray-700"><strong>Diagnóstico:</strong> <span th:text="${reg.diagnostico}"></span></p>
                 <p class="text-gray-700" th:if="${reg.tratamiento != null and !reg.tratamiento.isEmpty()}"><strong>Tratamiento:</strong> <span th:text="${reg.tratamiento}"></span></p>
+                <p class="text-gray-700" th:if="${!#lists.isEmpty(reg.drogas)}">
+                    <strong>Drogas:</strong>
+                    <span th:each="d, iter : ${reg.drogas}"><span th:text="${d.nombre}"></span><span th:if="${!iter.last}">, </span></span>
+                </p>
                 <p class="text-sm text-gray-500" th:if="${reg.veterinario != null}">Atendido por <span th:text="${reg.veterinario.nombre}"></span></p>
             </div>
         </div>
@@ -136,7 +134,7 @@
                     <li><a th:href="@{/}" class="hover:text-secondary transition-colors">Inicio</a></li>
                     <li><a th:href="@{/equipo}" class="hover:text-secondary transition-colors">Equipo</a></li>
                     <li><a th:href="@{/nosotros}" class="hover:text-secondary transition-colors">Nuestra Historia</a></li>
-                    <li><a th:href="@{/farmacia}" class="hover:text-secondary transition-colors">Tienda</a></li>
+                    <li><a th:href="@{/pacientes}" class="hover:text-secondary transition-colors">Pacientes</a></li>
                 </ul>
             </div>
             <div>

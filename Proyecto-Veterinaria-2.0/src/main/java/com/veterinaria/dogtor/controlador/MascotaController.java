@@ -43,6 +43,9 @@ public class MascotaController {
     @GetMapping("/{id}")
     public String verMascota(@PathVariable("id") Integer id, HttpSession session, Model model) {
         Mascota mascota = mascotaService.findById(id);
+        if (mascota == null) {
+            return "redirect:/pacientes";
+        }
         model.addAttribute("mascota", mascota);
 
         Object rol = session.getAttribute("rol");

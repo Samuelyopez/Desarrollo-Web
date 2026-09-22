@@ -35,12 +35,6 @@ public class MascotaServiceImpl implements MascotaService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Mascota> findByEnAdopcion(boolean enAdopcion) {
-        return mascotaRepository.findByEnAdopcion(enAdopcion);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<Mascota> findByNombreContaining(String nombre) {
         return mascotaRepository.findByNombreContainingIgnoreCase(nombre);
     }
@@ -49,5 +43,11 @@ public class MascotaServiceImpl implements MascotaService {
     @Transactional
     public Mascota save(Mascota mascota) {
         return mascotaRepository.save(mascota);
+    }
+
+    @Override
+    @Transactional
+    public void delete(Integer id) {
+        mascotaRepository.deleteById(id);
     }
 }
