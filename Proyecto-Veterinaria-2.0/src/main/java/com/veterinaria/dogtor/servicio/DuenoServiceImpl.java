@@ -1,6 +1,7 @@
 package com.veterinaria.dogtor.servicio;
 
 import com.veterinaria.dogtor.entidad.Dueno;
+import com.veterinaria.dogtor.entidad.Mascota;
 import com.veterinaria.dogtor.repositorio.DuenoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.util.List;
 public class DuenoServiceImpl implements DuenoService {
 
     private final DuenoRepository duenoRepository;
+    private final MascotaService mascotaService;
 
     @Override
     @Transactional(readOnly = true)
@@ -41,6 +43,12 @@ public class DuenoServiceImpl implements DuenoService {
     @Override
     @Transactional
     public void delete(Integer id) {
+        Dueno dueno = duenoRepository.findById(id).orElse(null);
+        if (dueno != null) {
+            for (Mascota mascota : mascotaService.findByDueno(dueno)) {
+                mascotaService.delete(mascota.getId());
+            }
+        }
         duenoRepository.deleteById(id);
     }
 }

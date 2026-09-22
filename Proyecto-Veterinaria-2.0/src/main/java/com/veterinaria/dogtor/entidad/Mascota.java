@@ -3,6 +3,9 @@ package com.veterinaria.dogtor.entidad;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "mascotas")
 @Getter
@@ -21,16 +24,24 @@ public class Mascota {
 
     private String raza;
     private String edad;
-    
+
     @Column(length = 500)
     private String fotoUrl;
-    
+
     private String vacunas;
 
     @Column(columnDefinition = "boolean default false")
     private boolean enAdopcion;
 
+    @Builder.Default
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private boolean activa = true;
+
     @ManyToOne
     @JoinColumn(name = "dueno_id")
     private Dueno dueno;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "mascota", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RegistroMedico> registros = new ArrayList<>();
 }

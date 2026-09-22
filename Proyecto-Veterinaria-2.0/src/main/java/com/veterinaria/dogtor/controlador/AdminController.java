@@ -107,9 +107,15 @@ public class AdminController {
     public String actualizarMascota(HttpSession session, @PathVariable("id") Integer id,
                                      @ModelAttribute Mascota mascota, @RequestParam("duenoId") Integer duenoId) {
         if (noEsAdmin(session)) return "redirect:/login";
-        mascota.setId(id);
-        mascota.setDueno(duenoService.findById(duenoId));
-        mascotaService.save(mascota);
+        Mascota existente = mascotaService.findById(id);
+        existente.setNombre(mascota.getNombre());
+        existente.setRaza(mascota.getRaza());
+        existente.setEdad(mascota.getEdad());
+        existente.setFotoUrl(mascota.getFotoUrl());
+        existente.setVacunas(mascota.getVacunas());
+        existente.setEnAdopcion(mascota.isEnAdopcion());
+        existente.setDueno(duenoService.findById(duenoId));
+        mascotaService.save(existente);
         return "redirect:/admin/mascotas";
     }
 

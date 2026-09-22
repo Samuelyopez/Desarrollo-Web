@@ -40,6 +40,12 @@ public class MascotaServiceImpl implements MascotaService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Mascota> findByNombreContaining(String nombre) {
+        return mascotaRepository.findByNombreContainingIgnoreCase(nombre);
+    }
+
+    @Override
     @Transactional
     public Mascota save(Mascota mascota) {
         return mascotaRepository.save(mascota);

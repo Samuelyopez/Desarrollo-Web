@@ -9,6 +9,7 @@ public interface MascotaService {
     Mascota findById(Integer id);
     List<Mascota> findByDueno(Dueno dueno);
     List<Mascota> findByEnAdopcion(boolean enAdopcion);
+    List<Mascota> findByNombreContaining(String nombre);
     Mascota save(Mascota mascota);
     void delete(Integer id);
 }

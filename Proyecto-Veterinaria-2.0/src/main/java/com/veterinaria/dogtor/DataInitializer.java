@@ -3,11 +3,13 @@ package com.veterinaria.dogtor;
 import com.veterinaria.dogtor.entidad.Dueno;
 import com.veterinaria.dogtor.entidad.Mascota;
 import com.veterinaria.dogtor.entidad.Producto;
+import com.veterinaria.dogtor.entidad.RegistroMedico;
 import com.veterinaria.dogtor.entidad.RolUsuario;
 import com.veterinaria.dogtor.entidad.Usuario;
 import com.veterinaria.dogtor.servicio.DuenoService;
 import com.veterinaria.dogtor.servicio.MascotaService;
 import com.veterinaria.dogtor.servicio.ProductoService;
+import com.veterinaria.dogtor.servicio.RegistroMedicoService;
 import com.veterinaria.dogtor.servicio.UsuarioService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -18,11 +20,13 @@ public class DataInitializer {
 
     @Bean
     public CommandLineRunner loadData(DuenoService duenoService, MascotaService mascotaService,
-                                       ProductoService productoService, UsuarioService usuarioService) {
+                                       ProductoService productoService, UsuarioService usuarioService,
+                                       RegistroMedicoService registroMedicoService) {
         return args -> {
+            Usuario veterinario = null;
             if (usuarioService.findAll().isEmpty()) {
                 usuarioService.save(Usuario.builder().nombre("Administrador DogTor").correo("administrador@dogtor.com").password("admin123").rol(RolUsuario.ADMIN).build());
-                usuarioService.save(Usuario.builder().nombre("Dr. Andres Felipe").correo("veterinario@dogtor.com").password("vet123").rol(RolUsuario.VETERINARIO).build());
+                veterinario = usuarioService.save(Usuario.builder().nombre("Dr. Andres Felipe").correo("veterinario@dogtor.com").password("vet123").rol(RolUsuario.VETERINARIO).build());
             }
 
             if (duenoService.findAll().isEmpty()) {
@@ -46,8 +50,8 @@ public class DataInitializer {
                         .usuario(Usuario.builder().correo("luis@example.com").password("1234").rol(RolUsuario.DUENO).build()).build());
 
                 // 3. Crear 10 Mascotas (2 por cada dueño regular)
-                mascotaService.save(Mascota.builder().nombre("Max").raza("Golden Retriever").edad("3 años").fotoUrl("https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d1).enAdopcion(false).build());
-                mascotaService.save(Mascota.builder().nombre("Luna").raza("Gato Siamés").edad("2 años").fotoUrl("https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=300&q=80").vacunas("Falta rabia").dueno(d1).enAdopcion(false).build());
+                Mascota max = mascotaService.save(Mascota.builder().nombre("Max").raza("Golden Retriever").edad("3 años").fotoUrl("https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d1).enAdopcion(false).build());
+                mascotaService.save(Mascota.builder().nombre("Luna").raza("Gato Siamés").edad("2 años").fotoUrl("https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=300&q=80").vacunas("Falta rabia").dueno(d1).enAdopcion(false).activa(false).build());
                 
                 mascotaService.save(Mascota.builder().nombre("Rocky").raza("Bulldog").edad("5 años").fotoUrl("https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d2).enAdopcion(false).build());
                 mascotaService.save(Mascota.builder().nombre("Coco").raza("Poodle").edad("1 año").fotoUrl("https://images.unsplash.com/photo-1591768575198-88dac53fbd0a?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d2).enAdopcion(false).build());
@@ -60,6 +64,15 @@ public class DataInitializer {
                 
                 mascotaService.save(Mascota.builder().nombre("Kira").raza("Husky").edad("3 años").fotoUrl("https://images.unsplash.com/photo-1605568420125-4eb84e554902?auto=format&fit=crop&w=300&q=80").vacunas("Falta refuerzo").dueno(d5).enAdopcion(false).build());
                 mascotaService.save(Mascota.builder().nombre("Thor").raza("Pastor Alemán").edad("4 años").fotoUrl("https://images.unsplash.com/photo-1589952283406-b53a7d1347e8?auto=format&fit=crop&w=300&q=80").vacunas("Al día").dueno(d5).enAdopcion(false).build());
+
+                if (veterinario != null) {
+                    registroMedicoService.save(RegistroMedico.builder().mascota(max).veterinario(veterinario)
+                            .diagnostico("Chequeo general de rutina, sin hallazgos relevantes.")
+                            .tratamiento("Ninguno, próximo control en 6 meses.").build());
+                    registroMedicoService.save(RegistroMedico.builder().mascota(max).veterinario(veterinario)
+                            .diagnostico("Leve otitis en oído derecho.")
+                            .tratamiento("Gotas óticas cada 12 horas por 7 días.").build());
+                }
 
                 // 4. Crear 6 Mascotas en Adopción
                 mascotaService.save(Mascota.builder().nombre("Oreo").raza("Gato Callejero").edad("6 meses").fotoUrl("https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=300&q=80").vacunas("Desparasitado").dueno(admin).enAdopcion(true).build());
