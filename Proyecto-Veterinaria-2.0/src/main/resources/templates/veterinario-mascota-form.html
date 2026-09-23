@@ -12,15 +12,16 @@
     </script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="/js/session-auth.js" defer></script>
 </head>
-<body class="bg-bglight text-textdark font-sans flex flex-col min-h-screen">
+<body class="bg-bglight text-textdark font-sans flex flex-col min-h-screen" th:attr="data-rol=${rol}">
     <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a th:href="@{/}" class="flex items-center gap-2 text-primary font-bold text-2xl hover:opacity-80 transition-opacity">DogTor</a>
             <nav class="flex flex-wrap gap-4 items-center text-sm font-medium">
                 <a th:href="@{/veterinario}" class="hover:text-primary transition-colors">Clientes</a>
                 <a th:href="@{/veterinario/mascotas}" class="hover:text-primary transition-colors font-bold text-primary">Mascotas</a>
-                <a th:href="@{/logout}" class="hover:text-primary transition-colors">Cerrar sesión</a>
+                <a href="#" class="js-logout hover:text-primary transition-colors">Cerrar sesión</a>
             </nav>
         </div>
     </header>
@@ -47,7 +48,8 @@
                   open: false,
                   get filtered() {
                       const q = this.query.trim().toLowerCase();
-                      const list = q === '' ? this.duenos : this.duenos.filter(d => d.nombre.toLowerCase().includes(q));
+                      const list = q === '' ? this.duenos : this.duenos.filter(d =>
+                <input type="hidden" name="_token"> d.nombre.toLowerCase().includes(q));
                       return list.slice(0, 20);
                   },
                   select(d) { this.selectedId = d.id; this.query = d.nombre; this.open = false; }

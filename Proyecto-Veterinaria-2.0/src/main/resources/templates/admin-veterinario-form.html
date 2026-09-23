@@ -11,8 +11,9 @@
         }
     </script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="/js/session-auth.js" defer></script>
 </head>
-<body class="bg-bglight text-textdark font-sans flex flex-col min-h-screen">
+<body class="bg-bglight text-textdark font-sans flex flex-col min-h-screen" th:attr="data-rol=${rol}">
     <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a th:href="@{/}" class="flex items-center gap-2 text-primary font-bold text-2xl hover:opacity-80 transition-opacity">DogTor</a>
@@ -20,7 +21,7 @@
                 <a th:href="@{/admin/clientes}" class="hover:text-primary transition-colors">Clientes</a>
                 <a th:href="@{/admin/mascotas}" class="hover:text-primary transition-colors">Mascotas</a>
                 <a th:href="@{/admin/veterinarios}" class="hover:text-primary transition-colors font-bold text-primary">Veterinarios</a>
-                <a th:href="@{/logout}" class="hover:text-primary transition-colors">Cerrar sesión</a>
+                <a href="#" class="js-logout hover:text-primary transition-colors">Cerrar sesión</a>
             </nav>
         </div>
     </header>
@@ -31,6 +32,7 @@
         <form class="flex flex-col gap-4"
               th:action="${veterinario.id} != null ? @{/admin/veterinarios/{id}(id=${veterinario.id})} : @{/admin/veterinarios}"
               th:object="${veterinario}" method="POST">
+                <input type="hidden" name="_token">
             <div>
                 <label class="block text-sm font-bold mb-1">Nombre</label>
                 <input type="text" th:field="*{usuario.nombre}" class="w-full p-3 border rounded-lg" required>

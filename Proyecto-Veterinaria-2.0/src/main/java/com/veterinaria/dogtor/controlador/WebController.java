@@ -1,28 +1,32 @@
 package com.veterinaria.dogtor.controlador;
 
-import com.veterinaria.dogtor.entidad.RolUsuario;
 import com.veterinaria.dogtor.entidad.Usuario;
-import com.veterinaria.dogtor.servicio.DuenoService;
+import com.veterinaria.dogtor.seguridad.JwtService;
 import com.veterinaria.dogtor.servicio.UsuarioService;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
 public class WebController {
 
-    private final DuenoService duenoService;
     private final UsuarioService usuarioService;
+    private final JwtService jwtService;
 
     @GetMapping("/")
-    public String index(HttpSession session, Model model) {
-        if ("DUENO".equals(session.getAttribute("rol"))) {
-            model.addAttribute("usuario", session.getAttribute("usuarioLogueado"));
+    public String index(HttpServletRequest request, Model model) {
+        if ("DUENO".equals(request.getAttribute("rol"))) {
+            model.addAttribute("usuario", request.getAttribute("usuarioLogueado"));
         }
         return "index";
     }
@@ -43,41 +47,26 @@ public class WebController {
     }
 
     @GetMapping("/login")
-    public String login(HttpSession session) {
-        Object rol = session.getAttribute("rol");
-        if ("ADMIN".equals(rol)) {
-            return "redirect:/admin";
-        } else if ("VETERINARIO".equals(rol)) {
-            return "redirect:/veterinario";
-        } else if ("DUENO".equals(rol)) {
-            return "redirect:/pacientes/mis-mascotas";
-        }
+    public String login() {
         return "login";
     }
 
     @PostMapping("/login")
-    public String procesarLogin(@RequestParam("correo") String correo,
-                                @RequestParam("password") String password,
-                                HttpSession session,
-                                Model model) {
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> procesarLogin(@RequestParam("correo") String correo,
+                                                               @RequestParam("password") String password) {
         if (!usuarioService.authenticate(correo, password)) {
-            model.addAttribute("error", "Credenciales inválidas");
-            return "login";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Credenciales inválidas"));
         }
         Usuario usuario = usuarioService.findByCorreo(correo);
-        session.setAttribute("rol", usuario.getRol().name());
-        if (usuario.getRol() == RolUsuario.DUENO) {
-            session.setAttribute("usuarioLogueado", duenoService.findByCorreo(correo));
-            return "redirect:/pacientes/mis-mascotas";
-        }
-        session.setAttribute("usuarioLogueado", usuario);
-        return usuario.getRol() == RolUsuario.ADMIN ? "redirect:/admin" : "redirect:/veterinario";
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/";
+        String redirectUrl = switch (usuario.getRol()) {
+            case ADMIN -> "/admin";
+            case VETERINARIO -> "/veterinario";
+            case DUENO -> "/pacientes/mis-mascotas";
+        };
+        String token = jwtService.generarToken(correo, usuario.getRol().name());
+        return ResponseEntity.ok(Map.of("token", token, "redirectUrl", redirectUrl));
     }
 
     @GetMapping("/diagrama")

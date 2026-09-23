@@ -4,7 +4,7 @@ import com.veterinaria.dogtor.entidad.Dueno;
 import com.veterinaria.dogtor.entidad.Mascota;
 import com.veterinaria.dogtor.servicio.MascotaService;
 import com.veterinaria.dogtor.servicio.RegistroMedicoService;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,11 +29,11 @@ public class MascotaController {
     }
 
     @GetMapping("/mis-mascotas")
-    public String listarMisMascotas(HttpSession session, Model model) {
-        if (!"DUENO".equals(session.getAttribute("rol"))) {
-            return "redirect:/login";
+    public String listarMisMascotas(HttpServletRequest request, Model model) {
+        if (!"DUENO".equals(request.getAttribute("rol"))) {
+            return "auth-shell";
         }
-        Dueno dueno = (Dueno) session.getAttribute("usuarioLogueado");
+        Dueno dueno = (Dueno) request.getAttribute("usuarioLogueado");
         List<Mascota> mascotas = mascotaService.findByDueno(dueno);
         model.addAttribute("mascotas", mascotas);
         model.addAttribute("dueno", dueno);
@@ -41,18 +41,18 @@ public class MascotaController {
     }
 
     @GetMapping("/{id}")
-    public String verMascota(@PathVariable("id") Integer id, HttpSession session, Model model) {
+    public String verMascota(@PathVariable("id") Integer id, HttpServletRequest request, Model model) {
         Mascota mascota = mascotaService.findById(id);
         if (mascota == null) {
             return "redirect:/pacientes";
         }
         model.addAttribute("mascota", mascota);
 
-        Object rol = session.getAttribute("rol");
+        Object rol = request.getAttribute("rol");
         boolean autorizado = "ADMIN".equals(rol) || "VETERINARIO".equals(rol);
         if ("DUENO".equals(rol)) {
-            Dueno dueno = (Dueno) session.getAttribute("usuarioLogueado");
-            autorizado = mascota != null && mascota.getDueno() != null
+            Dueno dueno = (Dueno) request.getAttribute("usuarioLogueado");
+            autorizado = mascota.getDueno() != null
                     && dueno != null && mascota.getDueno().getId().equals(dueno.getId());
         }
         if (autorizado) {

@@ -25,8 +25,9 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <!-- Alpine.js para interactividad -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="/js/session-auth.js" defer></script>
 </head>
-<body class="bg-bglight text-textdark font-sans flex flex-col min-h-screen">
+<body class="bg-bglight text-textdark font-sans flex flex-col min-h-screen" th:attr="data-rol=${rol}">
     <!-- Header Semántico -->
     <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -51,7 +52,7 @@
                 <a th:if="${rol == 'ADMIN'}" th:href="@{/admin}" class="hover:text-primary transition-colors">Panel Admin</a>
                 <a th:if="${rol == 'VETERINARIO'}" th:href="@{/veterinario}" class="hover:text-primary transition-colors">Panel Veterinario</a>
                 <a th:if="${rol == 'DUENO'}" th:href="@{/pacientes/mis-mascotas}" class="hover:text-primary transition-colors">Mis Mascotas</a>
-                <a th:if="${rol != null}" th:href="@{/logout}" class="hover:text-primary transition-colors">Cerrar sesión</a>
+                <a th:if="${rol != null}" href="#" class="js-logout hover:text-primary transition-colors">Cerrar sesión</a>
             </nav>
 
             <button class="lg:hidden text-primary focus:outline-none" id="mobile-menu-btn" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
@@ -71,7 +72,7 @@
             <a th:if="${rol == 'ADMIN'}" th:href="@{/admin}" class="block hover:text-primary transition-colors py-1">Panel Admin</a>
             <a th:if="${rol == 'VETERINARIO'}" th:href="@{/veterinario}" class="block hover:text-primary transition-colors py-1">Panel Veterinario</a>
             <a th:if="${rol == 'DUENO'}" th:href="@{/pacientes/mis-mascotas}" class="block hover:text-primary transition-colors py-1">Mis Mascotas</a>
-            <a th:if="${rol != null}" th:href="@{/logout}" class="block hover:text-primary transition-colors py-1">Cerrar sesión</a>
+            <a th:if="${rol != null}" href="#" class="js-logout block hover:text-primary transition-colors py-1">Cerrar sesión</a>
         </nav>
     </header>
 

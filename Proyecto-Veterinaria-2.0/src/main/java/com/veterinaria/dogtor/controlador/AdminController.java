@@ -8,7 +8,7 @@ import com.veterinaria.dogtor.entidad.Veterinario;
 import com.veterinaria.dogtor.servicio.DuenoService;
 import com.veterinaria.dogtor.servicio.MascotaService;
 import com.veterinaria.dogtor.servicio.VeterinarioService;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,28 +23,28 @@ public class AdminController {
     private final MascotaService mascotaService;
     private final VeterinarioService veterinarioService;
 
-    private boolean noEsAdmin(HttpSession session) {
-        return !"ADMIN".equals(session.getAttribute("rol"));
+    private boolean noEsAdmin(HttpServletRequest request) {
+        return !"ADMIN".equals(request.getAttribute("rol"));
     }
 
     @GetMapping
-    public String panel(HttpSession session) {
-        if (noEsAdmin(session)) return "redirect:/login";
+    public String panel(HttpServletRequest request) {
+        if (noEsAdmin(request)) return "auth-shell";
         return "redirect:/admin/clientes";
     }
 
     // ---------- Clientes ----------
 
     @GetMapping("/clientes")
-    public String listarClientes(HttpSession session, Model model) {
-        if (noEsAdmin(session)) return "redirect:/login";
+    public String listarClientes(HttpServletRequest request, Model model) {
+        if (noEsAdmin(request)) return "auth-shell";
         model.addAttribute("clientes", duenoService.findAll());
         return "admin-clientes";
     }
 
     @GetMapping("/clientes/nuevo")
-    public String nuevoClienteForm(HttpSession session, Model model) {
-        if (noEsAdmin(session)) return "redirect:/login";
+    public String nuevoClienteForm(HttpServletRequest request, Model model) {
+        if (noEsAdmin(request)) return "auth-shell";
         Dueno cliente = new Dueno();
         cliente.setUsuario(new Usuario());
         model.addAttribute("cliente", cliente);
@@ -52,8 +52,8 @@ public class AdminController {
     }
 
     @PostMapping("/clientes")
-    public String crearCliente(HttpSession session, @ModelAttribute Dueno cliente) {
-        if (noEsAdmin(session)) return "redirect:/login";
+    public String crearCliente(HttpServletRequest request, @ModelAttribute Dueno cliente) {
+        if (noEsAdmin(request)) return "redirect:/login";
         cliente.getUsuario().setRol(RolUsuario.DUENO);
         cliente.getUsuario().setActivo(true);
         duenoService.save(cliente);
@@ -61,15 +61,15 @@ public class AdminController {
     }
 
     @GetMapping("/clientes/editar/{id}")
-    public String editarClienteForm(HttpSession session, @PathVariable("id") Integer id, Model model) {
-        if (noEsAdmin(session)) return "redirect:/login";
+    public String editarClienteForm(HttpServletRequest request, @PathVariable("id") Integer id, Model model) {
+        if (noEsAdmin(request)) return "auth-shell";
         model.addAttribute("cliente", duenoService.findById(id));
         return "admin-cliente-form";
     }
 
     @PostMapping("/clientes/{id}")
-    public String actualizarCliente(HttpSession session, @PathVariable("id") Integer id, @ModelAttribute Dueno cliente) {
-        if (noEsAdmin(session)) return "redirect:/login";
+    public String actualizarCliente(HttpServletRequest request, @PathVariable("id") Integer id, @ModelAttribute Dueno cliente) {
+        if (noEsAdmin(request)) return "redirect:/login";
         Dueno existente = duenoService.findById(id);
         existente.setNombre(cliente.getNombre());
         existente.setTelefono(cliente.getTelefono());
@@ -81,8 +81,8 @@ public class AdminController {
     }
 
     @PostMapping("/clientes/{id}/eliminar")
-    public String eliminarCliente(HttpSession session, @PathVariable("id") Integer id) {
-        if (noEsAdmin(session)) return "redirect:/login";
+    public String eliminarCliente(HttpServletRequest request, @PathVariable("id") Integer id) {
+        if (noEsAdmin(request)) return "redirect:/login";
         duenoService.delete(id);
         return "redirect:/admin/clientes";
     }
@@ -90,24 +90,24 @@ public class AdminController {
     // ---------- Mascotas ----------
 
     @GetMapping("/mascotas")
-    public String listarMascotas(HttpSession session, Model model) {
-        if (noEsAdmin(session)) return "redirect:/login";
+    public String listarMascotas(HttpServletRequest request, Model model) {
+        if (noEsAdmin(request)) return "auth-shell";
         model.addAttribute("mascotas", mascotaService.findAll());
         return "admin-mascotas";
     }
 
     @GetMapping("/mascotas/editar/{id}")
-    public String editarMascotaForm(HttpSession session, @PathVariable("id") Integer id, Model model) {
-        if (noEsAdmin(session)) return "redirect:/login";
+    public String editarMascotaForm(HttpServletRequest request, @PathVariable("id") Integer id, Model model) {
+        if (noEsAdmin(request)) return "auth-shell";
         model.addAttribute("mascota", mascotaService.findById(id));
         model.addAttribute("duenos", duenoService.findAll());
         return "admin-mascota-form";
     }
 
     @PostMapping("/mascotas/{id}")
-    public String actualizarMascota(HttpSession session, @PathVariable("id") Integer id,
+    public String actualizarMascota(HttpServletRequest request, @PathVariable("id") Integer id,
                                      @ModelAttribute Mascota mascota, @RequestParam("duenoId") Integer duenoId) {
-        if (noEsAdmin(session)) return "redirect:/login";
+        if (noEsAdmin(request)) return "redirect:/login";
         Mascota existente = mascotaService.findById(id);
         existente.setNombre(mascota.getNombre());
         existente.setRaza(mascota.getRaza());
@@ -120,8 +120,8 @@ public class AdminController {
     }
 
     @PostMapping("/mascotas/{id}/estado")
-    public String cambiarEstadoMascota(HttpSession session, @PathVariable("id") Integer id) {
-        if (noEsAdmin(session)) return "redirect:/login";
+    public String cambiarEstadoMascota(HttpServletRequest request, @PathVariable("id") Integer id) {
+        if (noEsAdmin(request)) return "redirect:/login";
         Mascota mascota = mascotaService.findById(id);
         mascota.setActiva(!mascota.isActiva());
         mascotaService.save(mascota);
@@ -131,15 +131,15 @@ public class AdminController {
     // ---------- Veterinarios ----------
 
     @GetMapping("/veterinarios")
-    public String listarVeterinarios(HttpSession session, Model model) {
-        if (noEsAdmin(session)) return "redirect:/login";
+    public String listarVeterinarios(HttpServletRequest request, Model model) {
+        if (noEsAdmin(request)) return "auth-shell";
         model.addAttribute("veterinarios", veterinarioService.findAll());
         return "admin-veterinarios";
     }
 
     @GetMapping("/veterinarios/nuevo")
-    public String nuevoVeterinarioForm(HttpSession session, Model model) {
-        if (noEsAdmin(session)) return "redirect:/login";
+    public String nuevoVeterinarioForm(HttpServletRequest request, Model model) {
+        if (noEsAdmin(request)) return "auth-shell";
         Veterinario veterinario = new Veterinario();
         veterinario.setUsuario(new Usuario());
         model.addAttribute("veterinario", veterinario);
@@ -147,8 +147,8 @@ public class AdminController {
     }
 
     @PostMapping("/veterinarios")
-    public String crearVeterinario(HttpSession session, @ModelAttribute Veterinario veterinario) {
-        if (noEsAdmin(session)) return "redirect:/login";
+    public String crearVeterinario(HttpServletRequest request, @ModelAttribute Veterinario veterinario) {
+        if (noEsAdmin(request)) return "redirect:/login";
         veterinario.getUsuario().setRol(RolUsuario.VETERINARIO);
         veterinario.getUsuario().setActivo(true);
         veterinarioService.save(veterinario);
@@ -156,15 +156,15 @@ public class AdminController {
     }
 
     @GetMapping("/veterinarios/editar/{id}")
-    public String editarVeterinarioForm(HttpSession session, @PathVariable("id") Integer id, Model model) {
-        if (noEsAdmin(session)) return "redirect:/login";
+    public String editarVeterinarioForm(HttpServletRequest request, @PathVariable("id") Integer id, Model model) {
+        if (noEsAdmin(request)) return "auth-shell";
         model.addAttribute("veterinario", veterinarioService.findById(id));
         return "admin-veterinario-form";
     }
 
     @PostMapping("/veterinarios/{id}")
-    public String actualizarVeterinario(HttpSession session, @PathVariable("id") Integer id, @ModelAttribute Veterinario veterinario) {
-        if (noEsAdmin(session)) return "redirect:/login";
+    public String actualizarVeterinario(HttpServletRequest request, @PathVariable("id") Integer id, @ModelAttribute Veterinario veterinario) {
+        if (noEsAdmin(request)) return "redirect:/login";
         Veterinario existente = veterinarioService.findById(id);
         existente.setEspecialidad(veterinario.getEspecialidad());
         existente.setNumeroLicencia(veterinario.getNumeroLicencia());
@@ -176,8 +176,8 @@ public class AdminController {
     }
 
     @PostMapping("/veterinarios/{id}/eliminar")
-    public String eliminarVeterinario(HttpSession session, @PathVariable("id") Integer id) {
-        if (noEsAdmin(session)) return "redirect:/login";
+    public String eliminarVeterinario(HttpServletRequest request, @PathVariable("id") Integer id) {
+        if (noEsAdmin(request)) return "redirect:/login";
         veterinarioService.delete(id);
         return "redirect:/admin/veterinarios";
     }

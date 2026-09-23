@@ -10,7 +10,7 @@ import com.veterinaria.dogtor.servicio.DrogaService;
 import com.veterinaria.dogtor.servicio.DuenoService;
 import com.veterinaria.dogtor.servicio.MascotaService;
 import com.veterinaria.dogtor.servicio.RegistroMedicoService;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,15 +28,15 @@ public class VeterinarioController {
     private final RegistroMedicoService registroMedicoService;
     private final DrogaService drogaService;
 
-    private boolean sinAcceso(HttpSession session) {
-        Object rol = session.getAttribute("rol");
+    private boolean sinAcceso(HttpServletRequest request) {
+        Object rol = request.getAttribute("rol");
         return !"VETERINARIO".equals(rol) && !"ADMIN".equals(rol);
     }
 
     @GetMapping
-    public String panel(HttpSession session, Model model,
+    public String panel(HttpServletRequest request, Model model,
                          @RequestParam(value = "nombre", required = false) String nombre) {
-        if (sinAcceso(session)) return "redirect:/login";
+        if (sinAcceso(request)) return "auth-shell";
         boolean buscando = nombre != null && !nombre.isBlank();
         model.addAttribute("clientes", buscando ? duenoService.findByNombreContaining(nombre) : duenoService.findAll());
         model.addAttribute("nombre", nombre);
@@ -46,8 +46,8 @@ public class VeterinarioController {
     // ---------- Clientes ----------
 
     @GetMapping("/clientes/nuevo")
-    public String nuevoClienteForm(HttpSession session, Model model) {
-        if (sinAcceso(session)) return "redirect:/login";
+    public String nuevoClienteForm(HttpServletRequest request, Model model) {
+        if (sinAcceso(request)) return "auth-shell";
         Dueno cliente = new Dueno();
         cliente.setUsuario(new Usuario());
         model.addAttribute("cliente", cliente);
@@ -55,8 +55,8 @@ public class VeterinarioController {
     }
 
     @PostMapping("/clientes")
-    public String crearCliente(HttpSession session, @ModelAttribute Dueno cliente) {
-        if (sinAcceso(session)) return "redirect:/login";
+    public String crearCliente(HttpServletRequest request, @ModelAttribute Dueno cliente) {
+        if (sinAcceso(request)) return "redirect:/login";
         cliente.getUsuario().setRol(RolUsuario.DUENO);
         cliente.getUsuario().setActivo(true);
         duenoService.save(cliente);
@@ -64,15 +64,15 @@ public class VeterinarioController {
     }
 
     @GetMapping("/clientes/editar/{id}")
-    public String editarClienteForm(HttpSession session, @PathVariable("id") Integer id, Model model) {
-        if (sinAcceso(session)) return "redirect:/login";
+    public String editarClienteForm(HttpServletRequest request, @PathVariable("id") Integer id, Model model) {
+        if (sinAcceso(request)) return "auth-shell";
         model.addAttribute("cliente", duenoService.findById(id));
         return "veterinario-cliente-form";
     }
 
     @PostMapping("/clientes/{id}")
-    public String actualizarCliente(HttpSession session, @PathVariable("id") Integer id, @ModelAttribute Dueno cliente) {
-        if (sinAcceso(session)) return "redirect:/login";
+    public String actualizarCliente(HttpServletRequest request, @PathVariable("id") Integer id, @ModelAttribute Dueno cliente) {
+        if (sinAcceso(request)) return "redirect:/login";
         Dueno existente = duenoService.findById(id);
         existente.setNombre(cliente.getNombre());
         existente.setTelefono(cliente.getTelefono());
@@ -84,8 +84,8 @@ public class VeterinarioController {
     }
 
     @PostMapping("/clientes/{id}/eliminar")
-    public String eliminarCliente(HttpSession session, @PathVariable("id") Integer id) {
-        if (sinAcceso(session)) return "redirect:/login";
+    public String eliminarCliente(HttpServletRequest request, @PathVariable("id") Integer id) {
+        if (sinAcceso(request)) return "redirect:/login";
         duenoService.delete(id);
         return "redirect:/veterinario";
     }
@@ -93,9 +93,9 @@ public class VeterinarioController {
     // ---------- Mascotas ----------
 
     @GetMapping("/mascotas")
-    public String listarMascotas(HttpSession session, Model model,
+    public String listarMascotas(HttpServletRequest request, Model model,
                                   @RequestParam(value = "nombre", required = false) String nombre) {
-        if (sinAcceso(session)) return "redirect:/login";
+        if (sinAcceso(request)) return "auth-shell";
         boolean buscando = nombre != null && !nombre.isBlank();
         model.addAttribute("mascotas", buscando ? mascotaService.findByNombreContaining(nombre) : mascotaService.findAll());
         model.addAttribute("nombre", nombre);
@@ -103,16 +103,16 @@ public class VeterinarioController {
     }
 
     @GetMapping("/mascotas/nuevo")
-    public String nuevaMascotaForm(HttpSession session, Model model) {
-        if (sinAcceso(session)) return "redirect:/login";
+    public String nuevaMascotaForm(HttpServletRequest request, Model model) {
+        if (sinAcceso(request)) return "auth-shell";
         model.addAttribute("mascota", new Mascota());
         model.addAttribute("duenos", duenoService.findAll());
         return "veterinario-mascota-form";
     }
 
     @PostMapping("/mascotas")
-    public String crearMascota(HttpSession session, @ModelAttribute Mascota mascota, @RequestParam("duenoId") Integer duenoId) {
-        if (sinAcceso(session)) return "redirect:/login";
+    public String crearMascota(HttpServletRequest request, @ModelAttribute Mascota mascota, @RequestParam("duenoId") Integer duenoId) {
+        if (sinAcceso(request)) return "redirect:/login";
         mascota.setActiva(true);
         mascota.setDueno(duenoService.findById(duenoId));
         mascotaService.save(mascota);
@@ -120,17 +120,17 @@ public class VeterinarioController {
     }
 
     @GetMapping("/mascotas/editar/{id}")
-    public String editarMascotaForm(HttpSession session, @PathVariable("id") Integer id, Model model) {
-        if (sinAcceso(session)) return "redirect:/login";
+    public String editarMascotaForm(HttpServletRequest request, @PathVariable("id") Integer id, Model model) {
+        if (sinAcceso(request)) return "auth-shell";
         model.addAttribute("mascota", mascotaService.findById(id));
         model.addAttribute("duenos", duenoService.findAll());
         return "veterinario-mascota-form";
     }
 
     @PostMapping("/mascotas/{id}")
-    public String actualizarMascota(HttpSession session, @PathVariable("id") Integer id,
+    public String actualizarMascota(HttpServletRequest request, @PathVariable("id") Integer id,
                                      @ModelAttribute Mascota mascota, @RequestParam("duenoId") Integer duenoId) {
-        if (sinAcceso(session)) return "redirect:/login";
+        if (sinAcceso(request)) return "redirect:/login";
         Mascota existente = mascotaService.findById(id);
         existente.setNombre(mascota.getNombre());
         existente.setRaza(mascota.getRaza());
@@ -143,8 +143,8 @@ public class VeterinarioController {
     }
 
     @PostMapping("/mascotas/{id}/estado")
-    public String cambiarEstadoMascota(HttpSession session, @PathVariable("id") Integer id) {
-        if (sinAcceso(session)) return "redirect:/login";
+    public String cambiarEstadoMascota(HttpServletRequest request, @PathVariable("id") Integer id) {
+        if (sinAcceso(request)) return "redirect:/login";
         Mascota mascota = mascotaService.findById(id);
         mascota.setActiva(!mascota.isActiva());
         mascotaService.save(mascota);
@@ -154,8 +154,8 @@ public class VeterinarioController {
     // ---------- Detalle y registro médico ----------
 
     @GetMapping("/mascotas/{id}")
-    public String verMascota(HttpSession session, @PathVariable("id") Integer id, Model model) {
-        if (sinAcceso(session)) return "redirect:/login";
+    public String verMascota(HttpServletRequest request, @PathVariable("id") Integer id, Model model) {
+        if (sinAcceso(request)) return "auth-shell";
         Mascota mascota = mascotaService.findById(id);
         if (mascota == null) {
             return "redirect:/veterinario/mascotas";
@@ -168,17 +168,17 @@ public class VeterinarioController {
     }
 
     @PostMapping("/mascotas/{id}/registros")
-    public String crearRegistroMedico(HttpSession session, @PathVariable("id") Integer id,
+    public String crearRegistroMedico(HttpServletRequest request, @PathVariable("id") Integer id,
                                        @ModelAttribute RegistroMedico registro,
                                        @RequestParam(value = "drogaIds", required = false) List<Integer> drogaIds) {
-        if (sinAcceso(session)) return "redirect:/login";
+        if (sinAcceso(request)) return "redirect:/login";
         Mascota mascota = mascotaService.findById(id);
         if (mascota != null && mascota.isActiva()) {
             // El path variable "id" (de la mascota) se filtra al binding porque RegistroMedico
             // también tiene un campo "id"; se limpia para forzar un INSERT y no un UPDATE accidental.
             registro.setId(null);
             registro.setMascota(mascota);
-            registro.setVeterinario((Usuario) session.getAttribute("usuarioLogueado"));
+            registro.setVeterinario((Usuario) request.getAttribute("usuarioLogueado"));
             if (drogaIds != null) {
                 registro.setDrogas(drogaIds.stream().map(drogaService::findById).toList());
             }

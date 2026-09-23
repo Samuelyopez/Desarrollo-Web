@@ -11,8 +11,9 @@
         }
     </script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="/js/session-auth.js" defer></script>
 </head>
-<body class="bg-bglight text-textdark font-sans flex flex-col min-h-screen">
+<body class="bg-bglight text-textdark font-sans flex flex-col min-h-screen" th:attr="data-rol=${rol}">
     <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a th:href="@{/}" class="flex items-center gap-2 text-primary font-bold text-2xl hover:opacity-80 transition-opacity">DogTor</a>
