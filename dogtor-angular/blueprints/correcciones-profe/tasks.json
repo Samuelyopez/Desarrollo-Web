@@ -164,7 +164,7 @@
       "src/app/pages/mascota-detail/components/registro-medico-item/*",
       "src/app/pages/mascota-detail/mascota-detail.component.*"
     ],
-    "status": "pending"
+    "status": "done"
   },
   {
     "id": "E3-T1",

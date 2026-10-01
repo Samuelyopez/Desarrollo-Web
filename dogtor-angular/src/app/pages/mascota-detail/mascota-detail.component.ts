@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Mascota } from '../../models/mascota.model';
 import { RegistroMedico } from '../../models/registro-medico.model';
@@ -7,12 +6,19 @@ import { MascotaService } from '../../service/mascota.service';
 import { RegistroMedicoService } from '../../service/registro-medico.service';
 import { DrogaService } from '../../service/droga.service';
 import { UsuarioService } from '../../service/usuario.service';
-import { MascotaAvatarComponent } from '../../components/mascota-avatar/mascota-avatar.component';
-import { EstadoBadgeComponent } from '../../components/estado-badge/estado-badge.component';
+import { MascotaInfoCardComponent } from './components/mascota-info-card/mascota-info-card.component';
+import { RegistroMedicoItemComponent } from './components/registro-medico-item/registro-medico-item.component';
+
+// Registro médico con los nombres ya resueltos, listo para pintarse
+interface RegistroVista {
+  registro: RegistroMedico;
+  veterinario: string;
+  drogas: string[];
+}
 
 @Component({
   selector: 'app-mascota-detail',
-  imports: [RouterLink, DatePipe, MascotaAvatarComponent, EstadoBadgeComponent],
+  imports: [RouterLink, MascotaInfoCardComponent, RegistroMedicoItemComponent],
   templateUrl: './mascota-detail.component.html',
   styleUrl: './mascota-detail.component.scss',
 })
@@ -26,34 +32,31 @@ export class MascotaDetailComponent {
 
   mascotaId = -1;
   mascota: Mascota | undefined;
-  registros: RegistroMedico[] = [];
 
-  // El dueño ya viene dentro de la mascota (objeto, no id): no hay que buscarlo por id
-  get dueno() {
-    return this.mascota?.dueno;
-  }
+  // Se arma UNA vez en ngOnInit. Si el template llamara a un método que devuelve un arreglo
+  // nuevo, cada detección de cambios vería un valor distinto (error NG0100 en desarrollo)
+  registros: RegistroVista[] = [];
 
   ngOnInit() {
-    // 1. Obtener el id de la URL  2. Buscar la mascota  3. Cargar su historial
+    // 1. Obtener el id de la URL  2. Buscar la mascota  3. Preparar su historial
     this.mascotaId = Number(this.route.snapshot.params['id']);
     this.mascota = this.mascotaService.getMascotaById(this.mascotaId);
 
     if (this.mascota) {
-      this.registros = this.registroMedicoService.getRegistrosByMascota(this.mascotaId);
+      this.registros = this.registroMedicoService.getRegistrosByMascota(this.mascotaId).map((registro) => ({
+        registro,
+        veterinario: this.getNombreVeterinario(registro.veterinarioId),
+        drogas: registro.drogaIds
+          .map((id) => this.drogaService.getDrogaById(id)?.nombre)
+          .filter((nombre): nombre is string => !!nombre),
+      }));
     }
   }
 
-  getNombreVeterinario(veterinarioId?: number) {
+  private getNombreVeterinario(veterinarioId?: number) {
     if (veterinarioId === undefined) {
       return 'Sin asignar';
     }
     return this.usuarioService.getUsuarioById(veterinarioId)?.nombre ?? 'Sin asignar';
-  }
-
-  getNombresDrogas(drogaIds: number[]) {
-    return drogaIds
-      .map((id) => this.drogaService.getDrogaById(id)?.nombre)
-      .filter((nombre) => !!nombre)
-      .join(', ');
   }
 }
