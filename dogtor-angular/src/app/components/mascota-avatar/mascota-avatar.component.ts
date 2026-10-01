@@ -13,5 +13,5 @@ export class MascotaAvatarComponent {
   tamano = input<number>(56); // ancho y alto en px
 
   // Antes estaba repetida en la tabla y en el detalle; ahora vive solo aquí
-  readonly fotoPorDefecto = 'https://images.icon-icons.com/3446/PNG/512/account_profile_user_avatar_icon_219236.png';
+  readonly fotoPorDefecto = '/img/avatar-mascota.png';
 }

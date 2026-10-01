@@ -39,7 +39,8 @@ export class MascotaFormComponent {
     ]),
     raza: new FormControl('', [Validators.maxLength(50)]),
     edad: new FormControl('', [Validators.maxLength(30)]),
-    fotoUrl: new FormControl('', [Validators.pattern(/^https?:\/\/.+/)]),
+    // Acepta una URL externa o una imagen local del proyecto (public/img → "/img/...")
+    fotoUrl: new FormControl('', [Validators.pattern(/^(https?:\/\/|\/).+/)]),
     vacunas: new FormControl('', [Validators.maxLength(100)]),
     // El control guarda el objeto Dueno completo, no su id
     dueno: new FormControl<Dueno | null>(null, [Validators.required]),
@@ -55,7 +56,7 @@ export class MascotaFormComponent {
     },
     raza: { maxlength: 'La raza no puede superar 50 caracteres.' },
     edad: { maxlength: 'La edad no puede superar 30 caracteres.' },
-    fotoUrl: { pattern: 'La URL debe empezar por http:// o https://' },
+    fotoUrl: { pattern: 'La URL debe empezar por http://, https:// o / (imagen local).' },
     vacunas: { maxlength: 'Las vacunas no pueden superar 100 caracteres.' },
   };
 

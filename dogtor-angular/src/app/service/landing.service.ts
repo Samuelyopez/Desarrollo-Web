@@ -8,14 +8,14 @@ export class LandingService {
   // Datos de la landing, igual que los demás servicios: arreglos quemados porque no hay backend
   private slides: Slide[] = [
     {
-      img: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=1200',
+      img: '/img/landing/slide-mascotas.jpg',
       title: 'Cuidamos a tus Pacientes',
       desc: 'Consulta el historial médico de tu mascota en un solo lugar.',
       link: '/mascotas',
       btn: 'Ver Mascotas',
     },
     {
-      img: 'https://images.unsplash.com/photo-1537151608804-ea6f117f73d2?w=1200',
+      img: '/img/landing/slide-equipo.jpg',
       title: 'Nuestro Equipo',
       desc: 'Conoce a los especialistas de DogTor.',
     },
