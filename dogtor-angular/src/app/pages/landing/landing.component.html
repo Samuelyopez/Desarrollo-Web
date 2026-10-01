@@ -21,3 +21,32 @@
     </div>
   </div>
 </section>
+
+<section class="py-5">
+  <div class="container">
+    <app-section-header ancla="equipo" titulo="Nuestro equipo" subtitulo="Especialistas que cuidan a tus mascotas como si fueran suyas."></app-section-header>
+    <div class="row g-4 justify-content-center">
+      @for (miembro of equipo; track miembro.nombre) {
+        <div class="col-md-6 col-lg-4"><app-team-card [miembro]="miembro"></app-team-card></div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="py-5 bg-white">
+  <div class="container">
+    <app-section-header ancla="testimonios" titulo="Lo que dicen nuestros clientes"></app-section-header>
+    <div class="row g-4">
+      @for (testimonio of testimonios; track testimonio.autor) {
+        <div class="col-md-6 col-lg-4"><app-testimonio-card [testimonio]="testimonio"></app-testimonio-card></div>
+      }
+    </div>
+  </div>
+</section>
+
+<app-cta-banner
+  titulo="¿Ya eres parte de la familia DogTor?"
+  texto="Consulta la información y el historial médico de tus mascotas."
+  textoBoton="Ver mascotas"
+  ruta="/mascotas"
+></app-cta-banner>
