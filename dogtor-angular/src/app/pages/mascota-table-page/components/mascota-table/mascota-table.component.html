@@ -1,0 +1,57 @@
+@if (mascotaArray().length === 0) {
+  <div class="alert alert-light border text-center text-muted">No hay mascotas en esta lista.</div>
+} @else {
+  <div class="table-responsive bg-white rounded-3 shadow-sm border">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th scope="col">Foto</th>
+          <th scope="col">ID</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Raza</th>
+          <th scope="col">Edad</th>
+          <th scope="col">Vacunas</th>
+          <th scope="col">Dueño</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (mascota of mascotaArray(); track mascota.id) {
+          <tr>
+            <td>
+              <app-mascota-avatar [fotoUrl]="mascota.fotoUrl" [nombre]="mascota.nombre" [tamano]="56"></app-mascota-avatar>
+            </td>
+            <td class="text-muted">{{ mascota.id }}</td>
+            <td class="fw-bold text-dogtor">{{ mascota.nombre }}</td>
+            <td>{{ mascota.raza }}</td>
+            <td>{{ mascota.edad }}</td>
+            <td>{{ mascota.vacunas }}</td>
+            <td>{{ mascota.dueno?.nombre ?? '—' }}</td>
+            <td>
+              <div class="d-flex flex-wrap gap-2">
+                <button type="button" class="btn btn-sm btn-dogtor" (click)="verDetalleMascota(mascota)">
+                  <i class="bi bi-eye"></i> Ver
+                </button>
+                <a [routerLink]="['/mascota/update', mascota.id]" class="btn btn-sm btn-dogtor-accent">
+                  <i class="bi bi-pencil"></i> Editar
+                </a>
+                @if (areMascotasActivas()) {
+                  <button type="button" class="btn btn-sm btn-secondary" (click)="cambiarEstado(mascota)">
+                    Desactivar
+                  </button>
+                } @else {
+                  <button type="button" class="btn btn-sm btn-success" (click)="cambiarEstado(mascota)">
+                    Activar
+                  </button>
+                }
+                <button type="button" class="btn btn-sm btn-danger" (click)="eliminarMascota(mascota)">
+                  <i class="bi bi-trash"></i> Eliminar
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

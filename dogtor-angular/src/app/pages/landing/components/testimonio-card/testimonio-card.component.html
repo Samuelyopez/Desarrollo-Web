@@ -1,0 +1,12 @@
+<div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+  <div class="estrellas mb-3" [attr.aria-label]="testimonio().estrellas + ' de 5 estrellas'">
+    @for (posicion of posiciones; track posicion) {
+      <i class="bi" [class.bi-star-fill]="posicion <= testimonio().estrellas" [class.bi-star]="posicion > testimonio().estrellas"></i>
+    }
+  </div>
+  <p class="fst-italic mb-3">"{{ testimonio().texto }}"</p>
+  <p class="fw-bold mb-0">
+    {{ testimonio().autor }}
+    <span class="text-muted fw-normal">· Mascota: {{ testimonio().mascota }}</span>
+  </p>
+</div>

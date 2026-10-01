@@ -1,0 +1,9 @@
+<section class="bg-dogtor-dark text-white py-5">
+  <div class="container text-center">
+    <h2 class="fw-bold mb-2">{{ titulo() }}</h2>
+    @if (texto()) {
+      <p class="mb-4 opacity-75">{{ texto() }}</p>
+    }
+    <a [routerLink]="ruta()" class="btn btn-dogtor-secondary btn-lg px-5">{{ textoBoton() }}</a>
+  </div>
+</section>

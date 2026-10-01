@@ -1,0 +1,62 @@
+<div class="fondo py-5 px-3">
+  <div class="row justify-content-center g-0">
+    <div class="col-md-8 col-lg-5">
+      <div class="card border-0 shadow rounded-4">
+        <div class="card-body p-4 p-md-5">
+          <h2 class="fw-bold text-dogtor text-center mb-4">
+            @if (isEdit) { Editar Mascota } @else { Nueva Mascota }
+          </h2>
+
+          @if (noEncontrada) {
+            <div class="alert alert-danger text-center">No se encontró la mascota.</div>
+            <a [routerLink]="['/mascotas']" class="btn btn-dogtor w-100">Volver a mascotas</a>
+          } @else {
+            <form [formGroup]="mascotaForm" (ngSubmit)="handleSubmit()" novalidate>
+              <app-campo-texto
+                campoId="nombre"
+                etiqueta="Nombre"
+                [control]="mascotaForm.controls.nombre"
+                [mensajes]="mensajes.nombre"
+              ></app-campo-texto>
+              <app-campo-texto
+                campoId="raza"
+                etiqueta="Raza"
+                [control]="mascotaForm.controls.raza"
+                [mensajes]="mensajes.raza"
+              ></app-campo-texto>
+              <app-campo-texto
+                campoId="edad"
+                etiqueta="Edad"
+                placeholder="Ej: 2 años, 6 meses"
+                [control]="mascotaForm.controls.edad"
+                [mensajes]="mensajes.edad"
+              ></app-campo-texto>
+              <app-campo-texto
+                campoId="fotoUrl"
+                etiqueta="Foto (URL)"
+                placeholder="https://..."
+                [control]="mascotaForm.controls.fotoUrl"
+                [mensajes]="mensajes.fotoUrl"
+              ></app-campo-texto>
+              <app-foto-preview
+                [url]="mascotaForm.controls.fotoUrl.valid ? mascotaForm.controls.fotoUrl.value : null"
+              ></app-foto-preview>
+              <app-campo-texto
+                campoId="vacunas"
+                etiqueta="Vacunas"
+                [control]="mascotaForm.controls.vacunas"
+                [mensajes]="mensajes.vacunas"
+              ></app-campo-texto>
+              <app-dueno-select [control]="mascotaForm.controls.dueno" [duenos]="duenos"></app-dueno-select>
+
+              <button type="submit" class="btn btn-dogtor-secondary w-100 py-2 rounded-3" [disabled]="!mascotaForm.valid">
+                Guardar
+              </button>
+              <a [routerLink]="['/mascotas']" class="d-block text-center small text-muted mt-3 cancelar">Cancelar</a>
+            </form>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
