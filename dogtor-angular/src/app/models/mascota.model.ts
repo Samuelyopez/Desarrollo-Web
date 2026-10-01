@@ -9,6 +9,5 @@ export interface Mascota {
   fotoUrl?: string;
   vacunas?: string;
   activa: boolean;
-  duenoId?: number; // TEMPORAL: convive con "dueno" hasta que el formulario use el objeto; luego se elimina
   dueno?: Dueno; // @ManyToOne con Dueno: se guarda el objeto, no el id
 }

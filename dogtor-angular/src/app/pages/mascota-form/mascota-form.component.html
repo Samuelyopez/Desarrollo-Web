@@ -96,16 +96,17 @@
 
               <!-- Dueño -->
               <div class="mb-4">
-                <label for="duenoId" class="form-label fw-bold">Dueño</label>
+                <label for="dueno" class="form-label fw-bold">Dueño</label>
                 <select
-                  id="duenoId"
+                  id="dueno"
                   class="form-select"
-                  formControlName="duenoId"
-                  [class.is-invalid]="campoInvalido('duenoId')"
+                  formControlName="dueno"
+                  [compareWith]="compararDuenos"
+                  [class.is-invalid]="campoInvalido('dueno')"
                 >
                   <option [ngValue]="null" disabled>Selecciona un dueño...</option>
                   @for (dueno of duenos; track dueno.id) {
-                    <option [ngValue]="dueno.id">{{ dueno.nombre }}</option>
+                    <option [ngValue]="dueno">{{ dueno.nombre }}</option>
                   }
                 </select>
                 <div class="invalid-feedback">Selecciona un dueño de la lista.</div>

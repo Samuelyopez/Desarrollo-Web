@@ -38,8 +38,13 @@ export class MascotaFormComponent {
     edad: new FormControl('', [Validators.maxLength(30)]),
     fotoUrl: new FormControl('', [Validators.pattern(/^https?:\/\/.+/)]),
     vacunas: new FormControl('', [Validators.maxLength(100)]),
-    duenoId: new FormControl<number | null>(null, [Validators.required]),
+    // El control guarda el objeto Dueno completo, no su id
+    dueno: new FormControl<Dueno | null>(null, [Validators.required]),
   });
+
+  // compareWith del <select>: compara dueños por id y no por referencia,
+  // así al editar queda seleccionado el dueño que ya tenía la mascota
+  compararDuenos = (a: Dueno | null, b: Dueno | null) => (a && b ? a.id === b.id : a === b);
 
   ngOnInit() {
     this.duenos = this.duenoService.getDuenos();
@@ -58,7 +63,7 @@ export class MascotaFormComponent {
           edad: mascota.edad ?? '',
           fotoUrl: mascota.fotoUrl ?? '',
           vacunas: mascota.vacunas ?? '',
-          duenoId: mascota.duenoId ?? null,
+          dueno: mascota.dueno ?? null,
         });
       } else {
         this.noEncontrada = true;
@@ -88,7 +93,7 @@ export class MascotaFormComponent {
       fotoUrl: formValue.fotoUrl?.trim() || undefined,
       vacunas: formValue.vacunas?.trim() || undefined,
       activa: this.isEdit ? this.activaActual : true,
-      duenoId: Number(formValue.duenoId),
+      dueno: formValue.dueno ?? undefined,
     };
 
     if (this.isEdit) {
