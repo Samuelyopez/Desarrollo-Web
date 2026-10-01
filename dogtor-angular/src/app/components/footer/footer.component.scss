@@ -1,0 +1,17 @@
+footer {
+  color: #d1d5db;
+}
+
+.descripcion {
+  max-width: 24rem;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--dogtor-secondary);
+  }
+}

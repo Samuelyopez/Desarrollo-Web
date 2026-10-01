@@ -1,0 +1,124 @@
+<div class="fondo py-5 px-3">
+  <div class="row justify-content-center g-0">
+    <div class="col-md-8 col-lg-5">
+      <div class="card border-0 shadow rounded-4">
+        <div class="card-body p-4 p-md-5">
+          <h2 class="fw-bold text-dogtor text-center mb-4">
+            @if (isEdit) { Editar Mascota } @else { Nueva Mascota }
+          </h2>
+
+          @if (noEncontrada) {
+            <div class="alert alert-danger text-center">No se encontró la mascota.</div>
+            <a [routerLink]="['/mascotas']" class="btn btn-dogtor w-100">Volver a mascotas</a>
+          } @else {
+            <form [formGroup]="mascotaForm" (ngSubmit)="handleSubmit()" novalidate>
+              <!-- Nombre -->
+              <div class="mb-3">
+                <label for="nombre" class="form-label fw-bold">Nombre</label>
+                <input
+                  id="nombre"
+                  type="text"
+                  class="form-control"
+                  formControlName="nombre"
+                  [class.is-invalid]="campoInvalido('nombre')"
+                />
+                @if (campoInvalido('nombre')) {
+                  <div class="invalid-feedback">
+                    @if (mascotaForm.get('nombre')?.errors?.['required']) {
+                      El nombre es obligatorio.
+                    } @else if (mascotaForm.get('nombre')?.errors?.['minlength']) {
+                      El nombre debe tener al menos 2 caracteres.
+                    } @else if (mascotaForm.get('nombre')?.errors?.['maxlength']) {
+                      El nombre no puede superar 50 caracteres.
+                    } @else if (mascotaForm.get('nombre')?.errors?.['pattern']) {
+                      El nombre solo puede contener letras.
+                    }
+                  </div>
+                }
+              </div>
+
+              <!-- Raza -->
+              <div class="mb-3">
+                <label for="raza" class="form-label fw-bold">Raza</label>
+                <input
+                  id="raza"
+                  type="text"
+                  class="form-control"
+                  formControlName="raza"
+                  [class.is-invalid]="campoInvalido('raza')"
+                />
+                <div class="invalid-feedback">La raza no puede superar 50 caracteres.</div>
+              </div>
+
+              <!-- Edad -->
+              <div class="mb-3">
+                <label for="edad" class="form-label fw-bold">Edad</label>
+                <input
+                  id="edad"
+                  type="text"
+                  class="form-control"
+                  placeholder="Ej: 2 años, 6 meses"
+                  formControlName="edad"
+                  [class.is-invalid]="campoInvalido('edad')"
+                />
+                <div class="invalid-feedback">La edad no puede superar 30 caracteres.</div>
+              </div>
+
+              <!-- Foto -->
+              <div class="mb-3">
+                <label for="fotoUrl" class="form-label fw-bold">Foto (URL)</label>
+                <input
+                  id="fotoUrl"
+                  type="text"
+                  class="form-control"
+                  placeholder="https://..."
+                  formControlName="fotoUrl"
+                  [class.is-invalid]="campoInvalido('fotoUrl')"
+                />
+                <div class="invalid-feedback">La URL debe empezar por http:// o https://</div>
+                @if (mascotaForm.get('fotoUrl')?.value && mascotaForm.get('fotoUrl')?.valid) {
+                  <img [src]="mascotaForm.get('fotoUrl')?.value" alt="Vista previa" class="preview rounded-3 mt-2 border" />
+                }
+              </div>
+
+              <!-- Vacunas -->
+              <div class="mb-3">
+                <label for="vacunas" class="form-label fw-bold">Vacunas</label>
+                <input
+                  id="vacunas"
+                  type="text"
+                  class="form-control"
+                  formControlName="vacunas"
+                  [class.is-invalid]="campoInvalido('vacunas')"
+                />
+                <div class="invalid-feedback">Las vacunas no pueden superar 100 caracteres.</div>
+              </div>
+
+              <!-- Dueño -->
+              <div class="mb-4">
+                <label for="duenoId" class="form-label fw-bold">Dueño</label>
+                <select
+                  id="duenoId"
+                  class="form-select"
+                  formControlName="duenoId"
+                  [class.is-invalid]="campoInvalido('duenoId')"
+                >
+                  <option [ngValue]="null" disabled>Selecciona un dueño...</option>
+                  @for (dueno of duenos; track dueno.id) {
+                    <option [ngValue]="dueno.id">{{ dueno.nombre }}</option>
+                  }
+                </select>
+                <div class="invalid-feedback">Selecciona un dueño de la lista.</div>
+              </div>
+
+              <button type="submit" class="btn btn-dogtor-secondary w-100 py-2 rounded-3" [disabled]="!mascotaForm.valid">
+                Guardar
+              </button>
+              <a [routerLink]="['/mascotas']" class="d-block text-center small text-muted mt-3 cancelar">Cancelar</a>
+            </form>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

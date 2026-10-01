@@ -1,0 +1,74 @@
+/* Estilos globales de DogTor.
+   Bootstrap se carga desde angular.json; aquí solo va la paleta de la marca
+   (la misma que usábamos con Tailwind en Spring Boot) y el modelo de caja. */
+
+:root {
+  --dogtor-primary: #2a9d8f;
+  --dogtor-secondary: #f4a261;
+  --dogtor-accent: #e9c46a;
+  --dogtor-bglight: #fafafa;
+  --dogtor-textdark: #264653;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--dogtor-bglight);
+  color: var(--dogtor-textdark);
+}
+
+:focus-visible {
+  outline: 2px solid var(--dogtor-secondary);
+  outline-offset: 2px;
+}
+
+/* Utilidades de color de la marca */
+.text-dogtor {
+  color: var(--dogtor-primary) !important;
+}
+
+.bg-dogtor-dark {
+  background-color: var(--dogtor-textdark) !important;
+}
+
+.btn-dogtor {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--dogtor-primary);
+  --bs-btn-border-color: var(--dogtor-primary);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #21867a;
+  --bs-btn-hover-border-color: #21867a;
+  --bs-btn-active-bg: #1c7369;
+  --bs-btn-active-border-color: #1c7369;
+  --bs-btn-disabled-bg: var(--dogtor-primary);
+  --bs-btn-disabled-border-color: var(--dogtor-primary);
+  font-weight: 600;
+}
+
+.btn-dogtor-secondary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--dogtor-secondary);
+  --bs-btn-border-color: var(--dogtor-secondary);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #e8914a;
+  --bs-btn-hover-border-color: #e8914a;
+  --bs-btn-disabled-bg: var(--dogtor-secondary);
+  --bs-btn-disabled-border-color: var(--dogtor-secondary);
+  font-weight: 600;
+}
+
+.btn-dogtor-accent {
+  --bs-btn-color: var(--dogtor-textdark);
+  --bs-btn-bg: var(--dogtor-accent);
+  --bs-btn-border-color: var(--dogtor-accent);
+  --bs-btn-hover-color: var(--dogtor-textdark);
+  --bs-btn-hover-bg: #dfb74f;
+  --bs-btn-hover-border-color: #dfb74f;
+  font-weight: 600;
+}

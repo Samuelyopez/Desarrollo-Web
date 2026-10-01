@@ -1,0 +1,91 @@
+<div class="container py-5">
+  <a [routerLink]="['/mascotas']" class="volver small d-inline-block mb-4">
+    <i class="bi bi-arrow-left"></i> Volver a mascotas
+  </a>
+
+  @if (mascota) {
+    <div class="row justify-content-center">
+      <div class="col-lg-10 col-xl-8">
+        <!-- Datos de la mascota -->
+        <div class="card border-0 shadow rounded-4 mb-4">
+          <div class="card-body p-4">
+            <div class="row align-items-center g-4">
+              <div class="col-md-4 text-center">
+                <img
+                  [src]="mascota.fotoUrl || fotoPorDefecto"
+                  [alt]="mascota.nombre"
+                  class="foto rounded-circle border shadow-sm"
+                />
+              </div>
+
+              <div class="col-md-8">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                  <h1 class="h2 fw-bold text-dogtor mb-0">{{ mascota.nombre }}</h1>
+                  @if (mascota.activa) {
+                    <span class="badge text-bg-success">Activa</span>
+                  } @else {
+                    <span class="badge text-bg-secondary">Inactiva</span>
+                  }
+                </div>
+
+                <table class="table table-sm mb-3">
+                  <tbody>
+                    <tr><th>ID</th><td>{{ mascota.id }}</td></tr>
+                    <tr><th>Raza</th><td>{{ mascota.raza || '—' }}</td></tr>
+                    <tr><th>Edad</th><td>{{ mascota.edad || '—' }}</td></tr>
+                    <tr><th>Vacunas</th><td>{{ mascota.vacunas || '—' }}</td></tr>
+                    <tr>
+                      <th>Dueño</th>
+                      <td>
+                        @if (dueno) {
+                          {{ dueno.nombre }}
+                          @if (dueno.telefono) {
+                            <span class="text-muted">· {{ dueno.telefono }}</span>
+                          }
+                        } @else {
+                          —
+                        }
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <a [routerLink]="['/mascota/update', mascota.id]" class="btn btn-dogtor-accent">
+                  <i class="bi bi-pencil"></i> Editar
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Historial médico -->
+        <h2 class="h4 fw-bold mb-3">Historial médico</h2>
+        @for (registro of registros; track registro.id) {
+          <div class="card border-0 shadow-sm rounded-4 mb-3">
+            <div class="card-body">
+              <div class="d-flex flex-wrap justify-content-between gap-2 mb-2 small text-muted">
+                <span><i class="bi bi-calendar3"></i> {{ registro.fecha | date: 'dd/MM/yyyy HH:mm' }}</span>
+                <span><i class="bi bi-person-badge"></i> {{ getNombreVeterinario(registro.veterinarioId) }}</span>
+              </div>
+              <p class="mb-1"><strong>Diagnóstico:</strong> {{ registro.diagnostico }}</p>
+              @if (registro.tratamiento) {
+                <p class="mb-1"><strong>Tratamiento:</strong> {{ registro.tratamiento }}</p>
+              }
+              @if (registro.drogaIds.length > 0) {
+                <p class="mb-0"><strong>Drogas:</strong> {{ getNombresDrogas(registro.drogaIds) }}</p>
+              }
+            </div>
+          </div>
+        } @empty {
+          <div class="alert alert-light border text-muted">Esta mascota aún no tiene registros médicos.</div>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="alert alert-danger text-center">No se encontró la mascota con id {{ mascotaId }}.</div>
+      </div>
+    </div>
+  }
+</div>

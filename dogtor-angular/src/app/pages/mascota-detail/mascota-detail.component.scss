@@ -1,0 +1,19 @@
+.foto {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+}
+
+th {
+  width: 35%;
+  color: var(--dogtor-textdark);
+}
+
+.volver {
+  color: var(--dogtor-textdark);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--dogtor-primary);
+  }
+}
