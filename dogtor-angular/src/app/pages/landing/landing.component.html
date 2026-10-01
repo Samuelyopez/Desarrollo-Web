@@ -50,3 +50,10 @@
   textoBoton="Ver mascotas"
   ruta="/mascotas"
 ></app-cta-banner>
+
+<section class="py-5">
+  <div class="container">
+    <app-section-header ancla="contacto" titulo="Contáctanos" subtitulo="Agenda una cita o pregúntanos por nuestros planes."></app-section-header>
+    <app-contacto-form [datos]="contacto" [plan]="planSeleccionado" (enviado)="contactoEnviado()"></app-contacto-form>
+  </div>
+</section>

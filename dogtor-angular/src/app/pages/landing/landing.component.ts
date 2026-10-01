@@ -6,8 +6,9 @@ import { PlanCardComponent } from './components/plan-card/plan-card.component';
 import { TeamCardComponent } from './components/team-card/team-card.component';
 import { TestimonioCardComponent } from './components/testimonio-card/testimonio-card.component';
 import { CtaBannerComponent } from './components/cta-banner/cta-banner.component';
+import { ContactoFormComponent } from './components/contacto-form/contacto-form.component';
 import { LandingService } from '../../service/landing.service';
-import { MiembroEquipo, Plan, Servicio, Slide, Testimonio } from '../../models/landing.model';
+import { DatosContacto, MiembroEquipo, Plan, Servicio, Slide, Testimonio } from '../../models/landing.model';
 
 @Component({
   selector: 'app-landing',
@@ -19,6 +20,7 @@ import { MiembroEquipo, Plan, Servicio, Slide, Testimonio } from '../../models/l
     TeamCardComponent,
     TestimonioCardComponent,
     CtaBannerComponent,
+    ContactoFormComponent,
   ],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss',
@@ -33,6 +35,7 @@ export class LandingComponent {
   planes: Plan[] = this.landingService.getPlanes();
   equipo: MiembroEquipo[] = this.landingService.getEquipo();
   testimonios: Testimonio[] = this.landingService.getTestimonios();
+  contacto: DatosContacto = this.landingService.getContacto();
 
   // Plan elegido en una plan-card; el formulario de contacto lo usa para precargar el mensaje
   planSeleccionado: Plan | undefined;
@@ -41,5 +44,10 @@ export class LandingComponent {
     this.planSeleccionado = plan;
     // Lleva al usuario hasta la sección de contacto (el encabezado con ancla "contacto")
     document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // El formulario no se envía a ningún servidor: solo se limpia el plan elegido
+  contactoEnviado() {
+    this.planSeleccionado = undefined;
   }
 }
