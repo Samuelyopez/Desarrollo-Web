@@ -5,10 +5,13 @@ import { Mascota } from '../../models/mascota.model';
 import { Dueno } from '../../models/dueno.model';
 import { MascotaService } from '../../service/mascota.service';
 import { DuenoService } from '../../service/dueno.service';
+import { CampoTextoComponent } from '../../components/campo-texto/campo-texto.component';
+import { DuenoSelectComponent } from './components/dueno-select/dueno-select.component';
+import { FotoPreviewComponent } from './components/foto-preview/foto-preview.component';
 
 @Component({
   selector: 'app-mascota-form',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, CampoTextoComponent, DuenoSelectComponent, FotoPreviewComponent],
   templateUrl: './mascota-form.component.html',
   styleUrl: './mascota-form.component.scss',
 })
@@ -42,9 +45,19 @@ export class MascotaFormComponent {
     dueno: new FormControl<Dueno | null>(null, [Validators.required]),
   });
 
-  // compareWith del <select>: compara dueños por id y no por referencia,
-  // así al editar queda seleccionado el dueño que ya tenía la mascota
-  compararDuenos = (a: Dueno | null, b: Dueno | null) => (a && b ? a.id === b.id : a === b);
+  // Texto de cada error por campo (clave = nombre del validador); lo pinta app-campo-error
+  readonly mensajes = {
+    nombre: {
+      required: 'El nombre es obligatorio.',
+      minlength: 'El nombre debe tener al menos 2 caracteres.',
+      maxlength: 'El nombre no puede superar 50 caracteres.',
+      pattern: 'El nombre solo puede contener letras.',
+    },
+    raza: { maxlength: 'La raza no puede superar 50 caracteres.' },
+    edad: { maxlength: 'La edad no puede superar 30 caracteres.' },
+    fotoUrl: { pattern: 'La URL debe empezar por http:// o https://' },
+    vacunas: { maxlength: 'Las vacunas no pueden superar 100 caracteres.' },
+  };
 
   ngOnInit() {
     this.duenos = this.duenoService.getDuenos();
@@ -69,12 +82,6 @@ export class MascotaFormComponent {
         this.noEncontrada = true;
       }
     }
-  }
-
-  // Muestra el error solo cuando el usuario ya tocó el campo
-  campoInvalido(campo: string) {
-    const control = this.mascotaForm.get(campo);
-    return !!control && control.touched && control.invalid;
   }
 
   handleSubmit() {

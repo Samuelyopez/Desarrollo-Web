@@ -131,7 +131,7 @@
       "src/app/pages/mascota-form/components/foto-preview/*",
       "src/app/pages/mascota-form/mascota-form.component.*"
     ],
-    "status": "pending"
+    "status": "done"
   },
   {
     "id": "E2-T3",

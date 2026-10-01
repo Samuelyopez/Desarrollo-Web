@@ -12,105 +12,42 @@
             <a [routerLink]="['/mascotas']" class="btn btn-dogtor w-100">Volver a mascotas</a>
           } @else {
             <form [formGroup]="mascotaForm" (ngSubmit)="handleSubmit()" novalidate>
-              <!-- Nombre -->
-              <div class="mb-3">
-                <label for="nombre" class="form-label fw-bold">Nombre</label>
-                <input
-                  id="nombre"
-                  type="text"
-                  class="form-control"
-                  formControlName="nombre"
-                  [class.is-invalid]="campoInvalido('nombre')"
-                />
-                @if (campoInvalido('nombre')) {
-                  <div class="invalid-feedback">
-                    @if (mascotaForm.get('nombre')?.errors?.['required']) {
-                      El nombre es obligatorio.
-                    } @else if (mascotaForm.get('nombre')?.errors?.['minlength']) {
-                      El nombre debe tener al menos 2 caracteres.
-                    } @else if (mascotaForm.get('nombre')?.errors?.['maxlength']) {
-                      El nombre no puede superar 50 caracteres.
-                    } @else if (mascotaForm.get('nombre')?.errors?.['pattern']) {
-                      El nombre solo puede contener letras.
-                    }
-                  </div>
-                }
-              </div>
-
-              <!-- Raza -->
-              <div class="mb-3">
-                <label for="raza" class="form-label fw-bold">Raza</label>
-                <input
-                  id="raza"
-                  type="text"
-                  class="form-control"
-                  formControlName="raza"
-                  [class.is-invalid]="campoInvalido('raza')"
-                />
-                <div class="invalid-feedback">La raza no puede superar 50 caracteres.</div>
-              </div>
-
-              <!-- Edad -->
-              <div class="mb-3">
-                <label for="edad" class="form-label fw-bold">Edad</label>
-                <input
-                  id="edad"
-                  type="text"
-                  class="form-control"
-                  placeholder="Ej: 2 años, 6 meses"
-                  formControlName="edad"
-                  [class.is-invalid]="campoInvalido('edad')"
-                />
-                <div class="invalid-feedback">La edad no puede superar 30 caracteres.</div>
-              </div>
-
-              <!-- Foto -->
-              <div class="mb-3">
-                <label for="fotoUrl" class="form-label fw-bold">Foto (URL)</label>
-                <input
-                  id="fotoUrl"
-                  type="text"
-                  class="form-control"
-                  placeholder="https://..."
-                  formControlName="fotoUrl"
-                  [class.is-invalid]="campoInvalido('fotoUrl')"
-                />
-                <div class="invalid-feedback">La URL debe empezar por http:// o https://</div>
-                @if (mascotaForm.get('fotoUrl')?.value && mascotaForm.get('fotoUrl')?.valid) {
-                  <img [src]="mascotaForm.get('fotoUrl')?.value" alt="Vista previa" class="preview rounded-3 mt-2 border" />
-                }
-              </div>
-
-              <!-- Vacunas -->
-              <div class="mb-3">
-                <label for="vacunas" class="form-label fw-bold">Vacunas</label>
-                <input
-                  id="vacunas"
-                  type="text"
-                  class="form-control"
-                  formControlName="vacunas"
-                  [class.is-invalid]="campoInvalido('vacunas')"
-                />
-                <div class="invalid-feedback">Las vacunas no pueden superar 100 caracteres.</div>
-              </div>
-
-              <!-- Dueño -->
-              <div class="mb-4">
-                <label for="dueno" class="form-label fw-bold">Dueño</label>
-                <select
-                  id="dueno"
-                  class="form-select"
-                  formControlName="dueno"
-                  [compareWith]="compararDuenos"
-                  [class.is-invalid]="campoInvalido('dueno')"
-                >
-                  <option [ngValue]="null" disabled>Selecciona un dueño...</option>
-                  @for (dueno of duenos; track dueno.id) {
-                    <option [ngValue]="dueno">{{ dueno.nombre }}</option>
-                  }
-                </select>
-                <div class="invalid-feedback">Selecciona un dueño de la lista.</div>
-              </div>
+              <app-campo-texto
+                campoId="nombre"
+                etiqueta="Nombre"
+                [control]="mascotaForm.controls.nombre"
+                [mensajes]="mensajes.nombre"
+              ></app-campo-texto>
+              <app-campo-texto
+                campoId="raza"
+                etiqueta="Raza"
+                [control]="mascotaForm.controls.raza"
+                [mensajes]="mensajes.raza"
+              ></app-campo-texto>
+              <app-campo-texto
+                campoId="edad"
+                etiqueta="Edad"
+                placeholder="Ej: 2 años, 6 meses"
+                [control]="mascotaForm.controls.edad"
+                [mensajes]="mensajes.edad"
+              ></app-campo-texto>
+              <app-campo-texto
+                campoId="fotoUrl"
+                etiqueta="Foto (URL)"
+                placeholder="https://..."
+                [control]="mascotaForm.controls.fotoUrl"
+                [mensajes]="mensajes.fotoUrl"
+              ></app-campo-texto>
+              <app-foto-preview
+                [url]="mascotaForm.controls.fotoUrl.valid ? mascotaForm.controls.fotoUrl.value : null"
+              ></app-foto-preview>
+              <app-campo-texto
+                campoId="vacunas"
+                etiqueta="Vacunas"
+                [control]="mascotaForm.controls.vacunas"
+                [mensajes]="mensajes.vacunas"
+              ></app-campo-texto>
+              <app-dueno-select [control]="mascotaForm.controls.dueno" [duenos]="duenos"></app-dueno-select>
 
               <button type="submit" class="btn btn-dogtor-secondary w-100 py-2 rounded-3" [disabled]="!mascotaForm.valid">
                 Guardar

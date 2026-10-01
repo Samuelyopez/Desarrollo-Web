@@ -1,0 +1,12 @@
+<div class="mb-3">
+  <label [attr.for]="campoId()" class="form-label fw-bold">{{ etiqueta() }}</label>
+  <input
+    [id]="campoId()"
+    type="text"
+    class="form-control"
+    [placeholder]="placeholder()"
+    [formControl]="control()"
+    [class.is-invalid]="control().touched && control().invalid"
+  />
+  <app-campo-error [control]="control()" [mensajes]="mensajes()"></app-campo-error>
+</div>
