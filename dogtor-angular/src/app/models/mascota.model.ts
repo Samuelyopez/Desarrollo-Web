@@ -1,3 +1,5 @@
+import { Dueno } from './dueno.model';
+
 // Entidad Mascota (tabla mascotas)
 export interface Mascota {
   id: number;
@@ -7,5 +9,6 @@ export interface Mascota {
   fotoUrl?: string;
   vacunas?: string;
   activa: boolean;
-  duenoId?: number; // @ManyToOne con Dueno
+  duenoId?: number; // TEMPORAL: convive con "dueno" hasta que el formulario use el objeto; luego se elimina
+  dueno?: Dueno; // @ManyToOne con Dueno: se guarda el objeto, no el id
 }

@@ -30,7 +30,7 @@
             <td>{{ mascota.raza }}</td>
             <td>{{ mascota.edad }}</td>
             <td>{{ mascota.vacunas }}</td>
-            <td>{{ getNombreDueno(mascota.duenoId) }}</td>
+            <td>{{ mascota.dueno?.nombre ?? '—' }}</td>
             <td>
               <div class="d-flex flex-wrap gap-2">
                 <button type="button" class="btn btn-sm btn-dogtor" (click)="verDetalleMascota(mascota)">
