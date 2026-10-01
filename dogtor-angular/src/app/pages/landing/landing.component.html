@@ -1,1 +1,23 @@
 <app-hero-carousel [slides]="slides"></app-hero-carousel>
+
+<section class="py-5">
+  <div class="container">
+    <app-section-header ancla="servicios" titulo="Nuestros servicios" subtitulo="Todo lo que tu mascota necesita, en un solo lugar."></app-section-header>
+    <div class="row g-4">
+      @for (servicio of servicios; track servicio.titulo) {
+        <div class="col-md-6 col-lg-4"><app-service-card [servicio]="servicio"></app-service-card></div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="py-5 bg-white">
+  <div class="container">
+    <app-section-header ancla="planes" titulo="Planes de salud" subtitulo="Elige el plan que mejor se adapta a tu mascota."></app-section-header>
+    <div class="row g-4 justify-content-center">
+      @for (plan of planes; track plan.nombre) {
+        <div class="col-md-6 col-lg-4"><app-plan-card [plan]="plan" (planElegido)="elegirPlan($event)"></app-plan-card></div>
+      }
+    </div>
+  </div>
+</section>
