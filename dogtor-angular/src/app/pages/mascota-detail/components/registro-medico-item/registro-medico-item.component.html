@@ -1,0 +1,15 @@
+<div class="card border-0 shadow-sm rounded-4 mb-3">
+  <div class="card-body">
+    <div class="d-flex flex-wrap justify-content-between gap-2 mb-2 small text-muted">
+      <span><i class="bi bi-calendar3"></i> {{ registro().fecha | date: 'dd/MM/yyyy HH:mm' }}</span>
+      <span><i class="bi bi-person-badge"></i> {{ veterinario() }}</span>
+    </div>
+    <p class="mb-1"><strong>Diagnóstico:</strong> {{ registro().diagnostico }}</p>
+    @if (registro().tratamiento) {
+      <p class="mb-1"><strong>Tratamiento:</strong> {{ registro().tratamiento }}</p>
+    }
+    @if (drogas().length > 0) {
+      <p class="mb-0"><strong>Drogas:</strong> {{ drogas().join(', ') }}</p>
+    }
+  </div>
+</div>

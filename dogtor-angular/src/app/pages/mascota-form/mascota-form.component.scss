@@ -1,0 +1,12 @@
+.fondo {
+  background-color: #f0fdfa;
+  min-height: 100%;
+}
+
+.cancelar {
+  text-decoration: none;
+
+  &:hover {
+    color: var(--dogtor-primary) !important;
+  }
+}

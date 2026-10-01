@@ -1,0 +1,26 @@
+<div class="card h-100 rounded-4 shadow-sm" [class.destacado]="plan().destacado" [class.border-0]="!plan().destacado">
+  <div class="card-body p-4 d-flex flex-column">
+    @if (plan().destacado) {
+      <span class="badge bg-dogtor-dark align-self-start mb-2">Más elegido</span>
+    }
+    <h3 class="h4 fw-bold">{{ plan().nombre }}</h3>
+    <p class="mb-3">
+      <span class="display-6 fw-bold text-dogtor">{{ plan().precio }}</span>
+      <span class="text-muted">{{ plan().periodo }}</span>
+    </p>
+    <ul class="list-unstyled d-grid gap-2 mb-4">
+      @for (beneficio of plan().beneficios; track beneficio) {
+        <li><i class="bi bi-check-circle-fill text-dogtor"></i> {{ beneficio }}</li>
+      }
+    </ul>
+    <button
+      type="button"
+      class="btn mt-auto"
+      [class.btn-dogtor]="plan().destacado"
+      [class.btn-dogtor-secondary]="!plan().destacado"
+      (click)="elegir()"
+    >
+      Elegir plan {{ plan().nombre }}
+    </button>
+  </div>
+</div>

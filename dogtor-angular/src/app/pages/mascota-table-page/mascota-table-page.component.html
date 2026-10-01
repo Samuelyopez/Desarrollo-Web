@@ -1,0 +1,27 @@
+<div class="container py-5">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <app-page-title
+      titulo="Gestión de Mascotas"
+      subtitulo="Revisa los pacientes de la clínica y gestiona su información"
+    ></app-page-title>
+    <a [routerLink]="['/mascota/new']" class="btn btn-dogtor-secondary">
+      <i class="bi bi-plus-lg"></i> Nueva Mascota
+    </a>
+  </div>
+
+  <h3 class="h4 fw-bold mb-3">Mascotas activas ({{ mascotasActivas.length }})</h3>
+  <app-mascota-table
+    [mascotaArray]="mascotasActivas"
+    [areMascotasActivas]="true"
+    (estadoCambiado)="cambiarEstadoMascota($event)"
+    (mascotaEliminada)="eliminarMascota($event)"
+  ></app-mascota-table>
+
+  <h3 class="h4 fw-bold mt-5 mb-3">Mascotas inactivas ({{ mascotasInactivas.length }})</h3>
+  <app-mascota-table
+    [mascotaArray]="mascotasInactivas"
+    [areMascotasActivas]="false"
+    (estadoCambiado)="cambiarEstadoMascota($event)"
+    (mascotaEliminada)="eliminarMascota($event)"
+  ></app-mascota-table>
+</div>

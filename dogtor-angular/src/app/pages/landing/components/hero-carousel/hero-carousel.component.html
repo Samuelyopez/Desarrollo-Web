@@ -1,0 +1,32 @@
+<section class="hero position-relative w-100 overflow-hidden bg-dark">
+  @for (slide of slides(); track $index) {
+    <div class="slide position-absolute top-0 start-0 w-100 h-100" [class.visible]="activeSlide === $index">
+      <img [src]="slide.img" [alt]="slide.title" class="w-100 h-100" />
+      <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-center text-center px-5">
+        <h2 class="display-4 fw-bold text-white mb-3">{{ slide.title }}</h2>
+        <p class="fs-5 text-white mb-4">{{ slide.desc }}</p>
+        @if (slide.link) {
+          <a [routerLink]="slide.link" class="btn btn-dogtor btn-lg px-5">{{ slide.btn }}</a>
+        }
+      </div>
+    </div>
+  }
+
+  <button type="button" class="control start-0 ms-3" (click)="anterior()" aria-label="Anterior">
+    <i class="bi bi-chevron-left"></i>
+  </button>
+  <button type="button" class="control end-0 me-3" (click)="siguiente()" aria-label="Siguiente">
+    <i class="bi bi-chevron-right"></i>
+  </button>
+
+  <div class="indicadores position-absolute bottom-0 start-50 translate-middle-x mb-3 d-flex gap-2">
+    @for (slide of slides(); track $index) {
+      <button
+        type="button"
+        [class.activo]="activeSlide === $index"
+        (click)="activeSlide = $index"
+        [attr.aria-label]="'Ir a ' + slide.title"
+      ></button>
+    }
+  </div>
+</section>

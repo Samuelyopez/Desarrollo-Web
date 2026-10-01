@@ -1,0 +1,59 @@
+<app-hero-carousel [slides]="slides"></app-hero-carousel>
+
+<section class="py-5">
+  <div class="container">
+    <app-section-header ancla="servicios" titulo="Nuestros servicios" subtitulo="Todo lo que tu mascota necesita, en un solo lugar."></app-section-header>
+    <div class="row g-4">
+      @for (servicio of servicios; track servicio.titulo) {
+        <div class="col-md-6 col-lg-4"><app-service-card [servicio]="servicio"></app-service-card></div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="py-5 bg-white">
+  <div class="container">
+    <app-section-header ancla="planes" titulo="Planes de salud" subtitulo="Elige el plan que mejor se adapta a tu mascota."></app-section-header>
+    <div class="row g-4 justify-content-center">
+      @for (plan of planes; track plan.nombre) {
+        <div class="col-md-6 col-lg-4"><app-plan-card [plan]="plan" (planElegido)="elegirPlan($event)"></app-plan-card></div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="py-5">
+  <div class="container">
+    <app-section-header ancla="equipo" titulo="Nuestro equipo" subtitulo="Especialistas que cuidan a tus mascotas como si fueran suyas."></app-section-header>
+    <div class="row g-4 justify-content-center">
+      @for (miembro of equipo; track miembro.nombre) {
+        <div class="col-md-6 col-lg-4"><app-team-card [miembro]="miembro"></app-team-card></div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="py-5 bg-white">
+  <div class="container">
+    <app-section-header ancla="testimonios" titulo="Lo que dicen nuestros clientes"></app-section-header>
+    <div class="row g-4">
+      @for (testimonio of testimonios; track testimonio.autor) {
+        <div class="col-md-6 col-lg-4"><app-testimonio-card [testimonio]="testimonio"></app-testimonio-card></div>
+      }
+    </div>
+  </div>
+</section>
+
+<app-cta-banner
+  titulo="¿Ya eres parte de la familia DogTor?"
+  texto="Consulta la información y el historial médico de tus mascotas."
+  textoBoton="Ver mascotas"
+  ruta="/mascotas"
+></app-cta-banner>
+
+<section class="py-5">
+  <div class="container">
+    <app-section-header ancla="contacto" titulo="Contáctanos" subtitulo="Agenda una cita o pregúntanos por nuestros planes."></app-section-header>
+    <app-contacto-form [datos]="contacto" [plan]="planSeleccionado" (enviado)="contactoEnviado()"></app-contacto-form>
+  </div>
+</section>

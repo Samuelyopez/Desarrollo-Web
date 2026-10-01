@@ -1,0 +1,4 @@
+<!-- d-block: el selector de Bootstrap ".is-invalid ~ .invalid-feedback" no atraviesa el host del componente -->
+@if (control().touched && control().invalid) {
+  <div class="invalid-feedback d-block">{{ mensaje() }}</div>
+}

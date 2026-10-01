@@ -1,0 +1,46 @@
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+      <h3 class="h5 fw-bold mb-3">Visítanos o escríbenos</h3>
+      <p class="mb-2"><i class="bi bi-geo-alt text-dogtor"></i> {{ datos().direccion }}</p>
+      <p class="mb-2"><i class="bi bi-telephone text-dogtor"></i> {{ datos().telefono }}</p>
+      <p class="mb-2"><i class="bi bi-envelope text-dogtor"></i> {{ datos().correo }}</p>
+      <p class="mb-0"><i class="bi bi-clock text-dogtor"></i> {{ datos().horario }}</p>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+      @if (enviadoConExito) {
+        <div class="alert alert-success" role="status">¡Gracias! Te contactaremos pronto.</div>
+      }
+      <form [formGroup]="contactoForm" (ngSubmit)="handleSubmit()" novalidate>
+        <app-campo-texto
+          campoId="contacto-nombre"
+          etiqueta="Nombre"
+          [control]="contactoForm.controls.nombre"
+          [mensajes]="mensajes.nombre"
+        ></app-campo-texto>
+        <app-campo-texto
+          campoId="contacto-correo"
+          etiqueta="Correo"
+          placeholder="tucorreo@ejemplo.com"
+          [control]="contactoForm.controls.correo"
+          [mensajes]="mensajes.correo"
+        ></app-campo-texto>
+        <div class="mb-3">
+          <label for="contacto-mensaje" class="form-label fw-bold">Mensaje</label>
+          <textarea
+            id="contacto-mensaje"
+            rows="4"
+            class="form-control"
+            formControlName="mensaje"
+            [class.is-invalid]="contactoForm.controls.mensaje.touched && contactoForm.controls.mensaje.invalid"
+          ></textarea>
+          <app-campo-error [control]="contactoForm.controls.mensaje" [mensajes]="mensajes.mensaje"></app-campo-error>
+        </div>
+        <button type="submit" class="btn btn-dogtor w-100">Enviar mensaje</button>
+      </form>
+    </div>
+  </div>
+</div>

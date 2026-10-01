@@ -1,0 +1,16 @@
+<div class="mb-4">
+  <label for="dueno" class="form-label fw-bold">Dueño</label>
+  <select
+    id="dueno"
+    class="form-select"
+    [formControl]="control()"
+    [compareWith]="compararDuenos"
+    [class.is-invalid]="control().touched && control().invalid"
+  >
+    <option [ngValue]="null" disabled>Selecciona un dueño...</option>
+    @for (dueno of duenos(); track dueno.id) {
+      <option [ngValue]="dueno">{{ dueno.nombre }}</option>
+    }
+  </select>
+  <app-campo-error [control]="control()" [mensajes]="mensajes"></app-campo-error>
+</div>

@@ -1,0 +1,13 @@
+.navbar-brand:hover {
+  opacity: 0.8;
+}
+
+.nav-link {
+  color: var(--dogtor-textdark);
+  transition: color 0.2s;
+
+  &:hover,
+  &.active {
+    color: var(--dogtor-primary);
+  }
+}

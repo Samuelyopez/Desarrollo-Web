@@ -1,0 +1,31 @@
+<div class="container py-5">
+  <a [routerLink]="['/mascotas']" class="volver small d-inline-block mb-4">
+    <i class="bi bi-arrow-left"></i> Volver a mascotas
+  </a>
+
+  @if (mascota) {
+    <div class="row justify-content-center">
+      <div class="col-lg-10 col-xl-8">
+        <app-mascota-info-card [mascota]="mascota"></app-mascota-info-card>
+
+        <!-- Historial médico -->
+        <h2 class="h4 fw-bold mb-3">Historial médico</h2>
+        @for (item of registros; track item.registro.id) {
+          <app-registro-medico-item
+            [registro]="item.registro"
+            [veterinario]="item.veterinario"
+            [drogas]="item.drogas"
+          ></app-registro-medico-item>
+        } @empty {
+          <div class="alert alert-light border text-muted">Esta mascota aún no tiene registros médicos.</div>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="alert alert-danger text-center">No se encontró la mascota con id {{ mascotaId }}.</div>
+      </div>
+    </div>
+  }
+</div>
