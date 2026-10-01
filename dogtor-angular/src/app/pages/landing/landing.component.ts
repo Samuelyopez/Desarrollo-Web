@@ -1,43 +1,18 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
-
-interface Slide {
-  img: string;
-  title: string;
-  desc: string;
-  link?: string;
-  btn?: string;
-}
+import { Component, inject } from '@angular/core';
+import { HeroCarouselComponent } from './components/hero-carousel/hero-carousel.component';
+import { LandingService } from '../../service/landing.service';
+import { Slide } from '../../models/landing.model';
 
 @Component({
   selector: 'app-landing',
-  imports: [RouterLink],
+  imports: [HeroCarouselComponent],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss',
 })
 export class LandingComponent {
-  activeSlide = 0;
+  //DI
+  private landingService = inject(LandingService);
 
-  slides: Slide[] = [
-    {
-      img: 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=1200',
-      title: 'Cuidamos a tus Pacientes',
-      desc: 'Consulta el historial médico de tu mascota en un solo lugar.',
-      link: '/mascotas',
-      btn: 'Ver Mascotas',
-    },
-    {
-      img: 'https://images.unsplash.com/photo-1537151608804-ea6f117f73d2?w=1200',
-      title: 'Nuestro Equipo',
-      desc: 'Conoce a los especialistas de DogTor.',
-    },
-  ];
-
-  anterior() {
-    this.activeSlide = this.activeSlide === 0 ? this.slides.length - 1 : this.activeSlide - 1;
-  }
-
-  siguiente() {
-    this.activeSlide = this.activeSlide === this.slides.length - 1 ? 0 : this.activeSlide + 1;
-  }
+  // Los datos viven en LandingService, igual que en las demás páginas
+  slides: Slide[] = this.landingService.getSlides();
 }
