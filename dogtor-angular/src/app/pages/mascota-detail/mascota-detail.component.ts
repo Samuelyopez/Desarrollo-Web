@@ -7,10 +7,12 @@ import { MascotaService } from '../../service/mascota.service';
 import { RegistroMedicoService } from '../../service/registro-medico.service';
 import { DrogaService } from '../../service/droga.service';
 import { UsuarioService } from '../../service/usuario.service';
+import { MascotaAvatarComponent } from '../../components/mascota-avatar/mascota-avatar.component';
+import { EstadoBadgeComponent } from '../../components/estado-badge/estado-badge.component';
 
 @Component({
   selector: 'app-mascota-detail',
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, MascotaAvatarComponent, EstadoBadgeComponent],
   templateUrl: './mascota-detail.component.html',
   styleUrl: './mascota-detail.component.scss',
 })
@@ -25,8 +27,6 @@ export class MascotaDetailComponent {
   mascotaId = -1;
   mascota: Mascota | undefined;
   registros: RegistroMedico[] = [];
-
-  fotoPorDefecto = 'https://images.icon-icons.com/3446/PNG/512/account_profile_user_avatar_icon_219236.png';
 
   // El dueño ya viene dentro de la mascota (objeto, no id): no hay que buscarlo por id
   get dueno() {

@@ -1,10 +1,11 @@
 import { Component, inject, input, output } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Mascota } from '../../../../models/mascota.model';
+import { MascotaAvatarComponent } from '../../../../components/mascota-avatar/mascota-avatar.component';
 
 @Component({
   selector: 'app-mascota-table',
-  imports: [RouterLink],
+  imports: [RouterLink, MascotaAvatarComponent],
   templateUrl: './mascota-table.component.html',
   styleUrl: './mascota-table.component.scss',
 })
@@ -19,8 +20,6 @@ export class MascotaTableComponent {
   // Salidas: eventos que se le avisan al componente padre
   estadoCambiado = output<Mascota>();
   mascotaEliminada = output<Mascota>();
-
-  fotoPorDefecto = 'https://images.icon-icons.com/3446/PNG/512/account_profile_user_avatar_icon_219236.png';
 
   verDetalleMascota(mascota: Mascota) {
     this.router.navigate(['/mascota', mascota.id]);

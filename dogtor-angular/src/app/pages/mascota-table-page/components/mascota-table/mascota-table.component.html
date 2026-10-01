@@ -19,11 +19,7 @@
         @for (mascota of mascotaArray(); track mascota.id) {
           <tr>
             <td>
-              <img
-                [src]="mascota.fotoUrl || fotoPorDefecto"
-                [alt]="mascota.nombre"
-                class="foto rounded-circle border"
-              />
+              <app-mascota-avatar [fotoUrl]="mascota.fotoUrl" [nombre]="mascota.nombre" [tamano]="56"></app-mascota-avatar>
             </td>
             <td class="text-muted">{{ mascota.id }}</td>
             <td class="fw-bold text-dogtor">{{ mascota.nombre }}</td>

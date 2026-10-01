@@ -11,21 +11,13 @@
           <div class="card-body p-4">
             <div class="row align-items-center g-4">
               <div class="col-md-4 text-center">
-                <img
-                  [src]="mascota.fotoUrl || fotoPorDefecto"
-                  [alt]="mascota.nombre"
-                  class="foto rounded-circle border shadow-sm"
-                />
+                <app-mascota-avatar [fotoUrl]="mascota.fotoUrl" [nombre]="mascota.nombre" [tamano]="180"></app-mascota-avatar>
               </div>
 
               <div class="col-md-8">
                 <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
                   <h1 class="h2 fw-bold text-dogtor mb-0">{{ mascota.nombre }}</h1>
-                  @if (mascota.activa) {
-                    <span class="badge text-bg-success">Activa</span>
-                  } @else {
-                    <span class="badge text-bg-secondary">Inactiva</span>
-                  }
+                  <app-estado-badge [activa]="mascota.activa"></app-estado-badge>
                 </div>
 
                 <table class="table table-sm mb-3">
