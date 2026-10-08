@@ -26,17 +26,34 @@
       </button>
 
       <div class="collapse navbar-collapse" id="menuPrincipal">
-        <ul class="navbar-nav ms-auto gap-lg-3 fw-medium">
-          @for (link of links; track link.ruta) {
+        <ul class="navbar-nav ms-auto gap-lg-3 fw-medium align-items-lg-center">
+          @for (link of links(); track link.ruta) {
             <li class="nav-item">
               <a
                 class="nav-link"
                 [routerLink]="link.ruta"
                 routerLinkActive="active"
-                [routerLinkActiveOptions]="{ exact: link.ruta === '/' }"
+                [routerLinkActiveOptions]="{ exact: link.texto === 'Inicio' || link.texto === 'Mi portal' }"
               >
                 {{ link.texto }}
               </a>
+            </li>
+          }
+
+          @if (auth.usuario(); as usuario) {
+            <li class="nav-item d-flex align-items-center gap-2 py-2 py-lg-0">
+              <span class="small">
+                <i class="bi bi-person-circle text-dogtor"></i>
+                <span class="fw-bold">{{ usuario.nombre }}</span>
+                <span class="text-muted ms-1">({{ nombreRol[usuario.rol] }})</span>
+              </span>
+              <button type="button" class="btn btn-sm btn-outline-secondary" (click)="salir()">
+                <i class="bi bi-box-arrow-right"></i> Salir
+              </button>
+            </li>
+          } @else {
+            <li class="nav-item py-2 py-lg-0">
+              <a [routerLink]="['/login']" class="btn btn-dogtor px-4">Ingresar</a>
             </li>
           }
         </ul>

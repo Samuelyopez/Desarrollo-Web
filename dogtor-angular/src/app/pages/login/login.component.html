@@ -1,0 +1,47 @@
+<div class="fondo py-5 px-3">
+  <div class="row justify-content-center g-0">
+    <div class="col-md-7 col-lg-4">
+      <div class="card border-0 shadow rounded-4">
+        <div class="card-body p-4 p-md-5">
+          <div class="text-center mb-4">
+            <i class="bi bi-person-circle display-4 text-dogtor"></i>
+            <h1 class="h3 fw-bold text-dogtor mt-2 mb-1">Ingresar</h1>
+            <p class="small text-muted mb-0">Clientes, veterinarios y administradores</p>
+          </div>
+
+          @if (errorMensaje) {
+            <div class="alert alert-danger small" role="alert">
+              <i class="bi bi-exclamation-triangle"></i> {{ errorMensaje }}
+            </div>
+          }
+
+          <form [formGroup]="loginForm" novalidate>
+            <app-campo-texto
+              campoId="correo"
+              etiqueta="Correo"
+              tipo="email"
+              placeholder="tu@correo.com"
+              [control]="loginForm.controls.correo"
+              [mensajes]="mensajes.correo"
+            ></app-campo-texto>
+            <app-campo-texto
+              campoId="password"
+              etiqueta="Contraseña"
+              tipo="password"
+              [control]="loginForm.controls.password"
+              [mensajes]="mensajes.password"
+            ></app-campo-texto>
+
+            <button type="submit" class="btn btn-dogtor w-100 py-2 rounded-3 mt-2" [disabled]="cargando">
+              @if (cargando) {
+                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Ingresando...
+              } @else {
+                Ingresar
+              }
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

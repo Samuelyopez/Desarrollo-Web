@@ -1,5 +1,12 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, computed, inject } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../service/auth.service';
+import { Rol } from '../../models/usuario.model';
+
+interface LinkNavbar {
+  texto: string;
+  ruta: string;
+}
 
 @Component({
   selector: 'app-navbar',
@@ -8,10 +15,35 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent {
-  // Solo se enlazan las páginas que ya existen en Angular
-  links = [
-    { texto: 'Inicio', ruta: '/' },
-    { texto: 'Mascotas', ruta: '/mascotas' },
-    { texto: 'Dueños', ruta: '/duenos' },
-  ];
+  //DI
+  auth = inject(AuthService);
+  private router = inject(Router);
+
+  // Cada rol ve solo los enlaces de su portal
+  private readonly linksPorRol: Record<Rol, LinkNavbar[]> = {
+    DUENO: [{ texto: 'Mi portal', ruta: '/cliente' }],
+    VETERINARIO: [
+      { texto: 'Mi portal', ruta: '/vet' },
+      { texto: 'Dueños', ruta: '/vet/duenos' },
+      { texto: 'Mascotas', ruta: '/vet/mascotas' },
+    ],
+    ADMIN: [{ texto: 'Mi portal', ruta: '/admin' }],
+  };
+
+  // Se recalcula solo cuando cambia el rol (al entrar o salir)
+  links = computed(() => {
+    const rol = this.auth.rol();
+    return [{ texto: 'Inicio', ruta: '/' }, ...(rol ? this.linksPorRol[rol] : [])];
+  });
+
+  readonly nombreRol: Record<Rol, string> = {
+    DUENO: 'Cliente',
+    VETERINARIO: 'Veterinario',
+    ADMIN: 'Administrador',
+  };
+
+  salir() {
+    this.auth.logout();
+    this.router.navigateByUrl('/');
+  }
 }
