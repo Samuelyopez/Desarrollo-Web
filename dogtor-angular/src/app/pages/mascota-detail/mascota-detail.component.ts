@@ -32,6 +32,9 @@ export class MascotaDetailComponent {
   noEncontrada = false;
   errorMensaje = '';
 
+  // Mensaje flash: llega desde el formulario de tratamiento (history.state)
+  mensaje = (history.state as { mensaje?: string })?.mensaje ?? '';
+
   constructor() {
     // forkJoin en paralelo: (1) la mascota y luego su dueño (consulta anidada con switchMap,
     // sin subscribes anidados) y (2) su historial de tratamientos

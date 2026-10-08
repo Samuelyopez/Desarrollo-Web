@@ -29,6 +29,7 @@ export class NavbarComponent {
       { texto: 'Mi portal', ruta: '/vet' },
       { texto: 'Dueños', ruta: '/vet/duenos' },
       { texto: 'Mascotas', ruta: '/vet/mascotas' },
+      { texto: 'Mis pacientes', ruta: '/vet/pacientes' },
     ],
     ADMIN: [{ texto: 'Mi portal', ruta: '/admin' }],
   };

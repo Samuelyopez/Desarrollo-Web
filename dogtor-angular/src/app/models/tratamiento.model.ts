@@ -10,3 +10,11 @@ export interface Tratamiento {
   veterinarioNombre: string;
   veterinarioEspecialidad?: string;
 }
+
+// Cuerpo de POST /api/tratamientos (TratamientoRequest en Spring Boot). La fecha la pone la API (hoy)
+export interface TratamientoRequest {
+  mascotaId: number;
+  veterinarioId: number;
+  medicamentoId: number;
+  cantidad: number;
+}

@@ -1,0 +1,108 @@
+<div class="fondo py-5 px-3">
+  <div class="row justify-content-center g-0">
+    <div class="col-md-9 col-lg-6">
+      <div class="card border-0 shadow rounded-4">
+        <div class="card-body p-4 p-md-5">
+          <h2 class="fw-bold text-dogtor text-center mb-1">Dar tratamiento</h2>
+          <p class="text-center small text-muted mb-4">Solo mascotas activas y medicamentos con unidades disponibles</p>
+
+          @if (errorMensaje) {
+            <div class="alert alert-danger small" role="alert">
+              <i class="bi bi-exclamation-triangle"></i> {{ errorMensaje }}
+            </div>
+          }
+          @if (avisoMascota) {
+            <div class="alert alert-warning small" role="alert">
+              <i class="bi bi-info-circle"></i> {{ avisoMascota }}
+            </div>
+          }
+
+          <form [formGroup]="tratamientoForm" novalidate>
+            <div class="row g-3 mb-3">
+              <div class="col-sm-6">
+                <label for="veterinario" class="form-label fw-bold">Veterinario</label>
+                <input id="veterinario" class="form-control" [value]="veterinario.nombre" readonly />
+              </div>
+              <div class="col-sm-6">
+                <label for="fecha" class="form-label fw-bold">Fecha</label>
+                <input id="fecha" class="form-control" [value]="hoy | date: 'dd/MM/yyyy'" readonly />
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="mascota" class="form-label fw-bold">Mascota</label>
+              <select
+                id="mascota"
+                class="form-select"
+                formControlName="mascota"
+                [class.is-invalid]="tratamientoForm.controls.mascota.touched && tratamientoForm.controls.mascota.invalid"
+              >
+                <option [ngValue]="null" disabled>Selecciona una mascota activa...</option>
+                @for (mascota of mascotas; track mascota.id) {
+                  <option [ngValue]="mascota.id">{{ mascota.nombre }} — {{ mascota.duenoNombre }}</option>
+                }
+              </select>
+              <app-campo-error [control]="tratamientoForm.controls.mascota" [mensajes]="mensajes.mascota"></app-campo-error>
+            </div>
+
+            <div class="mb-3">
+              <label for="medicamento" class="form-label fw-bold">Medicamento</label>
+              @if (!cargando && medicamentos.length === 0) {
+                <div class="alert alert-warning small mb-0">No hay medicamentos con unidades disponibles.</div>
+              } @else {
+                <select
+                  id="medicamento"
+                  class="form-select"
+                  formControlName="medicamento"
+                  [compareWith]="compararMedicamentos"
+                  [class.is-invalid]="tratamientoForm.controls.medicamento.touched && tratamientoForm.controls.medicamento.invalid"
+                >
+                  <option [ngValue]="null" disabled>Selecciona un medicamento...</option>
+                  @for (medicamento of medicamentos; track medicamento.id) {
+                    <option [ngValue]="medicamento">
+                      {{ medicamento.nombre }} — {{ medicamento.precioVenta | currency: 'COP' : 'symbol-narrow' : '1.0-0' }} —
+                      {{ medicamento.unidadesDisponibles }} disponibles
+                    </option>
+                  }
+                </select>
+                <app-campo-error [control]="tratamientoForm.controls.medicamento" [mensajes]="mensajes.medicamento"></app-campo-error>
+              }
+            </div>
+
+            <div class="row g-3 align-items-end mb-4">
+              <div class="col-sm-6">
+                <label for="cantidad" class="form-label fw-bold">Cantidad</label>
+                <input
+                  id="cantidad"
+                  type="number"
+                  class="form-control"
+                  min="1"
+                  [max]="tratamientoForm.controls.medicamento.value?.unidadesDisponibles ?? 1"
+                  formControlName="cantidad"
+                  [class.is-invalid]="tratamientoForm.controls.cantidad.touched && tratamientoForm.controls.cantidad.invalid"
+                />
+                <app-campo-error [control]="tratamientoForm.controls.cantidad" [mensajes]="mensajesCantidad"></app-campo-error>
+              </div>
+              <div class="col-sm-6 text-sm-end">
+                <span class="small text-muted d-block">Total estimado</span>
+                <span class="fs-4 fw-bold text-dogtor">{{ total | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</span>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-dogtor-secondary w-100 py-2 rounded-3"
+              [disabled]="cargando || medicamentos.length === 0"
+            >
+              @if (cargando) {
+                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+              }
+              Registrar tratamiento
+            </button>
+            <a [routerLink]="rutaVolver" class="d-block text-center small text-muted mt-3 cancelar">Cancelar</a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

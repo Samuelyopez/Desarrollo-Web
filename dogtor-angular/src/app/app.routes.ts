@@ -11,6 +11,8 @@ import { DuenoFormComponent } from './pages/dueno-form/dueno-form.component';
 import { DuenoDetailComponent } from './pages/dueno-detail/dueno-detail.component';
 import { MisMascotasComponent } from './pages/mis-mascotas/mis-mascotas.component';
 import { MiMascotaDetailComponent } from './pages/mi-mascota-detail/mi-mascota-detail.component';
+import { TratamientoFormComponent } from './pages/tratamiento-form/tratamiento-form.component';
+import { MisPacientesComponent } from './pages/mis-pacientes/mis-pacientes.component';
 import { authGuard } from './guards/auth.guard';
 import { rolGuard } from './guards/rol.guard';
 import { invitadoGuard } from './guards/invitado.guard';
@@ -24,8 +26,8 @@ const accesosCliente: AccesoPortal[] = [
 const accesosVeterinario: AccesoPortal[] = [
   { icono: 'bi-people', titulo: 'Dueños', descripcion: 'Registra y gestiona a los clientes.', ruta: '/vet/duenos' },
   { icono: 'bi-heart-pulse', titulo: 'Mascotas', descripcion: 'Pacientes de la clínica.', ruta: '/vet/mascotas' },
-  { icono: 'bi-capsule', titulo: 'Tratamientos', descripcion: 'Suministra medicamentos a las mascotas activas.' },
-  { icono: 'bi-clipboard2-pulse', titulo: 'Mis pacientes', descripcion: 'Mascotas a las que les has dado tratamiento.' },
+  { icono: 'bi-capsule', titulo: 'Dar tratamiento', descripcion: 'Suministra medicamentos a las mascotas activas.', ruta: '/vet/tratamiento/new' },
+  { icono: 'bi-clipboard2-pulse', titulo: 'Mis pacientes', descripcion: 'Mascotas a las que les has dado tratamiento.', ruta: '/vet/pacientes' },
 ];
 
 const accesosAdmin: AccesoPortal[] = [
@@ -75,6 +77,8 @@ export const routes: Routes = [
       { path: 'dueno/new', component: DuenoFormComponent },
       { path: 'dueno/update/:cedula', component: DuenoFormComponent },
       { path: 'dueno/:cedula', component: DuenoDetailComponent },
+      { path: 'tratamiento/new', component: TratamientoFormComponent },
+      { path: 'pacientes', component: MisPacientesComponent },
     ],
   },
 
