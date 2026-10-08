@@ -31,7 +31,10 @@ export class NavbarComponent {
       { texto: 'Mascotas', ruta: '/vet/mascotas' },
       { texto: 'Mis pacientes', ruta: '/vet/pacientes' },
     ],
-    ADMIN: [{ texto: 'Mi portal', ruta: '/admin' }],
+    ADMIN: [
+      { texto: 'Mi portal', ruta: '/admin' },
+      { texto: 'Veterinarios', ruta: '/admin/veterinarios' },
+    ],
   };
 
   // Se recalcula solo cuando cambia el rol (al entrar o salir)

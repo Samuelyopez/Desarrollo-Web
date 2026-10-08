@@ -13,6 +13,8 @@ import { MisMascotasComponent } from './pages/mis-mascotas/mis-mascotas.componen
 import { MiMascotaDetailComponent } from './pages/mi-mascota-detail/mi-mascota-detail.component';
 import { TratamientoFormComponent } from './pages/tratamiento-form/tratamiento-form.component';
 import { MisPacientesComponent } from './pages/mis-pacientes/mis-pacientes.component';
+import { VeterinarioTablePageComponent } from './pages/veterinario-table-page/veterinario-table-page.component';
+import { VeterinarioFormComponent } from './pages/veterinario-form/veterinario-form.component';
 import { authGuard } from './guards/auth.guard';
 import { rolGuard } from './guards/rol.guard';
 import { invitadoGuard } from './guards/invitado.guard';
@@ -32,7 +34,7 @@ const accesosVeterinario: AccesoPortal[] = [
 
 const accesosAdmin: AccesoPortal[] = [
   { icono: 'bi-graph-up', titulo: 'Dashboard', descripcion: 'Indicadores del negocio.' },
-  { icono: 'bi-person-badge', titulo: 'Veterinarios', descripcion: 'Registra, edita y activa veterinarios.' },
+  { icono: 'bi-person-badge', titulo: 'Veterinarios', descripcion: 'Registra, edita y activa veterinarios.', ruta: '/admin/veterinarios' },
 ];
 
 export const routes: Routes = [
@@ -89,6 +91,9 @@ export const routes: Routes = [
     data: { roles: ['ADMIN'] },
     children: [
       { path: '', component: PortalInicioComponent, data: { titulo: 'Portal administrador', accesos: accesosAdmin } },
+      { path: 'veterinarios', component: VeterinarioTablePageComponent },
+      { path: 'veterinario/new', component: VeterinarioFormComponent },
+      { path: 'veterinario/update/:cedula', component: VeterinarioFormComponent },
     ],
   },
 

@@ -1,0 +1,82 @@
+<div class="fondo py-5 px-3">
+  <div class="row justify-content-center g-0">
+    <div class="col-md-8 col-lg-5">
+      <div class="card border-0 shadow rounded-4">
+        <div class="card-body p-4 p-md-5">
+          <h2 class="fw-bold text-dogtor text-center mb-4">
+            @if (isEdit) { Editar Veterinario } @else { Nuevo Veterinario }
+          </h2>
+
+          @if (noEncontrado) {
+            <div class="alert alert-danger text-center">No se encontró el veterinario.</div>
+            <a [routerLink]="['/admin/veterinarios']" class="btn btn-dogtor w-100">Volver a veterinarios</a>
+          } @else {
+            @if (errorMensaje) {
+              <div class="alert alert-danger small" role="alert">
+                <i class="bi bi-exclamation-triangle"></i> {{ errorMensaje }}
+              </div>
+            }
+
+            <form [formGroup]="veterinarioForm" novalidate>
+              <app-campo-texto
+                campoId="cedula"
+                etiqueta="Cédula"
+                placeholder="Ej: 800000006"
+                [control]="veterinarioForm.controls.cedula"
+                [mensajes]="mensajes.cedula"
+              ></app-campo-texto>
+              <app-campo-texto
+                campoId="nombre"
+                etiqueta="Nombre completo"
+                placeholder="Ej: Laura Jiménez"
+                [control]="veterinarioForm.controls.nombre"
+                [mensajes]="mensajes.nombre"
+              ></app-campo-texto>
+              <app-campo-texto
+                campoId="especialidad"
+                etiqueta="Especialidad"
+                placeholder="Ej: Cirugía"
+                [control]="veterinarioForm.controls.especialidad"
+                [mensajes]="mensajes.especialidad"
+              ></app-campo-texto>
+              <app-campo-texto
+                campoId="foto"
+                etiqueta="Foto (URL, opcional)"
+                placeholder="https://..."
+                [control]="veterinarioForm.controls.foto"
+                [mensajes]="mensajes.foto"
+              ></app-campo-texto>
+              <app-foto-preview
+                [url]="veterinarioForm.controls.foto.valid ? veterinarioForm.controls.foto.value : null"
+              ></app-foto-preview>
+              <app-campo-texto
+                campoId="correo"
+                etiqueta="Correo (para iniciar sesión)"
+                tipo="email"
+                placeholder="Ej: laura.vet@dogtor.com"
+                [control]="veterinarioForm.controls.correo"
+                [mensajes]="mensajes.correo"
+              ></app-campo-texto>
+              <app-campo-texto
+                campoId="password"
+                [etiqueta]="isEdit ? 'Nueva contraseña (opcional)' : 'Contraseña de acceso'"
+                tipo="password"
+                [placeholder]="isEdit ? 'Déjala vacía para no cambiarla' : 'Mínimo 6 caracteres'"
+                [control]="veterinarioForm.controls.password"
+                [mensajes]="mensajes.password"
+              ></app-campo-texto>
+
+              <button type="submit" class="btn btn-dogtor-secondary w-100 py-2 rounded-3 mt-2" [disabled]="cargando">
+                @if (cargando) {
+                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                }
+                Guardar
+              </button>
+              <a [routerLink]="['/admin/veterinarios']" class="d-block text-center small text-muted mt-3 cancelar">Cancelar</a>
+            </form>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

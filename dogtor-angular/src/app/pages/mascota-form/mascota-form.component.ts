@@ -10,7 +10,7 @@ import { MascotaService } from '../../service/mascota.service';
 import { DuenoService } from '../../service/dueno.service';
 import { CampoTextoComponent } from '../../components/campo-texto/campo-texto.component';
 import { DuenoSelectComponent } from './components/dueno-select/dueno-select.component';
-import { FotoPreviewComponent } from './components/foto-preview/foto-preview.component';
+import { FotoPreviewComponent } from '../../components/foto-preview/foto-preview.component';
 import { mensajeError } from '../../utils/mensaje-error';
 
 @Component({

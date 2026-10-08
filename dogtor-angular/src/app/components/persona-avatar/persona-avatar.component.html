@@ -1,0 +1,19 @@
+@if (fotoUrl() && !fotoFallida()) {
+  <img
+    [src]="fotoUrl()"
+    [alt]="nombre()"
+    [style.width.px]="tamano()"
+    [style.height.px]="tamano()"
+    class="foto rounded-circle border"
+    (error)="fotoFallida.set(true)"
+  />
+} @else {
+  <span
+    class="iniciales rounded-circle"
+    [style.width.px]="tamano()"
+    [style.height.px]="tamano()"
+    [style.font-size.px]="tamano() * 0.4"
+    [attr.aria-label]="nombre()"
+    >{{ iniciales() }}</span
+  >
+}

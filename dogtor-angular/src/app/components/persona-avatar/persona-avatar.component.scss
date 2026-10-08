@@ -1,0 +1,12 @@
+.foto {
+  object-fit: cover;
+}
+
+.iniciales {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #fff;
+  background-color: var(--dogtor-primary);
+}
