@@ -1,6 +1,8 @@
 package com.veterinaria.dogtor.config;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,15 +14,20 @@ import org.springframework.transaction.annotation.Transactional;
 import com.veterinaria.dogtor.entities.Administrador;
 import com.veterinaria.dogtor.entities.Dueno;
 import com.veterinaria.dogtor.entities.Mascota;
+import com.veterinaria.dogtor.entities.Medicamento;
 import com.veterinaria.dogtor.entities.Rol;
+import com.veterinaria.dogtor.entities.Tratamiento;
 import com.veterinaria.dogtor.entities.Usuario;
 import com.veterinaria.dogtor.entities.Veterinario;
 import com.veterinaria.dogtor.repository.AdministradorRepository;
 import com.veterinaria.dogtor.repository.DuenoRepository;
+import com.veterinaria.dogtor.repository.MascotaRepository;
+import com.veterinaria.dogtor.repository.MedicamentoRepository;
+import com.veterinaria.dogtor.repository.TratamientoRepository;
 import com.veterinaria.dogtor.repository.UsuarioRepository;
 import com.veterinaria.dogtor.repository.VeterinarioRepository;
 
-// Datos de prueba. Solo se cargan si la BD está vacía (la BD es un archivo y sobrevive a los reinicios).
+// Datos de prueba. Solo se cargan si faltan (la BD es un archivo y sobrevive a los reinicios).
 // Para volver a sembrar: detener la API y borrar la carpeta data/
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -39,18 +46,33 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private DuenoRepository duenoRepository;
 
+    @Autowired
+    private MascotaRepository mascotaRepository;
+
+    @Autowired
+    private MedicamentoRepository medicamentoRepository;
+
+    @Autowired
+    private TratamientoRepository tratamientoRepository;
+
     @Override
     @Transactional
     public void run(String... args) {
-        if (usuarioRepository.count() > 0) {
-            log.info("La base de datos ya tiene datos: no se cargan datos de prueba");
-            return;
+        if (usuarioRepository.count() == 0) {
+            cargarAdministradores();
+            cargarVeterinarios();
+            cargarDuenosYMascotas();
+            log.info("Datos de prueba cargados: {} administradores, {} veterinarios, {} dueños",
+                    administradorRepository.count(), veterinarioRepository.count(), duenoRepository.count());
+        } else {
+            log.info("La base de datos ya tiene usuarios: no se cargan usuarios de prueba");
         }
-        cargarAdministradores();
-        cargarVeterinarios();
-        cargarDuenosYMascotas();
-        log.info("Datos de prueba cargados: {} administradores, {} veterinarios, {} dueños",
-                administradorRepository.count(), veterinarioRepository.count(), duenoRepository.count());
+
+        // Aparte, para que también se siembre en una BD creada en sprints anteriores
+        if (tratamientoRepository.count() == 0) {
+            cargarTratamientosDemo();
+            log.info("Tratamientos de prueba cargados: {}", tratamientoRepository.count());
+        }
     }
 
     private void cargarAdministradores() {
@@ -115,6 +137,49 @@ public class DataLoader implements CommandLineRunner {
 
         // La cascada guarda también el usuario y las mascotas de cada dueño
         duenoRepository.saveAll(List.of(juan, maria, carlos, ana, luis, sofia, andres, camila, diego, valentina));
+    }
+
+    // TEMPORAL: en el Sprint 5 los medicamentos se cargan desde el Excel (por nombre, sin duplicar estos).
+    // Hay tratamientos de los últimos 30 días y otros más antiguos para el dashboard
+    private void cargarTratamientosDemo() {
+        Medicamento amoxicilina = medicamento("Amoxicilina 500 mg", 8000, 15000, 100);
+        Medicamento meloxicam = medicamento("Meloxicam 1.5 mg/ml", 12000, 22000, 80);
+        Medicamento metronidazol = medicamento("Metronidazol 250 mg", 6000, 11000, 120);
+        Medicamento prednisolona = medicamento("Prednisolona 5 mg", 5000, 9500, 90);
+        Medicamento suero = medicamento("Suero Ringer Lactato 500 ml", 7000, 14000, 60);
+        Medicamento ivermectina = medicamento("Ivermectina 1%", 10000, 19000, 70);
+
+        tratar("1000000001", "Max", "800000001", suero, 2, 2);
+        tratar("1000000001", "Max", "800000001", metronidazol, 1, 5);
+        tratar("1000000001", "Max", "800000002", amoxicilina, 1, 12);
+        tratar("1000000001", "Luna", "800000001", amoxicilina, 2, 3);
+        tratar("1000000001", "Luna", "800000003", meloxicam, 1, 45);
+        tratar("1000000002", "Rocky", "800000004", prednisolona, 1, 8);
+        tratar("1000000002", "Bella", "800000003", amoxicilina, 1, 20);
+        tratar("1000000004", "Felix", "800000005", metronidazol, 1, 60);
+        tratar("1000000004", "Simba", "800000005", meloxicam, 2, 90);
+        tratar("1000000003", "Toby", "800000003", prednisolona, 1, 15);
+        tratar("1000000007", "Buddy", "800000002", ivermectina, 1, 1);
+    }
+
+    private Medicamento medicamento(String nombre, double compra, double venta, int disponibles) {
+        return medicamentoRepository.findByNombre(nombre)
+                .orElseGet(() -> medicamentoRepository.save(new Medicamento(nombre, compra, venta, disponibles, 0)));
+    }
+
+    // Los ids son generados: se busca por cédula y nombre. Si el dueño ya no existe se omite
+    private void tratar(String cedulaDueno, String nombreMascota, String cedulaVet, Medicamento medicamento,
+            int cantidad, int haceDias) {
+        Optional<Mascota> mascota = duenoRepository.findByCedula(cedulaDueno)
+                .flatMap(dueno -> mascotaRepository.findByDueno_IdAndNombreIgnoreCase(dueno.getId(), nombreMascota));
+        Optional<Veterinario> veterinario = veterinarioRepository.findByCedula(cedulaVet);
+        if (mascota.isEmpty() || veterinario.isEmpty()) {
+            return;
+        }
+        medicamento.setUnidadesDisponibles(medicamento.getUnidadesDisponibles() - cantidad);
+        medicamento.setUnidadesVendidas(medicamento.getUnidadesVendidas() + cantidad);
+        tratamientoRepository.save(new Tratamiento(LocalDate.now().minusDays(haceDias), cantidad,
+                mascota.get(), veterinario.get(), medicamento));
     }
 
     private Dueno dueno(String cedula, String nombre, String celular, String correo) {

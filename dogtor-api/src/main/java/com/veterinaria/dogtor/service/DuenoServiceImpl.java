@@ -59,6 +59,14 @@ public class DuenoServiceImpl implements DuenoService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Mascota mascotaDe(String cedula, Long mascotaId) {
+        Dueno dueno = buscarPorCedula(cedula);
+        return mascotaRepository.findByIdAndDueno_Id(mascotaId, dueno.getId())
+                .orElseThrow(() -> new NotFoundException(dueno.getNombre() + " no tiene una mascota con el id " + mascotaId));
+    }
+
+    @Override
     @Transactional
     public Dueno crear(DuenoRequest request) {
         if (request.password() == null || request.password().isBlank()) {

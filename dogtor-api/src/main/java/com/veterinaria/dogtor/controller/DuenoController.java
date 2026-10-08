@@ -51,6 +51,14 @@ public class DuenoController {
         return duenoService.mascotasDe(cedula);
     }
 
+    // Portal cliente: evita mostrarle a un dueño una mascota ajena. Ojo: sin token la API
+    // no sabe quién llama, así que esto no reemplaza una seguridad real (fuera de alcance)
+    @Operation(summary = "Buscar una mascota de un dueño (404 si no es suya)")
+    @GetMapping("/{cedula}/mascotas/{id}")
+    public Mascota mascota(@PathVariable String cedula, @PathVariable Long id) {
+        return duenoService.mascotaDe(cedula, id);
+    }
+
     @Operation(summary = "Registrar un dueño y su usuario")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

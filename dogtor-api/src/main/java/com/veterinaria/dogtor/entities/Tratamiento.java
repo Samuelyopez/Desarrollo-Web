@@ -3,6 +3,7 @@ package com.veterinaria.dogtor.entities;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,6 +40,8 @@ public class Tratamiento {
     // Copias tomadas al crear el tratamiento
     private Double precioVenta;
 
+    // Dato interno para calcular ganancias: no se envía al front
+    @JsonIgnore
     private Double precioCompra;
 
     private String mascotaNombre;
@@ -57,4 +60,34 @@ public class Tratamiento {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "medicamento_id", nullable = false)
     private Medicamento medicamento;
+
+    // Toma la fecha, la mascota, el veterinario y el medicamento, y copia los datos que
+    // deben sobrevivir aunque luego se borre la mascota o cambie el precio del medicamento
+    public Tratamiento(LocalDate fecha, Integer cantidad, Mascota mascota, Veterinario veterinario, Medicamento medicamento) {
+        this.fecha = fecha;
+        this.cantidad = cantidad;
+        this.mascota = mascota;
+        this.veterinario = veterinario;
+        this.medicamento = medicamento;
+        this.mascotaNombre = mascota.getNombre();
+        this.precioVenta = medicamento.getPrecioVenta();
+        this.precioCompra = medicamento.getPrecioCompra();
+    }
+
+    // Datos para mostrar el historial. Requieren medicamento y veterinario cargados:
+    // por eso los finders de TratamientoRepository usan @EntityGraph
+    @JsonProperty(value = "medicamentoNombre", access = JsonProperty.Access.READ_ONLY)
+    public String getMedicamentoNombre() {
+        return medicamento != null ? medicamento.getNombre() : null;
+    }
+
+    @JsonProperty(value = "veterinarioNombre", access = JsonProperty.Access.READ_ONLY)
+    public String getVeterinarioNombre() {
+        return veterinario != null ? veterinario.getNombre() : null;
+    }
+
+    @JsonProperty(value = "veterinarioEspecialidad", access = JsonProperty.Access.READ_ONLY)
+    public String getVeterinarioEspecialidad() {
+        return veterinario != null ? veterinario.getEspecialidad() : null;
+    }
 }

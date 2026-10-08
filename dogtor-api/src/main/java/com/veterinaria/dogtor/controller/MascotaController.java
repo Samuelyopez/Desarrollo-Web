@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.veterinaria.dogtor.dto.EstadoMascotaRequest;
 import com.veterinaria.dogtor.dto.MascotaRequest;
 import com.veterinaria.dogtor.entities.Mascota;
+import com.veterinaria.dogtor.entities.Tratamiento;
 import com.veterinaria.dogtor.service.MascotaService;
+import com.veterinaria.dogtor.service.TratamientoService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -32,6 +34,9 @@ public class MascotaController {
     @Autowired
     private MascotaService mascotaService;
 
+    @Autowired
+    private TratamientoService tratamientoService;
+
     @Operation(summary = "Listar mascotas (filtro opcional por nombre, raza o dueño)")
     @GetMapping
     public List<Mascota> listar(@RequestParam(required = false) String buscar) {
@@ -42,6 +47,12 @@ public class MascotaController {
     @GetMapping("/{id}")
     public Mascota buscarPorId(@PathVariable Long id) {
         return mascotaService.buscarPorId(id);
+    }
+
+    @Operation(summary = "Historial de tratamientos de una mascota")
+    @GetMapping("/{id}/tratamientos")
+    public List<Tratamiento> tratamientos(@PathVariable Long id) {
+        return tratamientoService.historialDe(id);
     }
 
     @Operation(summary = "Registrar una mascota de un dueño")

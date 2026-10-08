@@ -27,6 +27,10 @@ public interface MascotaRepository extends JpaRepository<Mascota, Long> {
     @EntityGraph(attributePaths = "dueno")
     List<Mascota> findByDueno_Id(Long duenoId);
 
+    // Una mascota solo si es de ese dueño (portal cliente)
+    @EntityGraph(attributePaths = "dueno")
+    Optional<Mascota> findByIdAndDueno_Id(Long id, Long duenoId);
+
     // Para saber si el dueño ya tiene una mascota con ese nombre
     Optional<Mascota> findByDueno_IdAndNombreIgnoreCase(Long duenoId, String nombre);
 

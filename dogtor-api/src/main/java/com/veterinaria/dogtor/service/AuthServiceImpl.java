@@ -54,23 +54,23 @@ public class AuthServiceImpl implements AuthService {
             case DUENO -> {
                 Dueno dueno = duenoRepository.findByUsuarioId(usuario.getId())
                         .orElseThrow(() -> perfilNoEncontrado());
-                yield respuesta(usuario, dueno.getNombre(), dueno.getId());
+                yield respuesta(usuario, dueno.getNombre(), dueno.getId(), dueno.getCedula());
             }
             case VETERINARIO -> {
                 Veterinario veterinario = veterinarioRepository.findByUsuarioId(usuario.getId())
                         .orElseThrow(() -> perfilNoEncontrado());
-                yield respuesta(usuario, veterinario.getNombre(), veterinario.getId());
+                yield respuesta(usuario, veterinario.getNombre(), veterinario.getId(), veterinario.getCedula());
             }
             case ADMIN -> {
                 Administrador admin = administradorRepository.findByUsuarioId(usuario.getId())
                         .orElseThrow(() -> perfilNoEncontrado());
-                yield respuesta(usuario, admin.getNombre(), admin.getId());
+                yield respuesta(usuario, admin.getNombre(), admin.getId(), admin.getCedula());
             }
         };
     }
 
-    private LoginResponse respuesta(Usuario usuario, String nombre, Long perfilId) {
-        return new LoginResponse(usuario.getId(), nombre, usuario.getCorreo(), usuario.getRol(), perfilId);
+    private LoginResponse respuesta(Usuario usuario, String nombre, Long perfilId, String cedula) {
+        return new LoginResponse(usuario.getId(), nombre, usuario.getCorreo(), usuario.getRol(), perfilId, cedula);
     }
 
     private NotFoundException perfilNoEncontrado() {

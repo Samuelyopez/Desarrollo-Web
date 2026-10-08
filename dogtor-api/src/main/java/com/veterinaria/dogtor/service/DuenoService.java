@@ -15,6 +15,9 @@ public interface DuenoService {
 
     List<Mascota> mascotasDe(String cedula);
 
+    // Una mascota del dueño; 404 si no existe o es de otro dueño
+    Mascota mascotaDe(String cedula, Long mascotaId);
+
     // Crea el dueño junto con su usuario (rol DUENO)
     Dueno crear(DuenoRequest request);
 
