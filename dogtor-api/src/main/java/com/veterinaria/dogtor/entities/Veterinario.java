@@ -1,5 +1,7 @@
 package com.veterinaria.dogtor.entities;
 
+import org.hibernate.annotations.Formula;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -12,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,6 +41,12 @@ public class Veterinario {
 
     // URL de la foto
     private String foto;
+
+    // Número de atenciones = tratamientos que ha dado. No se guarda: lo calcula la BD (subconsulta)
+    @Formula("(select count(*) from tratamientos t where t.veterinario_id = id)")
+    @Setter(AccessLevel.NONE)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Integer cantidadAtenciones = 0;
 
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
