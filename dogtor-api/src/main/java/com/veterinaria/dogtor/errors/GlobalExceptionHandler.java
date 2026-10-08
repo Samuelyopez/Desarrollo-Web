@@ -9,7 +9,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -58,6 +60,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> cuerpoInvalido(HttpMessageNotReadableException ex) {
         return respuesta(HttpStatus.BAD_REQUEST, "El cuerpo de la petición no es válido");
+    }
+
+    // Ej: /api/mascotas/abc cuando se espera un id numérico
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> tipoInvalido(MethodArgumentTypeMismatchException ex) {
+        return respuesta(HttpStatus.BAD_REQUEST, "El parámetro '" + ex.getName() + "' no tiene un formato válido");
+    }
+
+    // Ej: DELETE /api/mascotas/1 (las mascotas no se eliminan)
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> metodoNoPermitido(HttpRequestMethodNotSupportedException ex) {
+        return respuesta(HttpStatus.METHOD_NOT_ALLOWED, "Operación no permitida: " + ex.getMethod());
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)

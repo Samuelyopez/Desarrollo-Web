@@ -68,4 +68,16 @@ public class Mascota {
     public Long getDuenoId() {
         return dueno != null ? dueno.getId() : null;
     }
+
+    // Datos básicos del dueño para la tabla y el detalle. Requieren el dueño cargado:
+    // por eso los finders de MascotaRepository usan @EntityGraph("dueno") o join fetch
+    @JsonProperty(value = "duenoCedula", access = JsonProperty.Access.READ_ONLY)
+    public String getDuenoCedula() {
+        return dueno != null ? dueno.getCedula() : null;
+    }
+
+    @JsonProperty(value = "duenoNombre", access = JsonProperty.Access.READ_ONLY)
+    public String getDuenoNombre() {
+        return dueno != null ? dueno.getNombre() : null;
+    }
 }
