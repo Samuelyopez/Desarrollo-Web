@@ -3,6 +3,8 @@ package com.veterinaria.dogtor.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.Formula;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -16,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,6 +42,13 @@ public class Dueno {
     private String nombre;
 
     private String celular;
+
+    // Calculado por la BD (subconsulta): la tabla del front muestra cuántas mascotas tiene
+    // sin pedir la lista LAZY ni hacer una petición por dueño
+    @Formula("(select count(*) from mascotas m where m.dueno_id = id)")
+    @Setter(AccessLevel.NONE)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Integer cantidadMascotas = 0;
 
     // Al borrar el dueño se borra su usuario
     @JsonIgnore

@@ -41,6 +41,11 @@ public class GlobalExceptionHandler {
         return respuesta(HttpStatus.FORBIDDEN, ex.getMessage());
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> badRequest(BadRequestException ex) {
+        return respuesta(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     // Falla de @Valid: se juntan los mensajes de cada campo
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> validacion(MethodArgumentNotValidException ex) {
