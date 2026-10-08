@@ -22,30 +22,39 @@ export class DuenoFormComponent {
   noEncontrado = false;
 
   duenoForm = new FormGroup({
+    // Solo dígitos: 6 a 10
+    cedula: new FormControl('', [Validators.required, Validators.pattern(/^\d{6,10}$/)]),
     nombre: new FormControl('', [
       Validators.required,
       Validators.minLength(3),
       Validators.maxLength(80),
       Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ ]+$/),
     ]),
-    // Solo dígitos: 7 (fijo) a 10 (celular)
-    telefono: new FormControl('', [Validators.required, Validators.pattern(/^\d{7,10}$/)]),
-    direccion: new FormControl('', [Validators.maxLength(100)]),
+    // Celular colombiano: 10 dígitos que empiezan por 3
+    celular: new FormControl('', [Validators.required, Validators.pattern(/^3\d{9}$/)]),
+    correo: new FormControl('', [Validators.required, Validators.email]),
   });
 
   // Texto de cada error por campo (clave = nombre del validador); lo pinta app-campo-error
   readonly mensajes = {
+    cedula: {
+      required: 'La cédula es obligatoria.',
+      pattern: 'La cédula debe tener entre 6 y 10 dígitos, sin puntos.',
+    },
     nombre: {
       required: 'El nombre es obligatorio.',
       minlength: 'El nombre debe tener al menos 3 caracteres.',
       maxlength: 'El nombre no puede superar 80 caracteres.',
       pattern: 'El nombre solo puede contener letras.',
     },
-    telefono: {
-      required: 'El teléfono es obligatorio.',
-      pattern: 'El teléfono debe tener entre 7 y 10 dígitos, sin espacios.',
+    celular: {
+      required: 'El celular es obligatorio.',
+      pattern: 'El celular debe tener 10 dígitos y empezar por 3.',
     },
-    direccion: { maxlength: 'La dirección no puede superar 100 caracteres.' },
+    correo: {
+      required: 'El correo es obligatorio.',
+      email: 'El correo no es válido.',
+    },
   };
 
   ngOnInit() {
@@ -57,9 +66,10 @@ export class DuenoFormComponent {
       const dueno = this.duenoService.getDuenoById(this.duenoId);
       if (dueno) {
         this.duenoForm.patchValue({
+          cedula: dueno.cedula,
           nombre: dueno.nombre,
-          telefono: dueno.telefono ?? '',
-          direccion: dueno.direccion ?? '',
+          celular: dueno.celular ?? '',
+          correo: dueno.correo ?? '',
         });
       } else {
         this.noEncontrado = true;
@@ -77,9 +87,10 @@ export class DuenoFormComponent {
 
     const dueno: Dueno = {
       id: 0,
+      cedula: formValue.cedula!.trim(),
       nombre: formValue.nombre!.trim(),
-      telefono: formValue.telefono!.trim(),
-      direccion: formValue.direccion?.trim() || undefined,
+      celular: formValue.celular!.trim(),
+      correo: formValue.correo!.trim().toLowerCase(),
     };
 
     let mensaje: string;
@@ -92,6 +103,6 @@ export class DuenoFormComponent {
     }
 
     // El mensaje viaja en el state de la navegación y lo muestra la tabla
-    this.router.navigate(['/duenos'], { state: { mensaje } });
+    this.router.navigate(['/vet/duenos'], { state: { mensaje } });
   }
 }

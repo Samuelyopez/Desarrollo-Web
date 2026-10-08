@@ -38,10 +38,13 @@ export class MascotaFormComponent {
       Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ ]+$/),
     ]),
     raza: new FormControl('', [Validators.maxLength(50)]),
-    edad: new FormControl('', [Validators.maxLength(30)]),
+    // Se escriben como texto y se convierten a número al guardar
+    edad: new FormControl('', [Validators.pattern(/^\d{1,2}$/)]),
+    peso: new FormControl('', [Validators.pattern(/^\d{1,3}([.,]\d{1,2})?$/)]),
+    // Puede quedar vacía mientras un veterinario la atiende
+    enfermedad: new FormControl('', [Validators.maxLength(100)]),
     // Acepta una URL externa o una imagen local del proyecto (public/img → "/img/...")
-    fotoUrl: new FormControl('', [Validators.pattern(/^(https?:\/\/|\/).+/)]),
-    vacunas: new FormControl('', [Validators.maxLength(100)]),
+    foto: new FormControl('', [Validators.pattern(/^(https?:\/\/|\/).+/)]),
     // El control guarda el objeto Dueno completo, no su id
     dueno: new FormControl<Dueno | null>(null, [Validators.required]),
   });
@@ -55,9 +58,10 @@ export class MascotaFormComponent {
       pattern: 'El nombre solo puede contener letras.',
     },
     raza: { maxlength: 'La raza no puede superar 50 caracteres.' },
-    edad: { maxlength: 'La edad no puede superar 30 caracteres.' },
-    fotoUrl: { pattern: 'La URL debe empezar por http://, https:// o / (imagen local).' },
-    vacunas: { maxlength: 'Las vacunas no pueden superar 100 caracteres.' },
+    edad: { pattern: 'La edad debe ser un número entero de años (0 a 99).' },
+    peso: { pattern: 'El peso debe ser un número en kg, ej. 8.5' },
+    enfermedad: { maxlength: 'La enfermedad no puede superar 100 caracteres.' },
+    foto: { pattern: 'La URL debe empezar por http://, https:// o / (imagen local).' },
   };
 
   ngOnInit() {
@@ -74,9 +78,10 @@ export class MascotaFormComponent {
         this.mascotaForm.patchValue({
           nombre: mascota.nombre,
           raza: mascota.raza ?? '',
-          edad: mascota.edad ?? '',
-          fotoUrl: mascota.fotoUrl ?? '',
-          vacunas: mascota.vacunas ?? '',
+          edad: mascota.edad?.toString() ?? '',
+          peso: mascota.peso?.toString() ?? '',
+          enfermedad: mascota.enfermedad ?? '',
+          foto: mascota.foto ?? '',
           dueno: mascota.dueno ?? null,
         });
       } else {
@@ -97,10 +102,12 @@ export class MascotaFormComponent {
       id: 0,
       nombre: formValue.nombre!.trim(),
       raza: formValue.raza?.trim() || undefined,
-      edad: formValue.edad?.trim() || undefined,
-      fotoUrl: formValue.fotoUrl?.trim() || undefined,
-      vacunas: formValue.vacunas?.trim() || undefined,
+      edad: formValue.edad ? Number(formValue.edad) : undefined,
+      peso: formValue.peso ? Number(formValue.peso.replace(',', '.')) : undefined,
+      enfermedad: formValue.enfermedad?.trim() || undefined,
+      foto: formValue.foto?.trim() || undefined,
       activa: this.isEdit ? this.activaActual : true,
+      duenoId: formValue.dueno?.id,
       dueno: formValue.dueno ?? undefined,
     };
 
@@ -110,6 +117,6 @@ export class MascotaFormComponent {
       this.mascotaService.addMascota(mascota);
     }
 
-    this.router.navigate(['/mascotas']);
+    this.router.navigate(['/vet/mascotas']);
   }
 }

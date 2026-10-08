@@ -22,7 +22,7 @@ export class MascotaTableComponent {
   mascotaEliminada = output<Mascota>();
 
   verDetalleMascota(mascota: Mascota) {
-    this.router.navigate(['/mascota', mascota.id]);
+    this.router.navigate(['/vet/mascota', mascota.id]);
   }
 
   cambiarEstado(mascota: Mascota) {

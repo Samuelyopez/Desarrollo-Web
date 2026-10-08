@@ -10,7 +10,7 @@
           <th scope="col">Nombre</th>
           <th scope="col">Raza</th>
           <th scope="col">Edad</th>
-          <th scope="col">Vacunas</th>
+          <th scope="col">Enfermedad</th>
           <th scope="col">Dueño</th>
           <th scope="col">Acciones</th>
         </tr>
@@ -19,20 +19,20 @@
         @for (mascota of mascotaArray(); track mascota.id) {
           <tr>
             <td>
-              <app-mascota-avatar [fotoUrl]="mascota.fotoUrl" [nombre]="mascota.nombre" [tamano]="56"></app-mascota-avatar>
+              <app-mascota-avatar [fotoUrl]="mascota.foto" [nombre]="mascota.nombre" [tamano]="56"></app-mascota-avatar>
             </td>
             <td class="text-muted">{{ mascota.id }}</td>
             <td class="fw-bold text-dogtor">{{ mascota.nombre }}</td>
             <td>{{ mascota.raza }}</td>
-            <td>{{ mascota.edad }}</td>
-            <td>{{ mascota.vacunas }}</td>
+            <td>{{ mascota.edad != null ? mascota.edad + ' año(s)' : '—' }}</td>
+            <td>{{ mascota.enfermedad || '—' }}</td>
             <td>{{ mascota.dueno?.nombre ?? '—' }}</td>
             <td>
               <div class="d-flex flex-wrap gap-2">
                 <button type="button" class="btn btn-sm btn-dogtor" (click)="verDetalleMascota(mascota)">
                   <i class="bi bi-eye"></i> Ver
                 </button>
-                <a [routerLink]="['/mascota/update', mascota.id]" class="btn btn-sm btn-dogtor-accent">
+                <a [routerLink]="['/vet/mascota/update', mascota.id]" class="btn btn-sm btn-dogtor-accent">
                   <i class="bi bi-pencil"></i> Editar
                 </a>
                 @if (areMascotasActivas()) {

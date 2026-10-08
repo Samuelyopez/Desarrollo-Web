@@ -9,7 +9,7 @@
 
           @if (noEncontrada) {
             <div class="alert alert-danger text-center">No se encontró la mascota.</div>
-            <a [routerLink]="['/mascotas']" class="btn btn-dogtor w-100">Volver a mascotas</a>
+            <a [routerLink]="['/vet/mascotas']" class="btn btn-dogtor w-100">Volver a mascotas</a>
           } @else {
             <form [formGroup]="mascotaForm" (ngSubmit)="handleSubmit()" novalidate>
               <app-campo-texto
@@ -24,35 +24,49 @@
                 [control]="mascotaForm.controls.raza"
                 [mensajes]="mensajes.raza"
               ></app-campo-texto>
+              <div class="row g-3">
+                <div class="col-sm-6">
+                  <app-campo-texto
+                    campoId="edad"
+                    etiqueta="Edad (años)"
+                    placeholder="Ej: 2"
+                    [control]="mascotaForm.controls.edad"
+                    [mensajes]="mensajes.edad"
+                  ></app-campo-texto>
+                </div>
+                <div class="col-sm-6">
+                  <app-campo-texto
+                    campoId="peso"
+                    etiqueta="Peso (kg)"
+                    placeholder="Ej: 8.5"
+                    [control]="mascotaForm.controls.peso"
+                    [mensajes]="mensajes.peso"
+                  ></app-campo-texto>
+                </div>
+              </div>
               <app-campo-texto
-                campoId="edad"
-                etiqueta="Edad"
-                placeholder="Ej: 2 años, 6 meses"
-                [control]="mascotaForm.controls.edad"
-                [mensajes]="mensajes.edad"
+                campoId="enfermedad"
+                etiqueta="Enfermedad"
+                placeholder="Puede quedar vacía mientras se diagnostica"
+                [control]="mascotaForm.controls.enfermedad"
+                [mensajes]="mensajes.enfermedad"
               ></app-campo-texto>
               <app-campo-texto
-                campoId="fotoUrl"
+                campoId="foto"
                 etiqueta="Foto (URL)"
                 placeholder="https://..."
-                [control]="mascotaForm.controls.fotoUrl"
-                [mensajes]="mensajes.fotoUrl"
+                [control]="mascotaForm.controls.foto"
+                [mensajes]="mensajes.foto"
               ></app-campo-texto>
               <app-foto-preview
-                [url]="mascotaForm.controls.fotoUrl.valid ? mascotaForm.controls.fotoUrl.value : null"
+                [url]="mascotaForm.controls.foto.valid ? mascotaForm.controls.foto.value : null"
               ></app-foto-preview>
-              <app-campo-texto
-                campoId="vacunas"
-                etiqueta="Vacunas"
-                [control]="mascotaForm.controls.vacunas"
-                [mensajes]="mensajes.vacunas"
-              ></app-campo-texto>
               <app-dueno-select [control]="mascotaForm.controls.dueno" [duenos]="duenos"></app-dueno-select>
 
               <button type="submit" class="btn btn-dogtor-secondary w-100 py-2 rounded-3" [disabled]="!mascotaForm.valid">
                 Guardar
               </button>
-              <a [routerLink]="['/mascotas']" class="d-block text-center small text-muted mt-3 cancelar">Cancelar</a>
+              <a [routerLink]="['/vet/mascotas']" class="d-block text-center small text-muted mt-3 cancelar">Cancelar</a>
             </form>
           }
         </div>

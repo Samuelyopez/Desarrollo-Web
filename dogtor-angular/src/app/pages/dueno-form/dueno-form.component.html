@@ -9,9 +9,16 @@
 
           @if (noEncontrado) {
             <div class="alert alert-danger text-center">No se encontró el dueño.</div>
-            <a [routerLink]="['/duenos']" class="btn btn-dogtor w-100">Volver a dueños</a>
+            <a [routerLink]="['/vet/duenos']" class="btn btn-dogtor w-100">Volver a dueños</a>
           } @else {
             <form [formGroup]="duenoForm" (ngSubmit)="handleSubmit()" novalidate>
+              <app-campo-texto
+                campoId="cedula"
+                etiqueta="Cédula"
+                placeholder="Ej: 1000000001"
+                [control]="duenoForm.controls.cedula"
+                [mensajes]="mensajes.cedula"
+              ></app-campo-texto>
               <app-campo-texto
                 campoId="nombre"
                 etiqueta="Nombre completo"
@@ -20,24 +27,25 @@
                 [mensajes]="mensajes.nombre"
               ></app-campo-texto>
               <app-campo-texto
-                campoId="telefono"
-                etiqueta="Teléfono"
+                campoId="celular"
+                etiqueta="Celular"
                 placeholder="Ej: 3001234567"
-                [control]="duenoForm.controls.telefono"
-                [mensajes]="mensajes.telefono"
+                [control]="duenoForm.controls.celular"
+                [mensajes]="mensajes.celular"
               ></app-campo-texto>
               <app-campo-texto
-                campoId="direccion"
-                etiqueta="Dirección (opcional)"
-                placeholder="Ej: Calle 10 # 5-20"
-                [control]="duenoForm.controls.direccion"
-                [mensajes]="mensajes.direccion"
+                campoId="correo"
+                etiqueta="Correo"
+                tipo="email"
+                placeholder="Ej: juan.perez@correo.com"
+                [control]="duenoForm.controls.correo"
+                [mensajes]="mensajes.correo"
               ></app-campo-texto>
 
               <button type="submit" class="btn btn-dogtor-secondary w-100 py-2 rounded-3 mt-2" [disabled]="!duenoForm.valid">
                 Guardar
               </button>
-              <a [routerLink]="['/duenos']" class="d-block text-center small text-muted mt-3 cancelar">Cancelar</a>
+              <a [routerLink]="['/vet/duenos']" class="d-block text-center small text-muted mt-3 cancelar">Cancelar</a>
             </form>
           }
         </div>

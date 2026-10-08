@@ -2,7 +2,7 @@
   <div class="card-body p-4">
     <div class="row align-items-center g-4">
       <div class="col-md-4 text-center">
-        <app-mascota-avatar [fotoUrl]="mascota().fotoUrl" [nombre]="mascota().nombre" [tamano]="180"></app-mascota-avatar>
+        <app-mascota-avatar [fotoUrl]="mascota().foto" [nombre]="mascota().nombre" [tamano]="180"></app-mascota-avatar>
       </div>
 
       <div class="col-md-8">
@@ -15,15 +15,16 @@
           <tbody>
             <tr><th>ID</th><td>{{ mascota().id }}</td></tr>
             <tr><th>Raza</th><td>{{ mascota().raza || '—' }}</td></tr>
-            <tr><th>Edad</th><td>{{ mascota().edad || '—' }}</td></tr>
-            <tr><th>Vacunas</th><td>{{ mascota().vacunas || '—' }}</td></tr>
+            <tr><th>Edad</th><td>{{ mascota().edad != null ? mascota().edad + ' año(s)' : '—' }}</td></tr>
+            <tr><th>Peso</th><td>{{ mascota().peso != null ? mascota().peso + ' kg' : '—' }}</td></tr>
+            <tr><th>Enfermedad</th><td>{{ mascota().enfermedad || 'Sin diagnóstico' }}</td></tr>
           </tbody>
         </table>
 
         <h2 class="h6 fw-bold mb-2">Dueño</h2>
         <app-dueno-card [dueno]="mascota().dueno"></app-dueno-card>
 
-        <a [routerLink]="['/mascota/update', mascota().id]" class="btn btn-dogtor-accent mt-3">
+        <a [routerLink]="['/vet/mascota/update', mascota().id]" class="btn btn-dogtor-accent mt-3">
           <i class="bi bi-pencil"></i> Editar
         </a>
       </div>

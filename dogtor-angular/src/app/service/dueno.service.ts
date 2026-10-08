@@ -5,18 +5,19 @@ import { Dueno } from '../models/dueno.model';
   providedIn: 'root',
 })
 export class DuenoService {
-  // "Base de datos" quemada con los mismos dueños del DataInitializer de Spring Boot
+  // "Base de datos" quemada con los mismos dueños del DataLoader de Spring Boot.
+  // En el Sprint 2 se reemplaza por peticiones HTTP a la API
   private duenoArray: Dueno[] = [
-    { id: 1, nombre: 'Juan Pérez', telefono: '3001234567', direccion: 'Calle 10 # 5-20', fechaCreacion: '2026-08-01T09:00:00' },
-    { id: 2, nombre: 'María López', telefono: '3012345678', direccion: 'Carrera 7 # 45-10', fechaCreacion: '2026-08-02T10:30:00' },
-    { id: 3, nombre: 'Carlos Ruiz', telefono: '3023456789', direccion: 'Avenida 68 # 12-03', fechaCreacion: '2026-08-03T11:15:00' },
-    { id: 4, nombre: 'Ana Gómez', telefono: '3034567890', direccion: 'Calle 80 # 20-45', fechaCreacion: '2026-08-04T14:00:00' },
-    { id: 5, nombre: 'Luis Díaz', telefono: '3045678901', direccion: 'Carrera 15 # 93-60', fechaCreacion: '2026-08-05T08:45:00' },
-    { id: 6, nombre: 'Sofía Martínez', telefono: '3056789012', direccion: 'Calle 53 # 24-11', fechaCreacion: '2026-08-06T16:20:00' },
-    { id: 7, nombre: 'Andrés Rodríguez', telefono: '3067890123', direccion: 'Carrera 30 # 1-50', fechaCreacion: '2026-08-07T12:10:00' },
-    { id: 8, nombre: 'Camila Torres', telefono: '3078901234', direccion: 'Calle 26 # 69-76', fechaCreacion: '2026-08-08T09:30:00' },
-    { id: 9, nombre: 'Diego Ramírez', telefono: '3089012345', direccion: 'Avenida Boyacá # 64-20', fechaCreacion: '2026-08-09T15:40:00' },
-    { id: 10, nombre: 'Valentina Jiménez', telefono: '3090123456', direccion: 'Calle 127 # 7-19', fechaCreacion: '2026-08-10T10:00:00' },
+    { id: 1, cedula: '1000000001', nombre: 'Juan Pérez', celular: '3001234567', correo: 'juan.perez@correo.com' },
+    { id: 2, cedula: '1000000002', nombre: 'María López', celular: '3012345678', correo: 'maria.lopez@correo.com' },
+    { id: 3, cedula: '1000000003', nombre: 'Carlos Ruiz', celular: '3023456789', correo: 'carlos.ruiz@correo.com' },
+    { id: 4, cedula: '1000000004', nombre: 'Ana Gómez', celular: '3034567890', correo: 'ana.gomez@correo.com' },
+    { id: 5, cedula: '1000000005', nombre: 'Luis Díaz', celular: '3045678901', correo: 'luis.diaz@correo.com' },
+    { id: 6, cedula: '1000000006', nombre: 'Sofía Martínez', celular: '3056789012', correo: 'sofia.martinez@correo.com' },
+    { id: 7, cedula: '1000000007', nombre: 'Andrés Rodríguez', celular: '3067890123', correo: 'andres.rodriguez@correo.com' },
+    { id: 8, cedula: '1000000008', nombre: 'Camila Torres', celular: '3078901234', correo: 'camila.torres@correo.com' },
+    { id: 9, cedula: '1000000009', nombre: 'Diego Ramírez', celular: '3089012345', correo: 'diego.ramirez@correo.com' },
+    { id: 10, cedula: '1000000010', nombre: 'Valentina Jiménez', celular: '3090123456', correo: 'valentina.jimenez@correo.com' },
   ];
 
   getDuenos() {
@@ -27,21 +28,20 @@ export class DuenoService {
     return this.duenoArray.find((d) => d.id === id);
   }
 
-  // Busca por nombre, teléfono o dirección (sin distinguir mayúsculas)
+  // Busca por nombre, cédula, celular o correo (sin distinguir mayúsculas)
   buscarDuenos(texto: string) {
     const filtro = texto.trim().toLowerCase();
     if (!filtro) {
       return this.duenoArray;
     }
     return this.duenoArray.filter((d) =>
-      [d.nombre, d.telefono ?? '', d.direccion ?? ''].some((campo) => campo.toLowerCase().includes(filtro)),
+      [d.nombre, d.cedula, d.celular ?? '', d.correo ?? ''].some((campo) => campo.toLowerCase().includes(filtro)),
     );
   }
 
   addDueno(dueno: Dueno) {
     // Siguiente id = máximo actual + 1 (no se repite aunque se eliminen dueños)
     dueno.id = Math.max(0, ...this.duenoArray.map((d) => d.id)) + 1;
-    dueno.fechaCreacion = this.ahora();
     this.duenoArray.push(dueno);
   }
 
@@ -49,24 +49,17 @@ export class DuenoService {
     const dueno = this.getDuenoById(id);
     if (dueno) {
       // Se modifica el MISMO objeto (no se reemplaza): las mascotas guardan la referencia
-      // al objeto Dueno, así ven el nombre/teléfono nuevos sin tener que actualizarlas una a una
+      // al objeto Dueno, así ven los datos nuevos sin tener que actualizarlas una a una
+      dueno.cedula = cambios.cedula;
       dueno.nombre = cambios.nombre;
-      dueno.telefono = cambios.telefono;
-      dueno.direccion = cambios.direccion;
-      dueno.fechaActualizacion = this.ahora();
+      dueno.celular = cambios.celular;
+      dueno.correo = cambios.correo;
     }
   }
 
   // Ojo: quien llama debe comprobar antes que el dueño no tenga mascotas
-  // (igual que la llave foránea mascotas.dueno_id en la base de datos)
+  // (en el Sprint 2 la API las borra en cascada)
   deleteDueno(dueno: Dueno) {
     this.duenoArray = this.duenoArray.filter((d) => d.id !== dueno.id);
-  }
-
-  // Fecha local en formato ISO sin zona, como LocalDateTime de Spring Boot
-  private ahora() {
-    const fecha = new Date();
-    fecha.setMinutes(fecha.getMinutes() - fecha.getTimezoneOffset());
-    return fecha.toISOString().slice(0, 19);
   }
 }

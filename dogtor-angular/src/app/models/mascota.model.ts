@@ -5,9 +5,11 @@ export interface Mascota {
   id: number;
   nombre: string;
   raza?: string;
-  edad?: string;
-  fotoUrl?: string;
-  vacunas?: string;
+  edad?: number; // en años
+  peso?: number; // en kg
+  enfermedad?: string;
+  foto?: string; // URL
   activa: boolean;
-  dueno?: Dueno; // @ManyToOne con Dueno: se guarda el objeto, no el id
+  duenoId?: number; // la API envía solo el id del dueño
+  dueno?: Dueno; // relación: se arma en el front cuando hace falta
 }

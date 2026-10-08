@@ -25,7 +25,7 @@ export class DuenoTableComponent {
   duenoEliminado = output<Dueno>();
 
   verDetalleDueno(dueno: Dueno) {
-    this.router.navigate(['/dueno', dueno.id]);
+    this.router.navigate(['/vet/dueno', dueno.id]);
   }
 
   eliminarDueno(dueno: Dueno) {

@@ -7,8 +7,9 @@
         <tr>
           <th scope="col">ID</th>
           <th scope="col">Nombre</th>
-          <th scope="col">Teléfono</th>
-          <th scope="col">Dirección</th>
+          <th scope="col">Cédula</th>
+          <th scope="col">Celular</th>
+          <th scope="col">Correo</th>
           <th scope="col">Mascotas</th>
           <th scope="col">Acciones</th>
         </tr>
@@ -18,8 +19,9 @@
           <tr>
             <td class="text-muted">{{ fila.dueno.id }}</td>
             <td class="fw-bold text-dogtor">{{ fila.dueno.nombre }}</td>
-            <td>{{ fila.dueno.telefono || '—' }}</td>
-            <td>{{ fila.dueno.direccion || '—' }}</td>
+            <td>{{ fila.dueno.cedula }}</td>
+            <td>{{ fila.dueno.celular || '—' }}</td>
+            <td>{{ fila.dueno.correo || '—' }}</td>
             <td>
               <span class="badge rounded-pill" [class]="fila.totalMascotas > 0 ? 'text-bg-info' : 'text-bg-light border'">
                 {{ fila.totalMascotas }}
@@ -30,7 +32,7 @@
                 <button type="button" class="btn btn-sm btn-dogtor" (click)="verDetalleDueno(fila.dueno)">
                   <i class="bi bi-eye"></i> Ver
                 </button>
-                <a [routerLink]="['/dueno/update', fila.dueno.id]" class="btn btn-sm btn-dogtor-accent">
+                <a [routerLink]="['/vet/dueno/update', fila.dueno.id]" class="btn btn-sm btn-dogtor-accent">
                   <i class="bi bi-pencil"></i> Editar
                 </a>
                 <button

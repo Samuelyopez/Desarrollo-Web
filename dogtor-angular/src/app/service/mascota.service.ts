@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Mascota } from '../models/mascota.model';
 import { Dueno } from '../models/dueno.model';
-import { RegistroMedicoService } from './registro-medico.service';
 import { DuenoService } from './dueno.service';
 
 @Injectable({
@@ -9,34 +8,33 @@ import { DuenoService } from './dueno.service';
 })
 export class MascotaService {
   //DI
-  private registroMedicoService = inject(RegistroMedicoService);
   // Debe ir ANTES de mascotaArray: los inicializadores de campos se ejecutan en orden
   // y el arreglo de abajo ya usa duenoService para guardar el objeto Dueno
   private duenoService = inject(DuenoService);
 
-  // "Base de datos" quemada: el servicio es un singleton, así que los cambios
-  // se mantienen mientras navegas, pero al recargar (F5) vuelven estos datos.
+  // "Base de datos" quemada con las mismas mascotas del DataLoader de Spring Boot.
+  // En el Sprint 3 se reemplaza por peticiones HTTP a la API
   private mascotaArray: Mascota[] = [
-    { id: 1, nombre: 'Max', raza: 'Golden Retriever', edad: '2 meses', fotoUrl: '/img/mascotas/1-max.jpg', vacunas: 'Al día', activa: true, dueno: this.duenoService.getDuenoById(1) },
-    { id: 2, nombre: 'Luna', raza: 'Gato Siamés', edad: '1 año', fotoUrl: '/img/mascotas/2-luna.jpg', vacunas: 'Falta vacuna de rabia', activa: true, dueno: this.duenoService.getDuenoById(1) },
-    { id: 3, nombre: 'Rocky', raza: 'Bulldog Francés', edad: '8 meses', fotoUrl: '/img/mascotas/3-rocky.jpg', vacunas: 'Falta refuerzo anual', activa: true, dueno: this.duenoService.getDuenoById(2) },
-    { id: 4, nombre: 'Bella', raza: 'Gato Persa', edad: '3 años', fotoUrl: '/img/mascotas/4-bella.jpg', vacunas: 'Desparasitado', activa: true, dueno: this.duenoService.getDuenoById(2) },
-    { id: 5, nombre: 'Toby', raza: 'Poodle', edad: '1 año y medio', fotoUrl: '/img/mascotas/5-toby.jpg', vacunas: 'Falta vacuna de rabia', activa: true, dueno: this.duenoService.getDuenoById(3) },
-    { id: 6, nombre: 'Oreo', raza: 'Gato Naranja Común', edad: '7 años', fotoUrl: '/img/mascotas/6-oreo.jpg', vacunas: 'Esquema completo', activa: true, dueno: this.duenoService.getDuenoById(3) },
-    { id: 7, nombre: 'Simba', raza: 'Golden Retriever', edad: '4 años', fotoUrl: '/img/mascotas/7-simba.jpg', vacunas: 'Desparasitado', activa: true, dueno: this.duenoService.getDuenoById(4) },
-    { id: 8, nombre: 'Felix', raza: 'Gato Común Europeo', edad: '6 meses', fotoUrl: '/img/mascotas/8-felix.jpg', vacunas: 'Vacuna múltiple pendiente', activa: false, dueno: this.duenoService.getDuenoById(4) },
-    { id: 9, nombre: 'Milo', raza: 'Labrador Retriever', edad: '2 meses', fotoUrl: '/img/mascotas/9-milo.jpg', vacunas: 'Esquema completo', activa: true, dueno: this.duenoService.getDuenoById(5) },
-    { id: 10, nombre: 'Pelusa', raza: 'Gato Negro', edad: '1 año', fotoUrl: '/img/mascotas/10-pelusa.jpg', vacunas: 'Al día', activa: true, dueno: this.duenoService.getDuenoById(5) },
-    { id: 11, nombre: 'Thor', raza: 'Husky Siberiano', edad: '8 meses', fotoUrl: '/img/mascotas/11-thor.jpg', vacunas: 'Vacuna múltiple pendiente', activa: true, dueno: this.duenoService.getDuenoById(6) },
-    { id: 12, nombre: 'Michi', raza: 'Gato Atigrado', edad: '3 años', fotoUrl: '/img/mascotas/12-michi.jpg', vacunas: 'Falta refuerzo anual', activa: true, dueno: this.duenoService.getDuenoById(6) },
-    { id: 13, nombre: 'Buddy', raza: 'Pastor Alemán', edad: '1 año y medio', fotoUrl: '/img/mascotas/13-buddy.jpg', vacunas: 'Al día', activa: true, dueno: this.duenoService.getDuenoById(7) },
-    { id: 14, nombre: 'Salem', raza: 'Gato Naranja', edad: '7 años', fotoUrl: '/img/mascotas/14-salem.jpg', vacunas: 'Falta vacuna de rabia', activa: true, dueno: this.duenoService.getDuenoById(7) },
-    { id: 15, nombre: 'Duke', raza: 'Mestizo', edad: '4 años', fotoUrl: '/img/mascotas/15-duke.jpg', vacunas: 'Falta refuerzo anual', activa: true, dueno: this.duenoService.getDuenoById(8) },
-    { id: 16, nombre: 'Whiskers', raza: 'Ragdoll', edad: '6 meses', fotoUrl: '/img/mascotas/16-whiskers.jpg', vacunas: 'Desparasitado', activa: true, dueno: this.duenoService.getDuenoById(8) },
-    { id: 17, nombre: 'Rex', raza: 'Chihuahua', edad: '2 meses', fotoUrl: '/img/mascotas/17-rex.jpg', vacunas: 'Falta vacuna de rabia', activa: true, dueno: this.duenoService.getDuenoById(9) },
-    { id: 18, nombre: 'Nala', raza: 'Gato Mestizo', edad: '1 año', fotoUrl: '/img/mascotas/18-nala.jpg', vacunas: 'Esquema completo', activa: true, dueno: this.duenoService.getDuenoById(9) },
-    { id: 19, nombre: 'Zeus', raza: 'Pug', edad: '8 meses', fotoUrl: '/img/mascotas/19-zeus.jpg', vacunas: 'Desparasitado', activa: true, dueno: this.duenoService.getDuenoById(10) },
-    { id: 20, nombre: 'Simona', raza: 'Abisinio', edad: '3 años', fotoUrl: '/img/mascotas/20-simona.jpg', vacunas: 'Vacuna múltiple pendiente', activa: true, dueno: this.duenoService.getDuenoById(10) },
+    this.mascota(1, 'Max', 'Golden Retriever', 1, 8.5, 'Parvovirus', '/img/mascotas/1-max.jpg', true, 1),
+    this.mascota(2, 'Luna', 'Gato Siamés', 1, 3.2, 'Infección urinaria', '/img/mascotas/2-luna.jpg', true, 1),
+    this.mascota(3, 'Rocky', 'Bulldog Francés', 1, 11.0, 'Dificultad respiratoria', '/img/mascotas/3-rocky.jpg', true, 2),
+    this.mascota(4, 'Bella', 'Gato Persa', 3, 4.1, 'Otitis', '/img/mascotas/4-bella.jpg', true, 2),
+    this.mascota(5, 'Toby', 'Poodle', 2, 6.3, 'Dermatitis', '/img/mascotas/5-toby.jpg', true, 3),
+    this.mascota(6, 'Oreo', 'Gato Naranja Común', 7, 5.0, 'Insuficiencia renal', '/img/mascotas/6-oreo.jpg', true, 3),
+    this.mascota(7, 'Simba', 'Golden Retriever', 4, 30.2, 'Displasia de cadera', '/img/mascotas/7-simba.jpg', true, 4),
+    this.mascota(8, 'Felix', 'Gato Común Europeo', 1, 2.8, 'Gastroenteritis', '/img/mascotas/8-felix.jpg', false, 4),
+    this.mascota(9, 'Milo', 'Labrador Retriever', 1, 9.0, 'Moquillo', '/img/mascotas/9-milo.jpg', true, 5),
+    this.mascota(10, 'Pelusa', 'Gato Negro', 1, 3.5, '', '/img/mascotas/10-pelusa.jpg', true, 5),
+    this.mascota(11, 'Thor', 'Husky Siberiano', 1, 18.4, 'Fractura de pata', '/img/mascotas/11-thor.jpg', true, 6),
+    this.mascota(12, 'Michi', 'Gato Atigrado', 3, 4.6, 'Conjuntivitis', '/img/mascotas/12-michi.jpg', true, 6),
+    this.mascota(13, 'Buddy', 'Pastor Alemán', 2, 28.0, 'Leishmaniasis', '/img/mascotas/13-buddy.jpg', true, 7),
+    this.mascota(14, 'Salem', 'Gato Naranja', 7, 5.4, 'Diabetes', '/img/mascotas/14-salem.jpg', true, 7),
+    this.mascota(15, 'Duke', 'Mestizo', 4, 15.7, 'Parásitos intestinales', '/img/mascotas/15-duke.jpg', true, 8),
+    this.mascota(16, 'Whiskers', 'Ragdoll', 1, 3.0, 'Gripe felina', '/img/mascotas/16-whiskers.jpg', true, 8),
+    this.mascota(17, 'Rex', 'Chihuahua', 1, 1.8, 'Hipoglucemia', '/img/mascotas/17-rex.jpg', true, 9),
+    this.mascota(18, 'Nala', 'Gato Mestizo', 1, 3.3, 'Herida por mordedura', '/img/mascotas/18-nala.jpg', true, 9),
+    this.mascota(19, 'Zeus', 'Pug', 1, 7.2, 'Alergia alimentaria', '/img/mascotas/19-zeus.jpg', true, 10),
+    this.mascota(20, 'Simona', 'Abisinio', 3, 3.9, 'Anemia', '/img/mascotas/20-simona.jpg', true, 10),
   ];
 
   getMascotas() {
@@ -82,7 +80,20 @@ export class MascotaService {
   }
 
   deleteMascota(mascota: Mascota) {
-    this.registroMedicoService.deleteRegistrosByMascota(mascota.id);
     this.mascotaArray = this.mascotaArray.filter((m) => m.id !== mascota.id);
+  }
+
+  private mascota(
+    id: number,
+    nombre: string,
+    raza: string,
+    edad: number,
+    peso: number,
+    enfermedad: string,
+    foto: string,
+    activa: boolean,
+    duenoId: number,
+  ): Mascota {
+    return { id, nombre, raza, edad, peso, enfermedad, foto, activa, duenoId, dueno: this.duenoService.getDuenoById(duenoId) };
   }
 }

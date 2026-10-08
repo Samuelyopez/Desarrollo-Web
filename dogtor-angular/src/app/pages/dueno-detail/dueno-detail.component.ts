@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Dueno } from '../../models/dueno.model';
 import { Mascota } from '../../models/mascota.model';
@@ -11,7 +10,7 @@ import { EstadoBadgeComponent } from '../../components/estado-badge/estado-badge
 
 @Component({
   selector: 'app-dueno-detail',
-  imports: [RouterLink, DatePipe, DuenoCardComponent, MascotaAvatarComponent, EstadoBadgeComponent],
+  imports: [RouterLink, DuenoCardComponent, MascotaAvatarComponent, EstadoBadgeComponent],
   templateUrl: './dueno-detail.component.html',
   styleUrl: './dueno-detail.component.scss',
 })
