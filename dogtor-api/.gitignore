@@ -35,3 +35,6 @@ build/
 
 ### H2 (base de datos en archivo) ###
 data/
+
+### Archivos temporales de Excel abierto ###
+~$*.xlsx

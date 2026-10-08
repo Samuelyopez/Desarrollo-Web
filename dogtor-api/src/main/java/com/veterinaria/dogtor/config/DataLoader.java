@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +29,10 @@ import com.veterinaria.dogtor.repository.UsuarioRepository;
 import com.veterinaria.dogtor.repository.VeterinarioRepository;
 
 // Datos de prueba. Solo se cargan si faltan (la BD es un archivo y sobrevive a los reinicios).
-// Para volver a sembrar: detener la API y borrar la carpeta data/
+// Para volver a sembrar: detener la API y borrar la carpeta data/.
+// Corre después de MedicamentoExcelLoader (@Order): los tratamientos de prueba usan sus medicamentos
 @Component
+@Order(2)
 public class DataLoader implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(DataLoader.class);
@@ -139,47 +142,41 @@ public class DataLoader implements CommandLineRunner {
         duenoRepository.saveAll(List.of(juan, maria, carlos, ana, luis, sofia, andres, camila, diego, valentina));
     }
 
-    // TEMPORAL: en el Sprint 5 los medicamentos se cargan desde el Excel (por nombre, sin duplicar estos).
-    // Hay tratamientos de los últimos 30 días y otros más antiguos para el dashboard
+    // Hay tratamientos de los últimos 30 días y otros más antiguos para el dashboard.
+    // Los medicamentos vienen del Excel: si alguno no está, se omiten sus tratamientos
     private void cargarTratamientosDemo() {
-        Medicamento amoxicilina = medicamento("Amoxicilina 500 mg", 8000, 15000, 100);
-        Medicamento meloxicam = medicamento("Meloxicam 1.5 mg/ml", 12000, 22000, 80);
-        Medicamento metronidazol = medicamento("Metronidazol 250 mg", 6000, 11000, 120);
-        Medicamento prednisolona = medicamento("Prednisolona 5 mg", 5000, 9500, 90);
-        Medicamento suero = medicamento("Suero Ringer Lactato 500 ml", 7000, 14000, 60);
-        Medicamento ivermectina = medicamento("Ivermectina 1%", 10000, 19000, 70);
-
-        tratar("1000000001", "Max", "800000001", suero, 2, 2);
-        tratar("1000000001", "Max", "800000001", metronidazol, 1, 5);
-        tratar("1000000001", "Max", "800000002", amoxicilina, 1, 12);
-        tratar("1000000001", "Luna", "800000001", amoxicilina, 2, 3);
-        tratar("1000000001", "Luna", "800000003", meloxicam, 1, 45);
-        tratar("1000000002", "Rocky", "800000004", prednisolona, 1, 8);
-        tratar("1000000002", "Bella", "800000003", amoxicilina, 1, 20);
-        tratar("1000000004", "Felix", "800000005", metronidazol, 1, 60);
-        tratar("1000000004", "Simba", "800000005", meloxicam, 2, 90);
-        tratar("1000000003", "Toby", "800000003", prednisolona, 1, 15);
-        tratar("1000000007", "Buddy", "800000002", ivermectina, 1, 1);
+        tratar("1000000001", "Max", "800000001", "Suero Ringer Lactato 500 ml", 2, 2);
+        tratar("1000000001", "Max", "800000001", "Metronidazol 250 mg", 1, 5);
+        tratar("1000000001", "Max", "800000002", "Amoxicilina 500 mg", 1, 12);
+        tratar("1000000001", "Luna", "800000001", "Amoxicilina 500 mg", 2, 3);
+        tratar("1000000001", "Luna", "800000003", "Meloxicam 1.5 mg/ml", 1, 45);
+        tratar("1000000002", "Rocky", "800000004", "Prednisolona 5 mg", 1, 8);
+        tratar("1000000002", "Bella", "800000003", "Amoxicilina 500 mg", 1, 20);
+        tratar("1000000004", "Felix", "800000005", "Metronidazol 250 mg", 1, 60);
+        tratar("1000000004", "Simba", "800000005", "Meloxicam 1.5 mg/ml", 2, 90);
+        tratar("1000000003", "Toby", "800000003", "Prednisolona 5 mg", 1, 15);
+        tratar("1000000007", "Buddy", "800000002", "Ivermectina 1%", 1, 1);
     }
 
-    private Medicamento medicamento(String nombre, double compra, double venta, int disponibles) {
-        return medicamentoRepository.findByNombre(nombre)
-                .orElseGet(() -> medicamentoRepository.save(new Medicamento(nombre, compra, venta, disponibles, 0)));
-    }
-
-    // Los ids son generados: se busca por cédula y nombre. Si el dueño ya no existe se omite
-    private void tratar(String cedulaDueno, String nombreMascota, String cedulaVet, Medicamento medicamento,
+    // Los ids son generados: se busca por cédula y nombre. Si algo ya no existe se omite
+    private void tratar(String cedulaDueno, String nombreMascota, String cedulaVet, String nombreMedicamento,
             int cantidad, int haceDias) {
         Optional<Mascota> mascota = duenoRepository.findByCedula(cedulaDueno)
                 .flatMap(dueno -> mascotaRepository.findByDueno_IdAndNombreIgnoreCase(dueno.getId(), nombreMascota));
         Optional<Veterinario> veterinario = veterinarioRepository.findByCedula(cedulaVet);
-        if (mascota.isEmpty() || veterinario.isEmpty()) {
+        Optional<Medicamento> medicamento = medicamentoRepository.findByNombreIgnoreCase(nombreMedicamento);
+        if (medicamento.isEmpty()) {
+            log.warn("El Excel no trae '{}': se omite su tratamiento de prueba", nombreMedicamento);
             return;
         }
-        medicamento.setUnidadesDisponibles(medicamento.getUnidadesDisponibles() - cantidad);
-        medicamento.setUnidadesVendidas(medicamento.getUnidadesVendidas() + cantidad);
+        Medicamento med = medicamento.get();
+        if (mascota.isEmpty() || veterinario.isEmpty() || med.getUnidadesDisponibles() < cantidad) {
+            return;
+        }
+        med.setUnidadesDisponibles(med.getUnidadesDisponibles() - cantidad);
+        med.setUnidadesVendidas(med.getUnidadesVendidas() + cantidad);
         tratamientoRepository.save(new Tratamiento(LocalDate.now().minusDays(haceDias), cantidad,
-                mascota.get(), veterinario.get(), medicamento));
+                mascota.get(), veterinario.get(), med));
     }
 
     private Dueno dueno(String cedula, String nombre, String celular, String correo) {

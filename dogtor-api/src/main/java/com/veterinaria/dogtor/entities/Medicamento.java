@@ -1,5 +1,7 @@
 package com.veterinaria.dogtor.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +27,8 @@ public class Medicamento {
     @Column(nullable = false, unique = true)
     private String nombre;
 
+    // Dato interno para calcular ganancias: no se envía al front
+    @JsonIgnore
     private Double precioCompra;
 
     private Double precioVenta;
