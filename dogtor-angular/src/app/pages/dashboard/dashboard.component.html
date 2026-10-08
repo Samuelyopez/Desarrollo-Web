@@ -1,0 +1,184 @@
+<div class="container py-5">
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+      <p class="text-uppercase small fw-bold text-dogtor mb-1">Portal administrador</p>
+      <h1 class="fw-bold mb-1">Dashboard</h1>
+      @if (dashboard) {
+        <p class="text-muted mb-0">
+          Último mes: {{ dashboard.fechaDesde | date: 'dd/MM/yyyy' }} al {{ dashboard.fechaHasta | date: 'dd/MM/yyyy' }}
+        </p>
+      }
+    </div>
+    <button type="button" class="btn btn-dogtor" (click)="actualizar()" [disabled]="cargando">
+      @if (cargando) {
+        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+      } @else {
+        <i class="bi bi-arrow-clockwise"></i>
+      }
+      Actualizar
+    </button>
+  </div>
+
+  @if (errorMensaje) {
+    <div class="alert alert-danger">{{ errorMensaje }}</div>
+  }
+
+  @if (dashboard; as d) {
+    <!-- Indicadores -->
+    <div class="row g-4 mb-4">
+      <div class="col-sm-6 col-lg-3">
+        <div class="kpi card h-100 border-0 shadow-sm rounded-4">
+          <div class="card-body">
+            <p class="kpi-titulo"><i class="bi bi-capsule text-dogtor"></i> Tratamientos del mes</p>
+            <p class="kpi-valor">{{ d.tratamientosUltimoMes | number }}</p>
+            <p class="kpi-detalle">{{ d.unidadesUltimoMes | number }} unidades suministradas</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="kpi card h-100 border-0 shadow-sm rounded-4">
+          <div class="card-body">
+            <p class="kpi-titulo"><i class="bi bi-cash-stack text-dogtor"></i> Ventas totales</p>
+            <p class="kpi-valor">{{ d.ventasTotales | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</p>
+            <p class="kpi-detalle">Precio de venta × unidades</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="kpi card h-100 border-0 shadow-sm rounded-4">
+          <div class="card-body">
+            <p class="kpi-titulo"><i class="bi bi-graph-up-arrow text-dogtor"></i> Ganancias totales</p>
+            <p class="kpi-valor">{{ d.gananciasTotales | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</p>
+            <p class="kpi-detalle">Margen de {{ margen | percent: '1.0-1' }} sobre las ventas</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="kpi card h-100 border-0 shadow-sm rounded-4">
+          <div class="card-body">
+            <p class="kpi-titulo"><i class="bi bi-trophy text-dogtor"></i> Más vendido</p>
+            @if (d.topMedicamentos.length > 0) {
+              <p class="kpi-valor kpi-valor-texto">{{ d.topMedicamentos[0].medicamento }}</p>
+              <p class="kpi-detalle">{{ d.topMedicamentos[0].unidades | number }} unidades</p>
+            } @else {
+              <p class="kpi-valor">—</p>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="kpi card h-100 border-0 shadow-sm rounded-4">
+          <div class="card-body">
+            <p class="kpi-titulo"><i class="bi bi-person-check text-dogtor"></i> Veterinarios activos</p>
+            <p class="kpi-valor">{{ d.veterinariosActivos | number }}</p>
+            <p class="kpi-detalle">Pueden dar tratamientos</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="kpi card h-100 border-0 shadow-sm rounded-4">
+          <div class="card-body">
+            <p class="kpi-titulo"><i class="bi bi-person-dash text-dogtor"></i> Veterinarios inactivos</p>
+            <p class="kpi-valor">{{ d.veterinariosInactivos | number }}</p>
+            <p class="kpi-detalle">Vacaciones o incapacidad</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="kpi card h-100 border-0 shadow-sm rounded-4">
+          <div class="card-body">
+            <p class="kpi-titulo"><i class="bi bi-heart text-dogtor"></i> Mascotas totales</p>
+            <p class="kpi-valor">{{ d.mascotasTotales | number }}</p>
+            <p class="kpi-detalle">Registradas en la veterinaria</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-3">
+        <div class="kpi card h-100 border-0 shadow-sm rounded-4">
+          <div class="card-body">
+            <p class="kpi-titulo"><i class="bi bi-hospital text-dogtor"></i> Mascotas activas</p>
+            <p class="kpi-valor">{{ d.mascotasActivas | number }}</p>
+            <p class="kpi-detalle">En la clínica (en tratamiento)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- Tratamientos por medicamento en el último mes -->
+      <div class="col-lg-7">
+        <div class="card h-100 border-0 shadow-sm rounded-4">
+          <div class="card-body">
+            <h2 class="h5 fw-bold mb-1">Tratamientos por medicamento</h2>
+            <p class="small text-muted mb-3">Últimos 30 días</p>
+            @if (d.tratamientosPorMedicamento.length === 0) {
+              <div class="alert alert-light border text-muted mb-0">Sin tratamientos en los últimos 30 días.</div>
+            } @else {
+              <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th scope="col">Medicamento</th>
+                      <th scope="col" class="text-end">Tratamientos</th>
+                      <th scope="col" class="text-end">Unidades</th>
+                      <th scope="col" class="columna-barra"><span class="visually-hidden">Proporción de unidades</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (fila of d.tratamientosPorMedicamento; track fila.medicamento) {
+                      <tr>
+                        <td>{{ fila.medicamento }}</td>
+                        <td class="text-end">{{ fila.tratamientos | number }}</td>
+                        <td class="text-end fw-bold">{{ fila.unidades | number }}</td>
+                        <td>
+                          <div class="pista" [title]="fila.medicamento + ': ' + fila.unidades + ' unidades'">
+                            <div class="barra" [style.width.%]="(fila.unidades / maxUnidades) * 100"></div>
+                          </div>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Top 3 -->
+      <div class="col-lg-5">
+        <div class="card h-100 border-0 shadow-sm rounded-4">
+          <div class="card-body">
+            <h2 class="h5 fw-bold mb-1">Top 3 más vendidos</h2>
+            <p class="small text-muted mb-3">Medicamentos con más unidades en tratamientos</p>
+            <ol class="list-unstyled mb-0">
+              @for (item of d.topMedicamentos; track item.medicamento; let i = $index) {
+                <li class="d-flex align-items-center gap-3 py-2" [class.border-top]="i > 0">
+                  <span class="puesto">{{ i + 1 }}</span>
+                  <div class="flex-grow-1">
+                    <p class="fw-bold mb-0">{{ item.medicamento }}</p>
+                    <p class="small text-muted mb-0">
+                      {{ item.unidades | number }} unidades · {{ item.ventas | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+                    </p>
+                  </div>
+                </li>
+              } @empty {
+                <li class="text-muted">Aún no hay tratamientos registrados.</li>
+              }
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="small text-muted mt-4 mb-0">
+      <i class="bi bi-info-circle"></i> Ventas, ganancias y unidades se calculan sobre los tratamientos registrados en DogTor
+      (con el precio de cada tratamiento e incluyendo los de mascotas eliminadas). No incluyen las unidades vendidas
+      históricas que trae el Excel de medicamentos.
+    </p>
+  } @else if (cargando) {
+    <div class="text-center py-5">
+      <span class="spinner-border text-dogtor" role="status" aria-label="Cargando"></span>
+    </div>
+  }
+</div>

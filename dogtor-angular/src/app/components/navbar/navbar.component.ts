@@ -33,6 +33,7 @@ export class NavbarComponent {
     ],
     ADMIN: [
       { texto: 'Mi portal', ruta: '/admin' },
+      { texto: 'Dashboard', ruta: '/admin/dashboard' },
       { texto: 'Veterinarios', ruta: '/admin/veterinarios' },
     ],
   };

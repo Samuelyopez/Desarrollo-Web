@@ -15,6 +15,7 @@ import { TratamientoFormComponent } from './pages/tratamiento-form/tratamiento-f
 import { MisPacientesComponent } from './pages/mis-pacientes/mis-pacientes.component';
 import { VeterinarioTablePageComponent } from './pages/veterinario-table-page/veterinario-table-page.component';
 import { VeterinarioFormComponent } from './pages/veterinario-form/veterinario-form.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
 import { rolGuard } from './guards/rol.guard';
 import { invitadoGuard } from './guards/invitado.guard';
@@ -33,10 +34,12 @@ const accesosVeterinario: AccesoPortal[] = [
 ];
 
 const accesosAdmin: AccesoPortal[] = [
-  { icono: 'bi-graph-up', titulo: 'Dashboard', descripcion: 'Indicadores del negocio.' },
+  { icono: 'bi-graph-up', titulo: 'Dashboard', descripcion: 'Indicadores del negocio.', ruta: '/admin/dashboard' },
   { icono: 'bi-person-badge', titulo: 'Veterinarios', descripcion: 'Registra, edita y activa veterinarios.', ruta: '/admin/veterinarios' },
 ];
 
+// Control de acceso por rol (AC34): cada portal exige sesión (authGuard) y su rol (rolGuard, data.roles).
+// canActivateChild repite la revisión en cada página hija del portal (defensa en profundidad)
 export const routes: Routes = [
   {
     path: '',
@@ -56,6 +59,7 @@ export const routes: Routes = [
   {
     path: 'cliente',
     canActivate: [authGuard, rolGuard],
+    canActivateChild: [authGuard, rolGuard],
     data: { roles: ['DUENO'] },
     children: [
       { path: '', component: PortalInicioComponent, data: { titulo: 'Portal cliente', accesos: accesosCliente } },
@@ -68,6 +72,7 @@ export const routes: Routes = [
   {
     path: 'vet',
     canActivate: [authGuard, rolGuard],
+    canActivateChild: [authGuard, rolGuard],
     data: { roles: ['VETERINARIO'] },
     children: [
       { path: '', component: PortalInicioComponent, data: { titulo: 'Portal veterinario', accesos: accesosVeterinario } },
@@ -88,9 +93,11 @@ export const routes: Routes = [
   {
     path: 'admin',
     canActivate: [authGuard, rolGuard],
+    canActivateChild: [authGuard, rolGuard],
     data: { roles: ['ADMIN'] },
     children: [
       { path: '', component: PortalInicioComponent, data: { titulo: 'Portal administrador', accesos: accesosAdmin } },
+      { path: 'dashboard', component: DashboardComponent },
       { path: 'veterinarios', component: VeterinarioTablePageComponent },
       { path: 'veterinario/new', component: VeterinarioFormComponent },
       { path: 'veterinario/update/:cedula', component: VeterinarioFormComponent },

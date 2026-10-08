@@ -1,0 +1,65 @@
+.kpi-titulo {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--bs-secondary-color);
+  margin-bottom: 0.25rem;
+}
+
+.kpi-valor {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--dogtor-textdark);
+  margin-bottom: 0.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+// El top 1 es un nombre, no un número: más pequeño para que quepa
+.kpi-valor-texto {
+  font-size: 1.15rem;
+}
+
+.kpi-detalle {
+  font-size: 0.8rem;
+  color: var(--bs-secondary-color);
+  margin-bottom: 0;
+}
+
+thead th {
+  color: var(--dogtor-textdark);
+  white-space: nowrap;
+}
+
+td.text-end,
+th.text-end {
+  font-variant-numeric: tabular-nums;
+}
+
+.columna-barra {
+  width: 35%;
+}
+
+// Barra de una sola serie: un solo tono, delgada, extremo redondeado anclado a la izquierda
+.pista {
+  height: 0.6rem;
+}
+
+.barra {
+  height: 100%;
+  min-width: 4px;
+  background-color: var(--dogtor-primary);
+  border-radius: 0 4px 4px 0;
+}
+
+.puesto {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  font-weight: 700;
+  color: var(--dogtor-textdark);
+  background-color: #f0fdfa;
+  border: 2px solid var(--dogtor-primary);
+}
