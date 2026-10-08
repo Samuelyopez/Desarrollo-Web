@@ -69,8 +69,8 @@ export const routes: Routes = [
       { path: 'mascota/:id', component: MascotaDetailComponent },
       { path: 'duenos', component: DuenoTablePageComponent },
       { path: 'dueno/new', component: DuenoFormComponent },
-      { path: 'dueno/update/:id', component: DuenoFormComponent },
-      { path: 'dueno/:id', component: DuenoDetailComponent },
+      { path: 'dueno/update/:cedula', component: DuenoFormComponent },
+      { path: 'dueno/:cedula', component: DuenoDetailComponent },
     ],
   },
 

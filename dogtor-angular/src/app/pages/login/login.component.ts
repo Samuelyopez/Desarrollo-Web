@@ -5,7 +5,7 @@ import { FormControl, FormGroup, FormSubmittedEvent, ReactiveFormsModule, Valida
 import { Router } from '@angular/router';
 import { catchError, EMPTY, filter, switchMap } from 'rxjs';
 import { AuthService } from '../../service/auth.service';
-import { ErrorResponse } from '../../models/error-response.model';
+import { mensajeError } from '../../utils/mensaje-error';
 import { CampoTextoComponent } from '../../components/campo-texto/campo-texto.component';
 
 @Component({
@@ -64,14 +64,9 @@ export class LoginComponent {
       });
   }
 
-  // 0 = la API no responde; en los demás casos se muestra el mensaje que envía Spring Boot
   private manejarError(error: HttpErrorResponse) {
     this.cargando = false;
-    const cuerpo = error.error as ErrorResponse | null;
-    this.errorMensaje =
-      error.status === 0
-        ? 'No se pudo conectar con el servidor. ¿Está encendida la API?'
-        : (cuerpo?.mensaje ?? 'No se pudo iniciar sesión.');
+    this.errorMensaje = mensajeError(error, 'No se pudo iniciar sesión.');
     return EMPTY;
   }
 }

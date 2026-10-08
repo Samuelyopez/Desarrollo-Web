@@ -11,7 +11,13 @@
             <div class="alert alert-danger text-center">No se encontró el dueño.</div>
             <a [routerLink]="['/vet/duenos']" class="btn btn-dogtor w-100">Volver a dueños</a>
           } @else {
-            <form [formGroup]="duenoForm" (ngSubmit)="handleSubmit()" novalidate>
+            @if (errorMensaje) {
+              <div class="alert alert-danger small" role="alert">
+                <i class="bi bi-exclamation-triangle"></i> {{ errorMensaje }}
+              </div>
+            }
+
+            <form [formGroup]="duenoForm" novalidate>
               <app-campo-texto
                 campoId="cedula"
                 etiqueta="Cédula"
@@ -41,8 +47,19 @@
                 [control]="duenoForm.controls.correo"
                 [mensajes]="mensajes.correo"
               ></app-campo-texto>
+              <app-campo-texto
+                campoId="password"
+                [etiqueta]="isEdit ? 'Nueva contraseña (opcional)' : 'Contraseña de acceso'"
+                tipo="password"
+                [placeholder]="isEdit ? 'Déjala vacía para no cambiarla' : 'Mínimo 6 caracteres'"
+                [control]="duenoForm.controls.password"
+                [mensajes]="mensajes.password"
+              ></app-campo-texto>
 
-              <button type="submit" class="btn btn-dogtor-secondary w-100 py-2 rounded-3 mt-2" [disabled]="!duenoForm.valid">
+              <button type="submit" class="btn btn-dogtor-secondary w-100 py-2 rounded-3 mt-2" [disabled]="cargando">
+                @if (cargando) {
+                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                }
                 Guardar
               </button>
               <a [routerLink]="['/vet/duenos']" class="d-block text-center small text-muted mt-3 cancelar">Cancelar</a>

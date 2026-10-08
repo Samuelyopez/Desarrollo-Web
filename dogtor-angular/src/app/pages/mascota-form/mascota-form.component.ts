@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Mascota } from '../../models/mascota.model';
@@ -19,6 +20,7 @@ export class MascotaFormComponent {
   //DI
   mascotaService = inject(MascotaService);
   duenoService = inject(DuenoService);
+  private destroyRef = inject(DestroyRef);
   router = inject(Router);
   activatedRoute = inject(ActivatedRoute);
 
@@ -65,7 +67,11 @@ export class MascotaFormComponent {
   };
 
   ngOnInit() {
-    this.duenos = this.duenoService.getDuenos();
+    // Los dueños ya vienen de la API (las mascotas siguen quemadas hasta el Sprint 3)
+    this.duenoService
+      .getDuenos()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((duenos) => (this.duenos = duenos));
 
     const idParam = this.activatedRoute.snapshot.params['id'];
     if (idParam) {

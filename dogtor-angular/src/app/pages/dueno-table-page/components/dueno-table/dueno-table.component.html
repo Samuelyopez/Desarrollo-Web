@@ -5,9 +5,8 @@
     <table class="table table-hover align-middle mb-0">
       <thead>
         <tr>
-          <th scope="col">ID</th>
-          <th scope="col">Nombre</th>
           <th scope="col">Cédula</th>
+          <th scope="col">Nombre</th>
           <th scope="col">Celular</th>
           <th scope="col">Correo</th>
           <th scope="col">Mascotas</th>
@@ -15,32 +14,26 @@
         </tr>
       </thead>
       <tbody>
-        @for (fila of duenoArray(); track fila.dueno.id) {
+        @for (dueno of duenoArray(); track dueno.cedula) {
           <tr>
-            <td class="text-muted">{{ fila.dueno.id }}</td>
-            <td class="fw-bold text-dogtor">{{ fila.dueno.nombre }}</td>
-            <td>{{ fila.dueno.cedula }}</td>
-            <td>{{ fila.dueno.celular || '—' }}</td>
-            <td>{{ fila.dueno.correo || '—' }}</td>
+            <td class="text-muted">{{ dueno.cedula }}</td>
+            <td class="fw-bold text-dogtor">{{ dueno.nombre }}</td>
+            <td>{{ dueno.celular || '—' }}</td>
+            <td>{{ dueno.correo || '—' }}</td>
             <td>
-              <span class="badge rounded-pill" [class]="fila.totalMascotas > 0 ? 'text-bg-info' : 'text-bg-light border'">
-                {{ fila.totalMascotas }}
+              <span class="badge rounded-pill" [class]="dueno.cantidadMascotas ? 'text-bg-info' : 'text-bg-light border'">
+                {{ dueno.cantidadMascotas ?? 0 }}
               </span>
             </td>
             <td>
               <div class="d-flex flex-wrap gap-2">
-                <button type="button" class="btn btn-sm btn-dogtor" (click)="verDetalleDueno(fila.dueno)">
+                <button type="button" class="btn btn-sm btn-dogtor" (click)="verDetalleDueno(dueno)">
                   <i class="bi bi-eye"></i> Ver
                 </button>
-                <a [routerLink]="['/vet/dueno/update', fila.dueno.id]" class="btn btn-sm btn-dogtor-accent">
+                <a [routerLink]="['/vet/dueno/update', dueno.cedula]" class="btn btn-sm btn-dogtor-accent">
                   <i class="bi bi-pencil"></i> Editar
                 </a>
-                <button
-                  type="button"
-                  class="btn btn-sm btn-danger"
-                  (click)="eliminarDueno(fila.dueno)"
-                  [title]="fila.totalMascotas > 0 ? 'Tiene mascotas: no se puede eliminar' : 'Eliminar dueño'"
-                >
+                <button type="button" class="btn btn-sm btn-danger" (click)="eliminarDueno(dueno)">
                   <i class="bi bi-trash"></i> Eliminar
                 </button>
               </div>

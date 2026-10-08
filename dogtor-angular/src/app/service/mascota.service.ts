@@ -1,17 +1,26 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Mascota } from '../models/mascota.model';
 import { Dueno } from '../models/dueno.model';
-import { DuenoService } from './dueno.service';
+
+// TEMPORAL (se borra en el Sprint 3 al pasar MascotaService a HTTP): copia de los dueños del
+// DataLoader para que las mascotas quemadas muestren su dueño. Los dueños reales ya vienen de la API
+const DUENOS_TEMPORALES: Dueno[] = [
+  { id: 1, cedula: '1000000001', nombre: 'Juan Pérez', celular: '3001234567', correo: 'juan.perez@correo.com' },
+  { id: 2, cedula: '1000000002', nombre: 'María López', celular: '3012345678', correo: 'maria.lopez@correo.com' },
+  { id: 3, cedula: '1000000003', nombre: 'Carlos Ruiz', celular: '3023456789', correo: 'carlos.ruiz@correo.com' },
+  { id: 4, cedula: '1000000004', nombre: 'Ana Gómez', celular: '3034567890', correo: 'ana.gomez@correo.com' },
+  { id: 5, cedula: '1000000005', nombre: 'Luis Díaz', celular: '3045678901', correo: 'luis.diaz@correo.com' },
+  { id: 6, cedula: '1000000006', nombre: 'Sofía Martínez', celular: '3056789012', correo: 'sofia.martinez@correo.com' },
+  { id: 7, cedula: '1000000007', nombre: 'Andrés Rodríguez', celular: '3067890123', correo: 'andres.rodriguez@correo.com' },
+  { id: 8, cedula: '1000000008', nombre: 'Camila Torres', celular: '3078901234', correo: 'camila.torres@correo.com' },
+  { id: 9, cedula: '1000000009', nombre: 'Diego Ramírez', celular: '3089012345', correo: 'diego.ramirez@correo.com' },
+  { id: 10, cedula: '1000000010', nombre: 'Valentina Jiménez', celular: '3090123456', correo: 'valentina.jimenez@correo.com' },
+];
 
 @Injectable({
   providedIn: 'root',
 })
 export class MascotaService {
-  //DI
-  // Debe ir ANTES de mascotaArray: los inicializadores de campos se ejecutan en orden
-  // y el arreglo de abajo ya usa duenoService para guardar el objeto Dueno
-  private duenoService = inject(DuenoService);
-
   // "Base de datos" quemada con las mismas mascotas del DataLoader de Spring Boot.
   // En el Sprint 3 se reemplaza por peticiones HTTP a la API
   private mascotaArray: Mascota[] = [
@@ -94,6 +103,6 @@ export class MascotaService {
     activa: boolean,
     duenoId: number,
   ): Mascota {
-    return { id, nombre, raza, edad, peso, enfermedad, foto, activa, duenoId, dueno: this.duenoService.getDuenoById(duenoId) };
+    return { id, nombre, raza, edad, peso, enfermedad, foto, activa, duenoId, dueno: DUENOS_TEMPORALES.find((d) => d.id === duenoId) };
   }
 }
