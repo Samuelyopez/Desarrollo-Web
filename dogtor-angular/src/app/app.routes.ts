@@ -9,6 +9,8 @@ import { MascotaDetailComponent } from './pages/mascota-detail/mascota-detail.co
 import { DuenoTablePageComponent } from './pages/dueno-table-page/dueno-table-page.component';
 import { DuenoFormComponent } from './pages/dueno-form/dueno-form.component';
 import { DuenoDetailComponent } from './pages/dueno-detail/dueno-detail.component';
+import { MisMascotasComponent } from './pages/mis-mascotas/mis-mascotas.component';
+import { MiMascotaDetailComponent } from './pages/mi-mascota-detail/mi-mascota-detail.component';
 import { authGuard } from './guards/auth.guard';
 import { rolGuard } from './guards/rol.guard';
 import { invitadoGuard } from './guards/invitado.guard';
@@ -16,7 +18,7 @@ import { AccesoPortal } from './pages/portal-inicio/portal-inicio.component';
 
 // Accesos del inicio de cada portal (sin ruta = llega en un próximo sprint)
 const accesosCliente: AccesoPortal[] = [
-  { icono: 'bi-heart', titulo: 'Mis mascotas', descripcion: 'Consulta tus mascotas y sus tratamientos.' },
+  { icono: 'bi-heart', titulo: 'Mis mascotas', descripcion: 'Consulta tus mascotas y sus tratamientos.', ruta: '/cliente/mascotas' },
 ];
 
 const accesosVeterinario: AccesoPortal[] = [
@@ -53,6 +55,8 @@ export const routes: Routes = [
     data: { roles: ['DUENO'] },
     children: [
       { path: '', component: PortalInicioComponent, data: { titulo: 'Portal cliente', accesos: accesosCliente } },
+      { path: 'mascotas', component: MisMascotasComponent },
+      { path: 'mascota/:id', component: MiMascotaDetailComponent },
     ],
   },
 

@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_URL } from '../api.config';
 import { Mascota, MascotaRequest } from '../models/mascota.model';
+import { Tratamiento } from '../models/tratamiento.model';
 
 // Las mascotas no se eliminan: solo se activan (en la clínica) o desactivan (en casa)
 @Injectable({
@@ -21,6 +22,11 @@ export class MascotaService {
 
   getMascotaById(id: number): Observable<Mascota> {
     return this.http.get<Mascota>(`${this.url}/${id}`);
+  }
+
+  // Historial de la mascota, del más reciente al más antiguo
+  getTratamientos(id: number): Observable<Tratamiento[]> {
+    return this.http.get<Tratamiento[]>(`${this.url}/${id}/tratamientos`);
   }
 
   createMascota(mascota: MascotaRequest): Observable<Mascota> {

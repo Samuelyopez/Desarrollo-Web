@@ -21,7 +21,10 @@ export class NavbarComponent {
 
   // Cada rol ve solo los enlaces de su portal
   private readonly linksPorRol: Record<Rol, LinkNavbar[]> = {
-    DUENO: [{ texto: 'Mi portal', ruta: '/cliente' }],
+    DUENO: [
+      { texto: 'Mi portal', ruta: '/cliente' },
+      { texto: 'Mis mascotas', ruta: '/cliente/mascotas' },
+    ],
     VETERINARIO: [
       { texto: 'Mi portal', ruta: '/vet' },
       { texto: 'Dueños', ruta: '/vet/duenos' },

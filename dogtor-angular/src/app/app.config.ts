@@ -1,8 +1,13 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
+import { registerLocaleData } from '@angular/common';
+import localeEsCo from '@angular/common/locales/es-CO';
 
 import { routes } from './app.routes';
+
+// Fechas y precios en formato colombiano en los pipes (ej. $15.000)
+registerLocaleData(localeEsCo);
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -10,5 +15,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     // Habilita HttpClient para consumir la API REST de Spring Boot
     provideHttpClient(),
+    { provide: LOCALE_ID, useValue: 'es-CO' },
   ],
 };

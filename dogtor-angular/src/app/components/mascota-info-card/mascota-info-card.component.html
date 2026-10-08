@@ -8,12 +8,18 @@
       <div class="col-md-8">
         <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
           <h1 class="h2 fw-bold text-dogtor mb-0">{{ mascota().nombre }}</h1>
-          <app-estado-badge [activa]="mascota().activa"></app-estado-badge>
+          @if (modo() === 'cliente') {
+            <app-estado-badge [activa]="mascota().activa" textoActiva="En la clínica" textoInactiva="En casa"></app-estado-badge>
+          } @else {
+            <app-estado-badge [activa]="mascota().activa"></app-estado-badge>
+          }
         </div>
 
         <table class="table table-sm mb-3">
           <tbody>
-            <tr><th>ID</th><td>{{ mascota().id }}</td></tr>
+            @if (modo() === 'vet') {
+              <tr><th>ID</th><td>{{ mascota().id }}</td></tr>
+            }
             <tr><th>Raza</th><td>{{ mascota().raza || '—' }}</td></tr>
             <tr><th>Edad</th><td>{{ mascota().edad != null ? mascota().edad + ' año(s)' : '—' }}</td></tr>
             <tr><th>Peso</th><td>{{ mascota().peso != null ? mascota().peso + ' kg' : '—' }}</td></tr>
@@ -21,19 +27,21 @@
           </tbody>
         </table>
 
-        <h2 class="h6 fw-bold mb-2">Dueño</h2>
-        <app-dueno-card [dueno]="dueno()"></app-dueno-card>
+        @if (modo() === 'vet') {
+          <h2 class="h6 fw-bold mb-2">Dueño</h2>
+          <app-dueno-card [dueno]="dueno()"></app-dueno-card>
 
-        <div class="d-flex flex-wrap gap-2 mt-3">
-          <a [routerLink]="['/vet/mascota/update', mascota().id]" class="btn btn-dogtor-accent">
-            <i class="bi bi-pencil"></i> Editar
-          </a>
-          @if (mascota().duenoCedula) {
-            <a [routerLink]="['/vet/dueno', mascota().duenoCedula]" class="btn btn-outline-secondary">
-              <i class="bi bi-person"></i> Ver dueño
+          <div class="d-flex flex-wrap gap-2 mt-3">
+            <a [routerLink]="['/vet/mascota/update', mascota().id]" class="btn btn-dogtor-accent">
+              <i class="bi bi-pencil"></i> Editar
             </a>
-          }
-        </div>
+            @if (mascota().duenoCedula) {
+              <a [routerLink]="['/vet/dueno', mascota().duenoCedula]" class="btn btn-outline-secondary">
+                <i class="bi bi-person"></i> Ver dueño
+              </a>
+            }
+          </div>
+        }
       </div>
     </div>
   </div>

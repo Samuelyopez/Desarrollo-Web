@@ -27,6 +27,11 @@ export class DuenoService {
     return this.http.get<Mascota[]>(`${this.url}/${cedula}/mascotas`);
   }
 
+  // Portal cliente: la API responde 404 si la mascota no es de ese dueño
+  getMascotaDeDueno(cedula: string, id: number): Observable<Mascota> {
+    return this.http.get<Mascota>(`${this.url}/${cedula}/mascotas/${id}`);
+  }
+
   createDueno(dueno: DuenoRequest): Observable<Dueno> {
     return this.http.post<Dueno>(this.url, dueno);
   }

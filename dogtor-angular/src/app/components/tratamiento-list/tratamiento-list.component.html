@@ -1,0 +1,41 @@
+@if (tratamientos().length === 0) {
+  <div class="alert alert-light border text-muted">Esta mascota aún no tiene tratamientos registrados.</div>
+} @else {
+  <div class="table-responsive bg-white rounded-3 shadow-sm border">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th scope="col">Fecha</th>
+          <th scope="col">Medicamento</th>
+          <th scope="col">Veterinario</th>
+          <th scope="col" class="text-center">Cantidad</th>
+          @if (mostrarPrecios()) {
+            <th scope="col" class="text-end">Precio unit.</th>
+            <th scope="col" class="text-end">Total</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (tratamiento of tratamientos(); track tratamiento.id) {
+          <tr>
+            <td class="text-nowrap">{{ tratamiento.fecha | date: 'dd/MM/yyyy' }}</td>
+            <td class="fw-bold text-dogtor">{{ tratamiento.medicamentoNombre }}</td>
+            <td>
+              {{ tratamiento.veterinarioNombre }}
+              @if (tratamiento.veterinarioEspecialidad) {
+                <span class="d-block small text-muted">{{ tratamiento.veterinarioEspecialidad }}</span>
+              }
+            </td>
+            <td class="text-center">{{ tratamiento.cantidad }}</td>
+            @if (mostrarPrecios()) {
+              <td class="text-end text-nowrap">{{ tratamiento.precioVenta | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</td>
+              <td class="text-end text-nowrap fw-bold">
+                {{ tratamiento.precioVenta * tratamiento.cantidad | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

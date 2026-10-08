@@ -1,17 +1,12 @@
-import { Mascota } from './mascota.model';
-import { Veterinario } from './veterinario.model';
-import { Medicamento } from './medicamento.model';
-
-// Entidad Tratamiento (tabla tratamientos): medicamento que un veterinario da a una mascota
+// Entidad Tratamiento (tabla tratamientos): medicamento que un veterinario da a una mascota.
+// La API no envía las relaciones: medicamentoNombre y veterinarioNombre salen de getters de Spring Boot
 export interface Tratamiento {
   id: number;
   fecha: string; // LocalDate en formato ISO, ej. "2026-10-08"
   cantidad: number;
-  precioVenta: number; // copia tomada al crear el tratamiento
-  precioCompra: number;
+  precioVenta: number; // precio unitario copiado al crear el tratamiento
   mascotaNombre: string; // se conserva aunque se borre la mascota
-  // Relaciones: la API no las envía, se piden aparte
-  mascota?: Mascota;
-  veterinario?: Veterinario;
-  medicamento?: Medicamento;
+  medicamentoNombre: string;
+  veterinarioNombre: string;
+  veterinarioEspecialidad?: string;
 }

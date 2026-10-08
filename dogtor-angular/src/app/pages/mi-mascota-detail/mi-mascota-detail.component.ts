@@ -4,66 +4,70 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { catchError, EMPTY, forkJoin, map, switchMap, tap } from 'rxjs';
 import { Mascota } from '../../models/mascota.model';
-import { Dueno } from '../../models/dueno.model';
 import { Tratamiento } from '../../models/tratamiento.model';
-import { MascotaService } from '../../service/mascota.service';
+import { AuthService } from '../../service/auth.service';
 import { DuenoService } from '../../service/dueno.service';
+import { MascotaService } from '../../service/mascota.service';
 import { MascotaInfoCardComponent } from '../../components/mascota-info-card/mascota-info-card.component';
 import { TratamientoListComponent } from '../../components/tratamiento-list/tratamiento-list.component';
 import { mensajeError } from '../../utils/mensaje-error';
 
+// Portal cliente (AC14): detalle de una mascota del dueño con su historial de tratamientos
 @Component({
-  selector: 'app-mascota-detail',
+  selector: 'app-mi-mascota-detail',
   imports: [RouterLink, MascotaInfoCardComponent, TratamientoListComponent],
-  templateUrl: './mascota-detail.component.html',
-  styleUrl: './mascota-detail.component.scss',
+  templateUrl: './mi-mascota-detail.component.html',
 })
-export class MascotaDetailComponent {
+export class MiMascotaDetailComponent {
   //DI
   private route = inject(ActivatedRoute);
-  private mascotaService = inject(MascotaService);
+  private auth = inject(AuthService);
   private duenoService = inject(DuenoService);
+  private mascotaService = inject(MascotaService);
 
   mascotaId = -1;
   mascota: Mascota | undefined;
-  dueno: Dueno | undefined;
   tratamientos: Tratamiento[] = [];
   cargando = true;
   noEncontrada = false;
   errorMensaje = '';
 
   constructor() {
-    // forkJoin en paralelo: (1) la mascota y luego su dueño (consulta anidada con switchMap,
-    // sin subscribes anidados) y (2) su historial de tratamientos
+    const usuario = this.auth.usuario()!;
+
+    // forkJoin pide en paralelo la mascota (solo si es del dueño: si no, la API responde 404)
+    // y su historial de tratamientos
     this.route.paramMap
       .pipe(
         map((params) => Number(params.get('id'))),
         tap((id) => this.iniciarCarga(id)),
         switchMap((id) =>
           forkJoin({
-            datos: this.mascotaService.getMascotaById(id).pipe(
-              switchMap((mascota) =>
-                this.duenoService.getDuenoByCedula(mascota.duenoCedula!).pipe(map((dueno) => ({ mascota, dueno }))),
-              ),
-            ),
+            mascota: this.duenoService.getMascotaDeDueno(usuario.cedula, id),
             tratamientos: this.mascotaService.getTratamientos(id),
-          }).pipe(catchError((error) => this.manejarError(error))),
+          }).pipe(
+            // Doble verificación en el front: la mascota debe ser del dueño que inició sesión
+            map((datos) => {
+              if (datos.mascota.duenoId !== usuario.perfilId) {
+                throw new HttpErrorResponse({ status: 404 });
+              }
+              return datos;
+            }),
+            catchError((error) => this.manejarError(error)),
+          ),
         ),
         takeUntilDestroyed(),
       )
-      .subscribe(({ datos, tratamientos }) => {
-        this.mascota = datos.mascota;
-        this.dueno = datos.dueno;
+      .subscribe(({ mascota, tratamientos }) => {
+        this.mascota = mascota;
         this.tratamientos = tratamientos;
         this.cargando = false;
       });
   }
 
-  // Limpia lo de la mascota anterior para no mostrar datos de otra
   private iniciarCarga(id: number) {
     this.mascotaId = id;
     this.mascota = undefined;
-    this.dueno = undefined;
     this.tratamientos = [];
     this.noEncontrada = false;
     this.errorMensaje = '';
@@ -75,7 +79,7 @@ export class MascotaDetailComponent {
     if (error.status === 404 || error.status === 400) {
       this.noEncontrada = true;
     } else {
-      this.errorMensaje = mensajeError(error, 'No se pudo cargar la mascota.');
+      this.errorMensaje = mensajeError(error, 'No se pudo cargar tu mascota.');
     }
     return EMPTY;
   }
