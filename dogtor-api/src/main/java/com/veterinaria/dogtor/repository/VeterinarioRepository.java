@@ -19,6 +19,9 @@ public interface VeterinarioRepository extends JpaRepository<Veterinario, Long> 
 
     boolean existsByCedula(String cedula);
 
+    // Dashboard: veterinarios activos o inactivos (estado laboral en Usuario.activo)
+    long countByUsuario_Activo(boolean activo);
+
     // Texto vacío = todos. Busca en nombre, cédula, especialidad o correo; activo null = cualquier estado
     @Query("""
             select v from Veterinario v join v.usuario u

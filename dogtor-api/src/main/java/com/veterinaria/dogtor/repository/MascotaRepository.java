@@ -31,6 +31,9 @@ public interface MascotaRepository extends JpaRepository<Mascota, Long> {
     @EntityGraph(attributePaths = "dueno")
     Optional<Mascota> findByIdAndDueno_Id(Long id, Long duenoId);
 
+    // Dashboard: mascotas que están en la veterinaria
+    long countByActivaTrue();
+
     // Para saber si el dueño ya tiene una mascota con ese nombre
     Optional<Mascota> findByDueno_IdAndNombreIgnoreCase(Long duenoId, String nombre);
 
