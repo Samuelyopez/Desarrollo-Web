@@ -26,4 +26,47 @@ export class DuenoService {
   getDuenoById(id: number) {
     return this.duenoArray.find((d) => d.id === id);
   }
+
+  // Busca por nombre, teléfono o dirección (sin distinguir mayúsculas)
+  buscarDuenos(texto: string) {
+    const filtro = texto.trim().toLowerCase();
+    if (!filtro) {
+      return this.duenoArray;
+    }
+    return this.duenoArray.filter((d) =>
+      [d.nombre, d.telefono ?? '', d.direccion ?? ''].some((campo) => campo.toLowerCase().includes(filtro)),
+    );
+  }
+
+  addDueno(dueno: Dueno) {
+    // Siguiente id = máximo actual + 1 (no se repite aunque se eliminen dueños)
+    dueno.id = Math.max(0, ...this.duenoArray.map((d) => d.id)) + 1;
+    dueno.fechaCreacion = this.ahora();
+    this.duenoArray.push(dueno);
+  }
+
+  updateDueno(id: number, cambios: Dueno) {
+    const dueno = this.getDuenoById(id);
+    if (dueno) {
+      // Se modifica el MISMO objeto (no se reemplaza): las mascotas guardan la referencia
+      // al objeto Dueno, así ven el nombre/teléfono nuevos sin tener que actualizarlas una a una
+      dueno.nombre = cambios.nombre;
+      dueno.telefono = cambios.telefono;
+      dueno.direccion = cambios.direccion;
+      dueno.fechaActualizacion = this.ahora();
+    }
+  }
+
+  // Ojo: quien llama debe comprobar antes que el dueño no tenga mascotas
+  // (igual que la llave foránea mascotas.dueno_id en la base de datos)
+  deleteDueno(dueno: Dueno) {
+    this.duenoArray = this.duenoArray.filter((d) => d.id !== dueno.id);
+  }
+
+  // Fecha local en formato ISO sin zona, como LocalDateTime de Spring Boot
+  private ahora() {
+    const fecha = new Date();
+    fecha.setMinutes(fecha.getMinutes() - fecha.getTimezoneOffset());
+    return fecha.toISOString().slice(0, 19);
+  }
 }

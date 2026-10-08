@@ -1,0 +1,51 @@
+@if (duenoArray().length === 0) {
+  <div class="alert alert-light border text-center text-muted">No se encontraron dueños.</div>
+} @else {
+  <div class="table-responsive bg-white rounded-3 shadow-sm border">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Teléfono</th>
+          <th scope="col">Dirección</th>
+          <th scope="col">Mascotas</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (fila of duenoArray(); track fila.dueno.id) {
+          <tr>
+            <td class="text-muted">{{ fila.dueno.id }}</td>
+            <td class="fw-bold text-dogtor">{{ fila.dueno.nombre }}</td>
+            <td>{{ fila.dueno.telefono || '—' }}</td>
+            <td>{{ fila.dueno.direccion || '—' }}</td>
+            <td>
+              <span class="badge rounded-pill" [class]="fila.totalMascotas > 0 ? 'text-bg-info' : 'text-bg-light border'">
+                {{ fila.totalMascotas }}
+              </span>
+            </td>
+            <td>
+              <div class="d-flex flex-wrap gap-2">
+                <button type="button" class="btn btn-sm btn-dogtor" (click)="verDetalleDueno(fila.dueno)">
+                  <i class="bi bi-eye"></i> Ver
+                </button>
+                <a [routerLink]="['/dueno/update', fila.dueno.id]" class="btn btn-sm btn-dogtor-accent">
+                  <i class="bi bi-pencil"></i> Editar
+                </a>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-danger"
+                  (click)="eliminarDueno(fila.dueno)"
+                  [title]="fila.totalMascotas > 0 ? 'Tiene mascotas: no se puede eliminar' : 'Eliminar dueño'"
+                >
+                  <i class="bi bi-trash"></i> Eliminar
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

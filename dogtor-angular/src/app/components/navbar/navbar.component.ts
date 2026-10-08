@@ -12,5 +12,6 @@ export class NavbarComponent {
   links = [
     { texto: 'Inicio', ruta: '/' },
     { texto: 'Mascotas', ruta: '/mascotas' },
+    { texto: 'Dueños', ruta: '/duenos' },
   ];
 }
