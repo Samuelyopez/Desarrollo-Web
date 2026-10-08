@@ -29,6 +29,9 @@ export class DuenoDetailComponent {
   noEncontrado = false;
   errorMensaje = '';
 
+  // Mensaje flash: llega desde el formulario de mascota (history.state) al agregarle una mascota
+  mensaje = (history.state as { mensaje?: string })?.mensaje ?? '';
+
   constructor() {
     // paramMap (y no snapshot) para que funcione aunque se navegue de un dueño a otro.
     // forkJoin pide el dueño y sus mascotas en paralelo y emite cuando llegan las dos respuestas

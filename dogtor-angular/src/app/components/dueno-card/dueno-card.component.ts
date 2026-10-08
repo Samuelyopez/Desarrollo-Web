@@ -8,6 +8,6 @@ import { Dueno } from '../../models/dueno.model';
   styleUrl: './dueno-card.component.scss',
 })
 export class DuenoCardComponent {
-  // Entrada: el dueño ya viene dentro de la mascota (objeto, no id); puede no tener
+  // Entrada: el dueño ya cargado por la página (se pide aparte a la API); puede no estar
   dueno = input<Dueno | undefined>();
 }

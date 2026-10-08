@@ -3,3 +3,11 @@ thead th {
   color: var(--dogtor-textdark);
   white-space: nowrap;
 }
+
+.enlace-dueno {
+  color: var(--dogtor-textdark);
+
+  &:hover {
+    color: var(--dogtor-primary);
+  }
+}

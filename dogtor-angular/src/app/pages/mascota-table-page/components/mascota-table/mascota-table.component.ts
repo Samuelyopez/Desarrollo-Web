@@ -17,9 +17,9 @@ export class MascotaTableComponent {
   mascotaArray = input<Mascota[]>([]);
   areMascotasActivas = input<boolean>(true);
 
-  // Salidas: eventos que se le avisan al componente padre
+  // Salida: evento que se le avisa al componente padre.
+  // No hay "eliminar": las mascotas solo se activan o desactivan
   estadoCambiado = output<Mascota>();
-  mascotaEliminada = output<Mascota>();
 
   verDetalleMascota(mascota: Mascota) {
     this.router.navigate(['/vet/mascota', mascota.id]);
@@ -27,11 +27,5 @@ export class MascotaTableComponent {
 
   cambiarEstado(mascota: Mascota) {
     this.estadoCambiado.emit(mascota);
-  }
-
-  eliminarMascota(mascota: Mascota) {
-    if (confirm(`¿Eliminar a ${mascota.nombre}? También se borrará su historial médico.`)) {
-      this.mascotaEliminada.emit(mascota);
-    }
   }
 }

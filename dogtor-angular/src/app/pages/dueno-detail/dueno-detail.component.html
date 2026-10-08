@@ -3,6 +3,13 @@
     <i class="bi bi-arrow-left"></i> Volver a dueños
   </a>
 
+  @if (mensaje) {
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ mensaje }}
+      <button type="button" class="btn-close" aria-label="Cerrar" (click)="mensaje = ''"></button>
+    </div>
+  }
+
   @if (cargando) {
     <div class="text-center py-5">
       <span class="spinner-border text-dogtor" role="status" aria-label="Cargando"></span>
@@ -27,7 +34,12 @@
         </div>
 
         <!-- Mascotas del dueño -->
-        <h2 class="h4 fw-bold mb-3">Mascotas ({{ mascotas.length }})</h2>
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+          <h2 class="h4 fw-bold mb-0">Mascotas ({{ mascotas.length }})</h2>
+          <a [routerLink]="['/vet/mascota/new']" [queryParams]="{ dueno: dueno.cedula }" class="btn btn-sm btn-dogtor-secondary">
+            <i class="bi bi-plus-lg"></i> Agregar mascota
+          </a>
+        </div>
         @for (mascota of mascotas; track mascota.id) {
           <a [routerLink]="['/vet/mascota', mascota.id]" class="mascota-item d-flex align-items-center gap-3 p-3 mb-2 bg-white border rounded-3 shadow-sm">
             <app-mascota-avatar [fotoUrl]="mascota.foto" [nombre]="mascota.nombre" [tamano]="56"></app-mascota-avatar>

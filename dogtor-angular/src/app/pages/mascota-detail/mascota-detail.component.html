@@ -3,10 +3,14 @@
     <i class="bi bi-arrow-left"></i> Volver a mascotas
   </a>
 
-  @if (mascota) {
+  @if (cargando) {
+    <div class="text-center py-5">
+      <span class="spinner-border text-dogtor" role="status" aria-label="Cargando"></span>
+    </div>
+  } @else if (mascota) {
     <div class="row justify-content-center">
       <div class="col-lg-10 col-xl-8">
-        <app-mascota-info-card [mascota]="mascota"></app-mascota-info-card>
+        <app-mascota-info-card [mascota]="mascota" [dueno]="dueno"></app-mascota-info-card>
 
         <!-- Historial de tratamientos: llega con el Sprint 5 -->
         <h2 class="h4 fw-bold mb-3">Historial de tratamientos</h2>
@@ -16,7 +20,13 @@
   } @else {
     <div class="row justify-content-center">
       <div class="col-md-6">
-        <div class="alert alert-danger text-center">No se encontró la mascota con id {{ mascotaId }}.</div>
+        <div class="alert alert-danger text-center">
+          @if (noEncontrada) {
+            No se encontró la mascota con id {{ mascotaId }}.
+          } @else {
+            {{ errorMensaje }}
+          }
+        </div>
       </div>
     </div>
   }

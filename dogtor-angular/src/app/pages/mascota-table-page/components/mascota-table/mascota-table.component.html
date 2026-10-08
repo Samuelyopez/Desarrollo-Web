@@ -26,7 +26,13 @@
             <td>{{ mascota.raza }}</td>
             <td>{{ mascota.edad != null ? mascota.edad + ' año(s)' : '—' }}</td>
             <td>{{ mascota.enfermedad || '—' }}</td>
-            <td>{{ mascota.dueno?.nombre ?? '—' }}</td>
+            <td>
+              @if (mascota.duenoCedula) {
+                <a [routerLink]="['/vet/dueno', mascota.duenoCedula]" class="enlace-dueno">{{ mascota.duenoNombre }}</a>
+              } @else {
+                —
+              }
+            </td>
             <td>
               <div class="d-flex flex-wrap gap-2">
                 <button type="button" class="btn btn-sm btn-dogtor" (click)="verDetalleMascota(mascota)">
@@ -44,9 +50,6 @@
                     Activar
                   </button>
                 }
-                <button type="button" class="btn btn-sm btn-danger" (click)="eliminarMascota(mascota)">
-                  <i class="bi bi-trash"></i> Eliminar
-                </button>
               </div>
             </td>
           </tr>
