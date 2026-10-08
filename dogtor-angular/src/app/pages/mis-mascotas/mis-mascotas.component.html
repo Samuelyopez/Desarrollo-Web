@@ -1,0 +1,25 @@
+<div class="container py-5">
+  <p class="text-uppercase small fw-bold text-dogtor mb-1">Portal cliente</p>
+  <h1 class="fw-bold mb-1">Mis mascotas</h1>
+  <p class="text-muted mb-4">Consulta el estado de tus mascotas y los tratamientos que han recibido.</p>
+
+  @if (cargando) {
+    <div class="text-center py-5">
+      <span class="spinner-border text-dogtor" role="status" aria-label="Cargando"></span>
+    </div>
+  } @else if (errorMensaje) {
+    <div class="alert alert-danger">{{ errorMensaje }}</div>
+  } @else {
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+      @for (mascota of mascotas; track mascota.id) {
+        <div class="col">
+          <app-mascota-card [mascota]="mascota"></app-mascota-card>
+        </div>
+      } @empty {
+        <div class="col-12">
+          <div class="alert alert-light border text-muted">Aún no tienes mascotas registradas en la clínica.</div>
+        </div>
+      }
+    </div>
+  }
+</div>

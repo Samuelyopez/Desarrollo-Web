@@ -14,5 +14,6 @@ export class CampoTextoComponent {
   etiqueta = input.required<string>();
   control = input.required<FormControl<string | null>>();
   placeholder = input<string>('');
+  tipo = input<'text' | 'email' | 'password'>('text');
   mensajes = input<Record<string, string>>({});
 }

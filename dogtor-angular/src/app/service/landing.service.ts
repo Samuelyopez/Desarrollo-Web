@@ -11,8 +11,8 @@ export class LandingService {
       img: '/img/landing/slide-mascotas.jpg',
       title: 'Cuidamos a tus Pacientes',
       desc: 'Consulta el historial médico de tu mascota en un solo lugar.',
-      link: '/mascotas',
-      btn: 'Ver Mascotas',
+      link: '/login',
+      btn: 'Ingresar',
     },
     {
       img: '/img/landing/slide-equipo.jpg',

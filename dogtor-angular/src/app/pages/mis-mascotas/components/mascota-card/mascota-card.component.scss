@@ -1,0 +1,8 @@
+.tarjeta {
+  text-decoration: none;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-0.25rem);
+  }
+}

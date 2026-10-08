@@ -1,0 +1,70 @@
+<div class="container py-5">
+  <a [routerLink]="['/vet/duenos']" class="volver small d-inline-block mb-4">
+    <i class="bi bi-arrow-left"></i> Volver a dueños
+  </a>
+
+  @if (mensaje) {
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ mensaje }}
+      <button type="button" class="btn-close" aria-label="Cerrar" (click)="mensaje = ''"></button>
+    </div>
+  }
+
+  @if (cargando) {
+    <div class="text-center py-5">
+      <span class="spinner-border text-dogtor" role="status" aria-label="Cargando"></span>
+    </div>
+  } @else if (dueno) {
+    <div class="row justify-content-center">
+      <div class="col-lg-10 col-xl-8">
+        <div class="card border-0 shadow rounded-4 mb-4">
+          <div class="card-body p-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+              <div>
+                <h1 class="h2 fw-bold text-dogtor mb-1">{{ dueno.nombre }}</h1>
+                <p class="small text-muted mb-0">C.C. {{ dueno.cedula }}</p>
+              </div>
+              <a [routerLink]="['/vet/dueno/update', dueno.cedula]" class="btn btn-dogtor-accent">
+                <i class="bi bi-pencil"></i> Editar
+              </a>
+            </div>
+
+            <app-dueno-card [dueno]="dueno"></app-dueno-card>
+          </div>
+        </div>
+
+        <!-- Mascotas del dueño -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+          <h2 class="h4 fw-bold mb-0">Mascotas ({{ mascotas.length }})</h2>
+          <a [routerLink]="['/vet/mascota/new']" [queryParams]="{ dueno: dueno.cedula }" class="btn btn-sm btn-dogtor-secondary">
+            <i class="bi bi-plus-lg"></i> Agregar mascota
+          </a>
+        </div>
+        @for (mascota of mascotas; track mascota.id) {
+          <a [routerLink]="['/vet/mascota', mascota.id]" class="mascota-item d-flex align-items-center gap-3 p-3 mb-2 bg-white border rounded-3 shadow-sm">
+            <app-mascota-avatar [fotoUrl]="mascota.foto" [nombre]="mascota.nombre" [tamano]="56"></app-mascota-avatar>
+            <div class="flex-grow-1">
+              <p class="fw-bold text-dogtor mb-0">{{ mascota.nombre }}</p>
+              <p class="small text-muted mb-0">{{ mascota.raza || 'Sin raza' }} · {{ mascota.edad != null ? mascota.edad + ' año(s)' : 'Edad sin registrar' }}</p>
+            </div>
+            <app-estado-badge [activa]="mascota.activa"></app-estado-badge>
+          </a>
+        } @empty {
+          <div class="alert alert-light border text-muted">Este dueño aún no tiene mascotas registradas.</div>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="alert alert-danger text-center">
+          @if (noEncontrado) {
+            No se encontró un dueño con la cédula {{ cedula }}.
+          } @else {
+            {{ errorMensaje }}
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

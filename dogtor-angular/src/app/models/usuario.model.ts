@@ -1,12 +1,19 @@
-// Equivalente al enum RolUsuario de Spring Boot
-export type RolUsuario = 'ADMIN' | 'VETERINARIO' | 'DUENO';
+// Equivalente al enum Rol de Spring Boot
+export type Rol = 'DUENO' | 'VETERINARIO' | 'ADMIN';
 
-// Entidad Usuario (tabla usuarios): credenciales y rol de acceso
-export interface Usuario {
-  id: number;
-  nombre?: string;
+// Cuerpo de POST /api/auth/login
+export interface LoginRequest {
   correo: string;
   password: string;
-  rol: RolUsuario;
-  activo: boolean;
+}
+
+// Respuesta del login (LoginResponse en Spring Boot).
+// perfilId y cedula son los del Dueno, Veterinario o Administrador según el rol
+export interface UsuarioLogueado {
+  id: number;
+  nombre: string;
+  correo: string;
+  rol: Rol;
+  perfilId: number;
+  cedula: string;
 }

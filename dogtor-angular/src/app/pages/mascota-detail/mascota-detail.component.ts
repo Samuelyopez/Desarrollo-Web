@@ -1,62 +1,85 @@
 import { Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { catchError, EMPTY, forkJoin, map, switchMap, tap } from 'rxjs';
 import { Mascota } from '../../models/mascota.model';
-import { RegistroMedico } from '../../models/registro-medico.model';
+import { Dueno } from '../../models/dueno.model';
+import { Tratamiento } from '../../models/tratamiento.model';
 import { MascotaService } from '../../service/mascota.service';
-import { RegistroMedicoService } from '../../service/registro-medico.service';
-import { DrogaService } from '../../service/droga.service';
-import { UsuarioService } from '../../service/usuario.service';
-import { MascotaInfoCardComponent } from './components/mascota-info-card/mascota-info-card.component';
-import { RegistroMedicoItemComponent } from './components/registro-medico-item/registro-medico-item.component';
-
-// Registro médico con los nombres ya resueltos, listo para pintarse
-interface RegistroVista {
-  registro: RegistroMedico;
-  veterinario: string;
-  drogas: string[];
-}
+import { DuenoService } from '../../service/dueno.service';
+import { MascotaInfoCardComponent } from '../../components/mascota-info-card/mascota-info-card.component';
+import { TratamientoListComponent } from '../../components/tratamiento-list/tratamiento-list.component';
+import { mensajeError } from '../../utils/mensaje-error';
 
 @Component({
   selector: 'app-mascota-detail',
-  imports: [RouterLink, MascotaInfoCardComponent, RegistroMedicoItemComponent],
+  imports: [RouterLink, MascotaInfoCardComponent, TratamientoListComponent],
   templateUrl: './mascota-detail.component.html',
   styleUrl: './mascota-detail.component.scss',
 })
 export class MascotaDetailComponent {
   //DI
-  route = inject(ActivatedRoute);
-  mascotaService = inject(MascotaService);
-  registroMedicoService = inject(RegistroMedicoService);
-  drogaService = inject(DrogaService);
-  usuarioService = inject(UsuarioService);
+  private route = inject(ActivatedRoute);
+  private mascotaService = inject(MascotaService);
+  private duenoService = inject(DuenoService);
 
   mascotaId = -1;
   mascota: Mascota | undefined;
+  dueno: Dueno | undefined;
+  tratamientos: Tratamiento[] = [];
+  cargando = true;
+  noEncontrada = false;
+  errorMensaje = '';
 
-  // Se arma UNA vez en ngOnInit. Si el template llamara a un método que devuelve un arreglo
-  // nuevo, cada detección de cambios vería un valor distinto (error NG0100 en desarrollo)
-  registros: RegistroVista[] = [];
+  // Mensaje flash: llega desde el formulario de tratamiento (history.state)
+  mensaje = (history.state as { mensaje?: string })?.mensaje ?? '';
 
-  ngOnInit() {
-    // 1. Obtener el id de la URL  2. Buscar la mascota  3. Preparar su historial
-    this.mascotaId = Number(this.route.snapshot.params['id']);
-    this.mascota = this.mascotaService.getMascotaById(this.mascotaId);
-
-    if (this.mascota) {
-      this.registros = this.registroMedicoService.getRegistrosByMascota(this.mascotaId).map((registro) => ({
-        registro,
-        veterinario: this.getNombreVeterinario(registro.veterinarioId),
-        drogas: registro.drogaIds
-          .map((id) => this.drogaService.getDrogaById(id)?.nombre)
-          .filter((nombre): nombre is string => !!nombre),
-      }));
-    }
+  constructor() {
+    // forkJoin en paralelo: (1) la mascota y luego su dueño (consulta anidada con switchMap,
+    // sin subscribes anidados) y (2) su historial de tratamientos
+    this.route.paramMap
+      .pipe(
+        map((params) => Number(params.get('id'))),
+        tap((id) => this.iniciarCarga(id)),
+        switchMap((id) =>
+          forkJoin({
+            datos: this.mascotaService.getMascotaById(id).pipe(
+              switchMap((mascota) =>
+                this.duenoService.getDuenoByCedula(mascota.duenoCedula!).pipe(map((dueno) => ({ mascota, dueno }))),
+              ),
+            ),
+            tratamientos: this.mascotaService.getTratamientos(id),
+          }).pipe(catchError((error) => this.manejarError(error))),
+        ),
+        takeUntilDestroyed(),
+      )
+      .subscribe(({ datos, tratamientos }) => {
+        this.mascota = datos.mascota;
+        this.dueno = datos.dueno;
+        this.tratamientos = tratamientos;
+        this.cargando = false;
+      });
   }
 
-  private getNombreVeterinario(veterinarioId?: number) {
-    if (veterinarioId === undefined) {
-      return 'Sin asignar';
+  // Limpia lo de la mascota anterior para no mostrar datos de otra
+  private iniciarCarga(id: number) {
+    this.mascotaId = id;
+    this.mascota = undefined;
+    this.dueno = undefined;
+    this.tratamientos = [];
+    this.noEncontrada = false;
+    this.errorMensaje = '';
+    this.cargando = true;
+  }
+
+  private manejarError(error: HttpErrorResponse) {
+    this.cargando = false;
+    if (error.status === 404 || error.status === 400) {
+      this.noEncontrada = true;
+    } else {
+      this.errorMensaje = mensajeError(error, 'No se pudo cargar la mascota.');
     }
-    return this.usuarioService.getUsuarioById(veterinarioId)?.nombre ?? 'Sin asignar';
+    return EMPTY;
   }
 }

@@ -1,0 +1,32 @@
+<div class="container py-5">
+  <a [routerLink]="['/cliente/mascotas']" class="small d-inline-block mb-4 text-decoration-none">
+    <i class="bi bi-arrow-left"></i> Volver a mis mascotas
+  </a>
+
+  @if (cargando) {
+    <div class="text-center py-5">
+      <span class="spinner-border text-dogtor" role="status" aria-label="Cargando"></span>
+    </div>
+  } @else if (mascota) {
+    <div class="row justify-content-center">
+      <div class="col-lg-10 col-xl-8">
+        <app-mascota-info-card [mascota]="mascota" modo="cliente"></app-mascota-info-card>
+
+        <h2 class="h4 fw-bold mb-3">Historial de tratamientos ({{ tratamientos.length }})</h2>
+        <app-tratamiento-list [tratamientos]="tratamientos"></app-tratamiento-list>
+      </div>
+    </div>
+  } @else {
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="alert alert-danger text-center">
+          @if (noEncontrada) {
+            No encontramos esa mascota entre las tuyas.
+          } @else {
+            {{ errorMensaje }}
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

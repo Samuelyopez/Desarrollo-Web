@@ -2,7 +2,7 @@
   <label [attr.for]="campoId()" class="form-label fw-bold">{{ etiqueta() }}</label>
   <input
     [id]="campoId()"
-    type="text"
+    [type]="tipo()"
     class="form-control"
     [placeholder]="placeholder()"
     [formControl]="control()"

@@ -1,0 +1,55 @@
+@if (veterinarioArray().length === 0) {
+  <div class="alert alert-light border text-center text-muted">No se encontraron veterinarios.</div>
+} @else {
+  <div class="table-responsive bg-white rounded-3 shadow-sm border">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">Cédula</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Especialidad</th>
+          <th scope="col">Correo</th>
+          <th scope="col" class="text-center">Atenciones</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (veterinario of veterinarioArray(); track veterinario.cedula) {
+          <tr [class.opacity-75]="!veterinario.activo">
+            <td><app-persona-avatar [fotoUrl]="veterinario.foto" [nombre]="veterinario.nombre" [tamano]="44"></app-persona-avatar></td>
+            <td class="text-muted">{{ veterinario.cedula }}</td>
+            <td class="fw-bold text-dogtor">{{ veterinario.nombre }}</td>
+            <td>{{ veterinario.especialidad || '—' }}</td>
+            <td>{{ veterinario.correo || '—' }}</td>
+            <td class="text-center">
+              <span class="badge rounded-pill" [class]="veterinario.cantidadAtenciones ? 'text-bg-info' : 'text-bg-light border'">
+                {{ veterinario.cantidadAtenciones ?? 0 }}
+              </span>
+            </td>
+            <td>
+              <app-estado-badge [activa]="veterinario.activo" textoActiva="Activo" textoInactiva="Inactivo"></app-estado-badge>
+            </td>
+            <td>
+              <div class="d-flex flex-wrap gap-2">
+                <a [routerLink]="['/admin/veterinario/update', veterinario.cedula]" class="btn btn-sm btn-dogtor-accent">
+                  <i class="bi bi-pencil"></i> Editar
+                </a>
+                @if (veterinario.activo) {
+                  <button type="button" class="btn btn-sm btn-outline-secondary" (click)="cambiarEstado(veterinario)">
+                    Desactivar
+                  </button>
+                } @else {
+                  <button type="button" class="btn btn-sm btn-success" (click)="cambiarEstado(veterinario)">
+                    Activar
+                  </button>
+                }
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
