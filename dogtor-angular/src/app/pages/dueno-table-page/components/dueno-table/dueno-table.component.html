@@ -30,7 +30,7 @@
                 <button type="button" class="btn btn-sm btn-dogtor" (click)="verDetalleDueno(dueno)">
                   <i class="bi bi-eye"></i> Ver
                 </button>
-                <a [routerLink]="['/vet/dueno/update', dueno.cedula]" class="btn btn-sm btn-dogtor-accent">
+                <a [routerLink]="[portal.base + '/dueno/update', dueno.cedula]" class="btn btn-sm btn-dogtor-accent">
                   <i class="bi bi-pencil"></i> Editar
                 </a>
                 <button type="button" class="btn btn-sm btn-danger" (click)="eliminarDueno(dueno)">

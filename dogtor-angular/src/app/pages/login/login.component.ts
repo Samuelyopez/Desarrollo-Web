@@ -62,7 +62,7 @@ export class LoginComponent {
       )
       .subscribe((usuario) => {
         this.cargando = false;
-        this.router.navigateByUrl(this.auth.rutaInicio(usuario.rol));
+        this.router.navigateByUrl(this.auth.rutaInicio(usuario));
       });
   }
 

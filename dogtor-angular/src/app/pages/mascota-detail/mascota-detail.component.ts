@@ -15,6 +15,7 @@ import { VolverLinkComponent } from '../../components/volver-link/volver-link.co
 import { AlertaFlashComponent } from '../../components/alerta-flash/alerta-flash.component';
 import { CargandoComponent } from '../../components/cargando/cargando.component';
 import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error.component';
+import { injectPortal } from '../../utils/portal';
 
 @Component({
   selector: 'app-mascota-detail',
@@ -23,6 +24,7 @@ import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error
 })
 export class MascotaDetailComponent {
   //DI
+  portal = injectPortal();
   private route = inject(ActivatedRoute);
   private mascotaService = inject(MascotaService);
   private duenoService = inject(DuenoService);

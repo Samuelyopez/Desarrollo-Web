@@ -22,6 +22,7 @@ import { mensajeError } from '../../utils/mensaje-error';
 import { AlertaFlashComponent } from '../../components/alerta-flash/alerta-flash.component';
 import { CargandoComponent } from '../../components/cargando/cargando.component';
 import { BuscadorComponent } from '../../components/buscador/buscador.component';
+import { injectPortal } from '../../utils/portal';
 
 @Component({
   selector: 'app-mascota-table-page',
@@ -31,6 +32,7 @@ import { BuscadorComponent } from '../../components/buscador/buscador.component'
 })
 export class MascotaTablePageComponent {
   //DI
+  portal = injectPortal();
   private mascotaService = inject(MascotaService);
 
   filtro = '';

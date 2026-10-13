@@ -1,7 +1,7 @@
 <app-form-card [titulo]="isEdit ? 'Editar Mascota' : 'Nueva Mascota'">
   @if (noEncontrada) {
     <app-alerta-error mensaje="No se encontró la mascota." variante="formulario"></app-alerta-error>
-    <a [routerLink]="['/vet/mascotas']" class="btn btn-dogtor w-100">Volver a mascotas</a>
+    <a [routerLink]="[portal.base + '/mascotas']" class="btn btn-dogtor w-100">Volver a mascotas</a>
   } @else {
     @if (errorMensaje) {
       <app-alerta-error [mensaje]="errorMensaje" variante="formulario"></app-alerta-error>

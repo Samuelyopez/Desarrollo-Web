@@ -1,5 +1,5 @@
 <div class="container py-5">
-  <app-volver-link [ruta]="['/vet/duenos']" texto="Volver a dueños"></app-volver-link>
+  <app-volver-link [ruta]="[portal.base + '/duenos']" texto="Volver a dueños"></app-volver-link>
   <app-alerta-flash [(mensaje)]="mensaje"></app-alerta-flash>
 
   @if (cargando) {
@@ -14,7 +14,7 @@
                 <h1 class="h2 fw-bold text-dogtor mb-1">{{ dueno.nombre }}</h1>
                 <p class="small text-muted mb-0">C.C. {{ dueno.cedula }}</p>
               </div>
-              <a [routerLink]="['/vet/dueno/update', dueno.cedula]" class="btn btn-dogtor-accent">
+              <a [routerLink]="[portal.base + '/dueno/update', dueno.cedula]" class="btn btn-dogtor-accent">
                 <i class="bi bi-pencil"></i> Editar
               </a>
             </div>
@@ -26,12 +26,12 @@
         <!-- Mascotas del dueño -->
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
           <h2 class="h4 fw-bold mb-0">Mascotas ({{ mascotas.length }})</h2>
-          <a [routerLink]="['/vet/mascota/new']" [queryParams]="{ dueno: dueno.cedula }" class="btn btn-sm btn-dogtor-secondary">
+          <a [routerLink]="[portal.base + '/mascota/new']" [queryParams]="{ dueno: dueno.cedula }" class="btn btn-sm btn-dogtor-secondary">
             <i class="bi bi-plus-lg"></i> Agregar mascota
           </a>
         </div>
         @for (mascota of mascotas; track mascota.id) {
-          <app-mascota-item [mascota]="mascota" [ruta]="['/vet/mascota', mascota.id]"></app-mascota-item>
+          <app-mascota-item [mascota]="mascota" [ruta]="[portal.base + '/mascota', mascota.id]"></app-mascota-item>
         } @empty {
           <app-estado-vacio mensaje="Este dueño aún no tiene mascotas registradas."></app-estado-vacio>
         }

@@ -22,6 +22,7 @@ import { mensajeError } from '../../utils/mensaje-error';
 import { AlertaFlashComponent } from '../../components/alerta-flash/alerta-flash.component';
 import { CargandoComponent } from '../../components/cargando/cargando.component';
 import { BuscadorComponent } from '../../components/buscador/buscador.component';
+import { injectPortal } from '../../utils/portal';
 
 @Component({
   selector: 'app-dueno-table-page',
@@ -30,6 +31,7 @@ import { BuscadorComponent } from '../../components/buscador/buscador.component'
 })
 export class DuenoTablePageComponent {
   //DI
+  portal = injectPortal();
   private duenoService = inject(DuenoService);
 
   filtro = '';

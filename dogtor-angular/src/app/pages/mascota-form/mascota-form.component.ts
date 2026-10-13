@@ -15,6 +15,7 @@ import { FormCardComponent } from '../../components/form-card/form-card.componen
 import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error.component';
 import { FormAccionesComponent } from '../../components/form-acciones/form-acciones.component';
 import { CampoSelectComponent } from '../../components/campo-select/campo-select.component';
+import { injectPortal } from '../../utils/portal';
 
 @Component({
   selector: 'app-mascota-form',
@@ -23,6 +24,7 @@ import { CampoSelectComponent } from '../../components/campo-select/campo-select
 })
 export class MascotaFormComponent {
   //DI
+  portal = injectPortal();
   private mascotaService = inject(MascotaService);
   private duenoService = inject(DuenoService);
   private router = inject(Router);
@@ -35,7 +37,7 @@ export class MascotaFormComponent {
 
   // Si se llega desde el detalle de un dueño (?dueno=cedula) se preselecciona y se vuelve allá
   duenoInicial: string | undefined = this.activatedRoute.snapshot.queryParams['dueno'];
-  rutaVolver = this.duenoInicial ? ['/vet/dueno', this.duenoInicial] : ['/vet/mascotas'];
+  rutaVolver = this.duenoInicial ? [this.portal.base + '/dueno', this.duenoInicial] : [this.portal.base + '/mascotas'];
 
   noEncontrada = false;
   cargando = true;

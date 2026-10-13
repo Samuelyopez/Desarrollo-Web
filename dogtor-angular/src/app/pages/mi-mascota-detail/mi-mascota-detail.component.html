@@ -1,5 +1,5 @@
 <div class="container py-5">
-  <app-volver-link [ruta]="['/cliente/mascotas']" texto="Volver a mis mascotas"></app-volver-link>
+  <app-volver-link [ruta]="[portal.base + '/mascotas']" texto="Volver a mis mascotas"></app-volver-link>
 
   @if (cargando) {
     <app-cargando></app-cargando>

@@ -1,4 +1,4 @@
-<a [routerLink]="['/cliente/mascota', mascota().id]" class="tarjeta card h-100 border-0 shadow-sm rounded-4 text-reset">
+<a [routerLink]="[portal.base + '/mascota', mascota().id]" class="tarjeta card h-100 border-0 shadow-sm rounded-4 text-reset">
   <div class="card-body p-4 text-center d-flex flex-column">
     <app-mascota-avatar [fotoUrl]="mascota().foto" [nombre]="mascota().nombre" [tamano]="120"></app-mascota-avatar>
     <h2 class="h4 fw-bold text-dogtor mt-3 mb-1">{{ mascota().nombre }}</h2>

@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { Mascota } from '../../../../models/mascota.model';
 import { MascotaAvatarComponent } from '../../../../components/mascota-avatar/mascota-avatar.component';
 import { EstadoVacioComponent } from '../../../../components/estado-vacio/estado-vacio.component';
+import { injectPortal } from '../../../../utils/portal';
 
 @Component({
   selector: 'app-mascota-table',
@@ -12,6 +13,7 @@ import { EstadoVacioComponent } from '../../../../components/estado-vacio/estado
 })
 export class MascotaTableComponent {
   //DI
+  portal = injectPortal();
   router = inject(Router);
 
   // Entradas: datos que manda el componente padre
@@ -23,7 +25,7 @@ export class MascotaTableComponent {
   estadoCambiado = output<Mascota>();
 
   verDetalleMascota(mascota: Mascota) {
-    this.router.navigate(['/vet/mascota', mascota.id]);
+    this.router.navigate([this.portal.base + '/mascota', mascota.id]);
   }
 
   cambiarEstado(mascota: Mascota) {

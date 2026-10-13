@@ -5,12 +5,12 @@ import { ActivatedRoute } from '@angular/router';
 import { catchError, EMPTY, forkJoin, map, switchMap, tap } from 'rxjs';
 import { Mascota } from '../../models/mascota.model';
 import { Tratamiento } from '../../models/tratamiento.model';
-import { AuthService } from '../../service/auth.service';
 import { DuenoService } from '../../service/dueno.service';
 import { MascotaService } from '../../service/mascota.service';
 import { MascotaInfoCardComponent } from '../../components/mascota-info-card/mascota-info-card.component';
 import { TratamientoListComponent } from '../../components/tratamiento-list/tratamiento-list.component';
 import { mensajeError } from '../../utils/mensaje-error';
+import { injectPortal } from '../../utils/portal';
 import { VolverLinkComponent } from '../../components/volver-link/volver-link.component';
 import { CargandoComponent } from '../../components/cargando/cargando.component';
 import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error.component';
@@ -23,8 +23,8 @@ import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error
 })
 export class MiMascotaDetailComponent {
   //DI
+  portal = injectPortal();
   private route = inject(ActivatedRoute);
-  private auth = inject(AuthService);
   private duenoService = inject(DuenoService);
   private mascotaService = inject(MascotaService);
 
@@ -36,7 +36,8 @@ export class MiMascotaDetailComponent {
   errorMensaje = '';
 
   constructor() {
-    const usuario = this.auth.usuario()!;
+    // La cédula del dueño viene en la URL (/cliente/<cédula>/mascota/<id>)
+    const cedula = this.portal.cedula;
 
     // forkJoin pide en paralelo la mascota (solo si es del dueño: si no, la API responde 404)
     // y su historial de tratamientos
@@ -46,12 +47,12 @@ export class MiMascotaDetailComponent {
         tap((id) => this.iniciarCarga(id)),
         switchMap((id) =>
           forkJoin({
-            mascota: this.duenoService.getMascotaDeDueno(usuario.cedula, id),
+            mascota: this.duenoService.getMascotaDeDueno(cedula, id),
             tratamientos: this.mascotaService.getTratamientos(id),
           }).pipe(
-            // Doble verificación en el front: la mascota debe ser del dueño que inició sesión
+            // Doble verificación en el front: la mascota debe ser del dueño de la URL
             map((datos) => {
-              if (datos.mascota.duenoId !== usuario.perfilId) {
+              if (datos.mascota.duenoCedula !== cedula) {
                 throw new HttpErrorResponse({ status: 404 });
               }
               return datos;

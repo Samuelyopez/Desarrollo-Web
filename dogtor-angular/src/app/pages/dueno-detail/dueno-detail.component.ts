@@ -14,6 +14,7 @@ import { CargandoComponent } from '../../components/cargando/cargando.component'
 import { MascotaItemComponent } from '../../components/mascota-item/mascota-item.component';
 import { EstadoVacioComponent } from '../../components/estado-vacio/estado-vacio.component';
 import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error.component';
+import { injectPortal } from '../../utils/portal';
 
 @Component({
   selector: 'app-dueno-detail',
@@ -22,6 +23,7 @@ import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error
 })
 export class DuenoDetailComponent {
   //DI
+  portal = injectPortal();
   private route = inject(ActivatedRoute);
   private duenoService = inject(DuenoService);
 

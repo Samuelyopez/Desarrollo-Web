@@ -13,7 +13,6 @@ configurada en `src/app/api.config.ts`): hay que tenerla encendida.
 ```bash
 npm install
 npm start      # http://localhost:4200
-npm test       # pruebas de los guards (necesita Chrome)
 ```
 
 ## Estructura
@@ -22,9 +21,8 @@ npm test       # pruebas de los guards (necesita Chrome)
 src/app/
 ├── api.config.ts  URL base de la API
 ├── models/        Interfaces con los mismos nombres de campo que las entidades y DTOs de Spring Boot
-├── service/       Solo peticiones HTTP (HttpClient), devuelven Observables. AuthService guarda el usuario
-├── guards/        authGuard, rolGuard e invitadoGuard (control de acceso por rol)
-├── utils/         mensajeError: texto para mostrar cuando falla una petición
+├── service/       Solo peticiones HTTP (HttpClient), devuelven Observables
+├── utils/         mensajeError (texto de error de la API) e injectPortal (portal y cédula de la URL)
 ├── components/    Piezas compartidas (navbar, avatares, badges, campos de formulario, lista de tratamientos…)
 └── pages/         Una carpeta por página
 ```
@@ -40,17 +38,17 @@ src/app/
 
 ## Rutas
 
-| Ruta | Página | Acceso |
-|---|---|---|
-| `/` | Landing | Todos |
-| `/login` | Ingresar | Sin sesión (con sesión redirige al portal) |
-| `/acceso-denegado` | Rol sin permiso | Todos |
-| `/cliente`, `/cliente/mascotas`, `/cliente/mascota/:id` | Portal cliente: mis mascotas y su historial | Cliente |
-| `/vet`, `/vet/duenos`, `/vet/dueno/new`, `/vet/dueno/update/:cedula`, `/vet/dueno/:cedula` | CRUD de dueños | Veterinario |
-| `/vet/mascotas`, `/vet/mascota/new`, `/vet/mascota/update/:id`, `/vet/mascota/:id` | CRUD de mascotas | Veterinario |
-| `/vet/tratamiento/new`, `/vet/pacientes` | Dar tratamiento, Mis pacientes | Veterinario |
-| `/admin`, `/admin/dashboard` | Dashboard | Administrador |
-| `/admin/veterinarios`, `/admin/veterinario/new`, `/admin/veterinario/update/:cedula` | CRUD de veterinarios | Administrador |
+No hay sesión ni guards: cualquier pantalla se abre solo con su ruta. La cédula del cliente o del veterinario va en
+la URL y cada pantalla la lee con `injectPortal()` (`utils/portal.ts`); los enlaces del portal se arman a partir de
+esa base. El login solo valida las credenciales y redirige al portal del rol.
 
-Cada portal usa `canActivate` y `canActivateChild` con `authGuard` y `rolGuard`. La sesión vive solo en memoria:
-al recargar (F5) hay que volver a ingresar.
+| Ruta | Página |
+|---|---|
+| `/` | Landing |
+| `/login` | Ingresar (redirige a `/cliente/<cédula>`, `/vet/<cédula>` o `/admin`) |
+| `/cliente/:cliente`, `.../mascotas`, `.../mascota/:id` | Portal cliente: inicio, mis mascotas y su historial |
+| `/vet/:veterinario`, `.../duenos`, `.../dueno/new`, `.../dueno/update/:cedula`, `.../dueno/:cedula` | Portal veterinario: CRUD de dueños |
+| `/vet/:veterinario/mascotas`, `.../mascota/new`, `.../mascota/update/:id`, `.../mascota/:id` | CRUD de mascotas |
+| `/vet/:veterinario/tratamiento/new`, `.../pacientes` | Dar tratamiento, Mis pacientes |
+| `/admin`, `/admin/dashboard` | Portal administrador: dashboard |
+| `/admin/veterinarios`, `/admin/veterinario/new`, `/admin/veterinario/update/:cedula` | CRUD de veterinarios |

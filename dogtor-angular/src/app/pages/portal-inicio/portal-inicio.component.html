@@ -1,13 +1,20 @@
 <div class="container py-5">
   <div class="mb-4">
-    <app-page-title [seccion]="titulo" [titulo]="'Hola, ' + (auth.usuario()?.nombre ?? '')" [subtitulo]="auth.usuario()?.correo ?? ''"></app-page-title>
+    <app-page-title [seccion]="titulo" [titulo]="nombre ? 'Hola, ' + nombre : ''" [subtitulo]="correo"></app-page-title>
   </div>
 
-  <div class="row g-4">
-    @for (acceso of accesos; track acceso.titulo) {
-      <div class="col-sm-6 col-lg-4">
-        <app-acceso-card [acceso]="acceso"></app-acceso-card>
-      </div>
+  @if (errorMensaje) {
+    <app-alerta-error [mensaje]="errorMensaje"></app-alerta-error>
+  } @else {
+    @if (aviso) {
+      <div class="alert alert-warning small" role="alert"><i class="bi bi-info-circle"></i> {{ aviso }}</div>
     }
-  </div>
+    <div class="row g-4">
+      @for (acceso of accesos; track acceso.titulo) {
+        <div class="col-sm-6 col-lg-4">
+          <app-acceso-card [acceso]="acceso"></app-acceso-card>
+        </div>
+      }
+    </div>
+  }
 </div>

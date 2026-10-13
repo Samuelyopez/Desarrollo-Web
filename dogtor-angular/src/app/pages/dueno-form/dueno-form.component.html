@@ -1,7 +1,7 @@
 <app-form-card [titulo]="isEdit ? 'Editar Dueño' : 'Nuevo Dueño'">
   @if (noEncontrado) {
     <app-alerta-error mensaje="No se encontró el dueño." variante="formulario"></app-alerta-error>
-    <a [routerLink]="['/vet/duenos']" class="btn btn-dogtor w-100">Volver a dueños</a>
+    <a [routerLink]="[portal.base + '/duenos']" class="btn btn-dogtor w-100">Volver a dueños</a>
   } @else {
     @if (errorMensaje) {
       <app-alerta-error [mensaje]="errorMensaje" variante="formulario"></app-alerta-error>
@@ -46,7 +46,7 @@
         [mensajes]="mensajes.password"
       ></app-campo-texto>
 
-      <app-form-acciones [cargando]="cargando" [rutaCancelar]="['/vet/duenos']"></app-form-acciones>
+      <app-form-acciones [cargando]="cargando" [rutaCancelar]="[portal.base + '/duenos']"></app-form-acciones>
     </form>
   }
 </app-form-card>

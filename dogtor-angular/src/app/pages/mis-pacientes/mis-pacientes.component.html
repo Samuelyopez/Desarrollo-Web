@@ -5,7 +5,7 @@
       titulo="Mis pacientes"
       subtitulo="Mascotas a las que les has dado tratamiento."
     ></app-page-title>
-    <a [routerLink]="['/vet/tratamiento/new']" class="btn btn-dogtor-secondary">
+    <a [routerLink]="[portal.base + '/tratamiento/new']" class="btn btn-dogtor-secondary">
       <i class="bi bi-capsule"></i> Dar tratamiento
     </a>
   </div>
@@ -43,7 +43,7 @@
               <td class="text-center">{{ paciente.cantidadTratamientos }}</td>
               <td class="text-nowrap">{{ paciente.ultimoTratamiento | date: 'dd/MM/yyyy' }}</td>
               <td>
-                <a [routerLink]="['/vet/mascota', paciente.mascotaId]" class="btn btn-sm btn-dogtor">
+                <a [routerLink]="[portal.base + '/mascota', paciente.mascotaId]" class="btn btn-sm btn-dogtor">
                   <i class="bi bi-eye"></i> Ver
                 </a>
               </td>

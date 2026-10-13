@@ -28,7 +28,7 @@
             <td>{{ mascota.enfermedad || '—' }}</td>
             <td>
               @if (mascota.duenoCedula) {
-                <a [routerLink]="['/vet/dueno', mascota.duenoCedula]" class="enlace-dueno">{{ mascota.duenoNombre }}</a>
+                <a [routerLink]="[portal.base + '/dueno', mascota.duenoCedula]" class="enlace-dueno">{{ mascota.duenoNombre }}</a>
               } @else {
                 —
               }
@@ -38,7 +38,7 @@
                 <button type="button" class="btn btn-sm btn-dogtor" (click)="verDetalleMascota(mascota)">
                   <i class="bi bi-eye"></i> Ver
                 </button>
-                <a [routerLink]="['/vet/mascota/update', mascota.id]" class="btn btn-sm btn-dogtor-accent">
+                <a [routerLink]="[portal.base + '/mascota/update', mascota.id]" class="btn btn-sm btn-dogtor-accent">
                   <i class="bi bi-pencil"></i> Editar
                 </a>
                 @if (areMascotasActivas()) {

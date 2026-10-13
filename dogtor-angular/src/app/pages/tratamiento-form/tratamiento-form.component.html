@@ -2,6 +2,11 @@
   @if (errorMensaje) {
     <app-alerta-error [mensaje]="errorMensaje" variante="formulario"></app-alerta-error>
   }
+  @if (avisoVeterinario) {
+    <div class="alert alert-warning small" role="alert">
+      <i class="bi bi-person-dash"></i> {{ avisoVeterinario }}
+    </div>
+  }
   @if (avisoMascota) {
     <div class="alert alert-warning small" role="alert">
       <i class="bi bi-info-circle"></i> {{ avisoMascota }}
@@ -12,7 +17,7 @@
     <div class="row g-3 mb-3">
       <div class="col-sm-6">
         <label for="veterinario" class="form-label fw-bold">Veterinario</label>
-        <input id="veterinario" class="form-control" [value]="veterinario.nombre" readonly />
+        <input id="veterinario" class="form-control" [value]="veterinario?.nombre ?? ''" readonly />
       </div>
       <div class="col-sm-6">
         <label for="fecha" class="form-label fw-bold">Fecha</label>
@@ -69,7 +74,7 @@
     <app-form-acciones
       texto="Registrar tratamiento"
       [cargando]="cargando"
-      [deshabilitado]="medicamentos.length === 0"
+      [deshabilitado]="medicamentos.length === 0 || !veterinario?.activo"
       [rutaCancelar]="rutaVolver"
     ></app-form-acciones>
   </form>

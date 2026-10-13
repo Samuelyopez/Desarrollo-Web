@@ -2,6 +2,7 @@ import { Component, inject, input, output } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Dueno } from '../../../../models/dueno.model';
 import { EstadoVacioComponent } from '../../../../components/estado-vacio/estado-vacio.component';
+import { injectPortal } from '../../../../utils/portal';
 
 @Component({
   selector: 'app-dueno-table',
@@ -10,6 +11,7 @@ import { EstadoVacioComponent } from '../../../../components/estado-vacio/estado
 })
 export class DuenoTableComponent {
   //DI
+  portal = injectPortal();
   router = inject(Router);
 
   // Entrada: datos que manda el componente padre
@@ -19,7 +21,7 @@ export class DuenoTableComponent {
   duenoEliminado = output<Dueno>();
 
   verDetalleDueno(dueno: Dueno) {
-    this.router.navigate(['/vet/dueno', dueno.cedula]);
+    this.router.navigate([this.portal.base + '/dueno', dueno.cedula]);
   }
 
   // Eliminación en cascada: se avisa cuántas mascotas se van con el dueño
