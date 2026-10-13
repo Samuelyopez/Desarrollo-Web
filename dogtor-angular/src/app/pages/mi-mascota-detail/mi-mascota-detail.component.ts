@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { catchError, EMPTY, forkJoin, map, switchMap, tap } from 'rxjs';
 import { Mascota } from '../../models/mascota.model';
 import { Tratamiento } from '../../models/tratamiento.model';
@@ -11,11 +11,14 @@ import { MascotaService } from '../../service/mascota.service';
 import { MascotaInfoCardComponent } from '../../components/mascota-info-card/mascota-info-card.component';
 import { TratamientoListComponent } from '../../components/tratamiento-list/tratamiento-list.component';
 import { mensajeError } from '../../utils/mensaje-error';
+import { VolverLinkComponent } from '../../components/volver-link/volver-link.component';
+import { CargandoComponent } from '../../components/cargando/cargando.component';
+import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error.component';
 
 // Portal cliente (AC14): detalle de una mascota del dueño con su historial de tratamientos
 @Component({
   selector: 'app-mi-mascota-detail',
-  imports: [RouterLink, MascotaInfoCardComponent, TratamientoListComponent],
+  imports: [MascotaInfoCardComponent, TratamientoListComponent, VolverLinkComponent, CargandoComponent, AlertaErrorComponent],
   templateUrl: './mi-mascota-detail.component.html',
 })
 export class MiMascotaDetailComponent {

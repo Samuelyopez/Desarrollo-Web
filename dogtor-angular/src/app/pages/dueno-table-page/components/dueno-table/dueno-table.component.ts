@@ -1,12 +1,12 @@
 import { Component, inject, input, output } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Dueno } from '../../../../models/dueno.model';
+import { EstadoVacioComponent } from '../../../../components/estado-vacio/estado-vacio.component';
 
 @Component({
   selector: 'app-dueno-table',
-  imports: [RouterLink],
+  imports: [RouterLink, EstadoVacioComponent],
   templateUrl: './dueno-table.component.html',
-  styleUrl: './dueno-table.component.scss',
 })
 export class DuenoTableComponent {
   //DI

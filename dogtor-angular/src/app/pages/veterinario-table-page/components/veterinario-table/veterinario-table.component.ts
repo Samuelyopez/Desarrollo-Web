@@ -3,12 +3,12 @@ import { RouterLink } from '@angular/router';
 import { Veterinario } from '../../../../models/veterinario.model';
 import { PersonaAvatarComponent } from '../../../../components/persona-avatar/persona-avatar.component';
 import { EstadoBadgeComponent } from '../../../../components/estado-badge/estado-badge.component';
+import { EstadoVacioComponent } from '../../../../components/estado-vacio/estado-vacio.component';
 
 @Component({
   selector: 'app-veterinario-table',
-  imports: [RouterLink, PersonaAvatarComponent, EstadoBadgeComponent],
+  imports: [RouterLink, PersonaAvatarComponent, EstadoBadgeComponent, EstadoVacioComponent],
   templateUrl: './veterinario-table.component.html',
-  styleUrl: './veterinario-table.component.scss',
 })
 export class VeterinarioTableComponent {
   // Entrada: datos que manda el componente padre

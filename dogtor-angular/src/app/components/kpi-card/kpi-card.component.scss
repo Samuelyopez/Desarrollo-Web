@@ -1,0 +1,30 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.titulo {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--bs-secondary-color);
+  margin-bottom: 0.25rem;
+}
+
+.valor {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--dogtor-textdark);
+  margin-bottom: 0.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.valor-texto {
+  font-size: 1.15rem;
+}
+
+.detalle {
+  font-size: 0.8rem;
+  color: var(--bs-secondary-color);
+  margin-bottom: 0;
+}

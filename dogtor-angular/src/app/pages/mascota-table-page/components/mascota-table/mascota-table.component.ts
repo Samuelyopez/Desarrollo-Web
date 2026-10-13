@@ -2,10 +2,11 @@ import { Component, inject, input, output } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Mascota } from '../../../../models/mascota.model';
 import { MascotaAvatarComponent } from '../../../../components/mascota-avatar/mascota-avatar.component';
+import { EstadoVacioComponent } from '../../../../components/estado-vacio/estado-vacio.component';
 
 @Component({
   selector: 'app-mascota-table',
-  imports: [RouterLink, MascotaAvatarComponent],
+  imports: [RouterLink, MascotaAvatarComponent, EstadoVacioComponent],
   templateUrl: './mascota-table.component.html',
   styleUrl: './mascota-table.component.scss',
 })

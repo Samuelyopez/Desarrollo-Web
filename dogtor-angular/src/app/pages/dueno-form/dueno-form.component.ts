@@ -8,12 +8,14 @@ import { DuenoRequest } from '../../models/dueno.model';
 import { DuenoService } from '../../service/dueno.service';
 import { CampoTextoComponent } from '../../components/campo-texto/campo-texto.component';
 import { mensajeError } from '../../utils/mensaje-error';
+import { FormCardComponent } from '../../components/form-card/form-card.component';
+import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error.component';
+import { FormAccionesComponent } from '../../components/form-acciones/form-acciones.component';
 
 @Component({
   selector: 'app-dueno-form',
-  imports: [ReactiveFormsModule, RouterLink, CampoTextoComponent],
+  imports: [ReactiveFormsModule, RouterLink, CampoTextoComponent, FormCardComponent, AlertaErrorComponent, FormAccionesComponent],
   templateUrl: './dueno-form.component.html',
-  styleUrl: './dueno-form.component.scss',
 })
 export class DuenoFormComponent {
   //DI

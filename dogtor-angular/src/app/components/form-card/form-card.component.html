@@ -1,0 +1,20 @@
+<div class="fondo py-5 px-3">
+  <div class="row justify-content-center g-0">
+    <div [class]="columnas[ancho()]">
+      <div class="card border-0 shadow rounded-4">
+        <div class="card-body p-4 p-md-5">
+          <div class="text-center mb-4">
+            @if (icono()) {
+              <i class="bi display-4 text-dogtor" [class]="icono()"></i>
+            }
+            <h1 class="h3 fw-bold text-dogtor mb-1" [class.mt-2]="icono()">{{ titulo() }}</h1>
+            @if (subtitulo()) {
+              <p class="small text-muted mb-0">{{ subtitulo() }}</p>
+            }
+          </div>
+          <ng-content></ng-content>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

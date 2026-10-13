@@ -72,3 +72,10 @@ body {
   --bs-btn-hover-border-color: #dfb74f;
   font-weight: 600;
 }
+
+// Cabecera de las tablas de gestión (dueños, mascotas, veterinarios, pacientes, tratamientos)
+.tabla-dogtor thead th {
+  background-color: #f0fdfa;
+  color: var(--dogtor-textdark);
+  white-space: nowrap;
+}

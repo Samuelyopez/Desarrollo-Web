@@ -9,15 +9,17 @@ import { Dueno } from '../../models/dueno.model';
 import { MascotaService } from '../../service/mascota.service';
 import { DuenoService } from '../../service/dueno.service';
 import { CampoTextoComponent } from '../../components/campo-texto/campo-texto.component';
-import { DuenoSelectComponent } from './components/dueno-select/dueno-select.component';
 import { FotoPreviewComponent } from '../../components/foto-preview/foto-preview.component';
 import { mensajeError } from '../../utils/mensaje-error';
+import { FormCardComponent } from '../../components/form-card/form-card.component';
+import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error.component';
+import { FormAccionesComponent } from '../../components/form-acciones/form-acciones.component';
+import { CampoSelectComponent } from '../../components/campo-select/campo-select.component';
 
 @Component({
   selector: 'app-mascota-form',
-  imports: [ReactiveFormsModule, RouterLink, CampoTextoComponent, DuenoSelectComponent, FotoPreviewComponent],
+  imports: [ReactiveFormsModule, RouterLink, CampoTextoComponent, FotoPreviewComponent, FormCardComponent, AlertaErrorComponent, FormAccionesComponent, CampoSelectComponent],
   templateUrl: './mascota-form.component.html',
-  styleUrl: './mascota-form.component.scss',
 })
 export class MascotaFormComponent {
   //DI
@@ -72,7 +74,13 @@ export class MascotaFormComponent {
     peso: { pattern: 'El peso debe ser un número en kg, ej. 8.5' },
     enfermedad: { maxlength: 'La enfermedad no puede superar 100 caracteres.' },
     foto: { pattern: 'La URL debe empezar por http://, https:// o / (imagen local).' },
+    dueno: { required: 'Selecciona un dueño de la lista.' },
   };
+
+  // Lista de dueños: muestra el nombre y compara por id, así al editar queda seleccionado
+  // el dueño que ya tenía la mascota aunque sea otro objeto
+  textoDueno = (dueno: Dueno) => `${dueno.nombre} (C.C. ${dueno.cedula})`;
+  compararDuenos = (a: Dueno | null, b: Dueno | null) => (a && b ? a.id === b.id : a === b);
 
   constructor() {
     this.cargarDatos();

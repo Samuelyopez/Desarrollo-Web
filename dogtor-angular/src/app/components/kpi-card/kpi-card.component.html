@@ -1,0 +1,9 @@
+<div class="card h-100 border-0 shadow-sm rounded-4">
+  <div class="card-body">
+    <p class="titulo"><i class="bi text-dogtor" [class]="kpi().icono"></i> {{ kpi().titulo }}</p>
+    <p class="valor" [class.valor-texto]="kpi().valorEsTexto">{{ kpi().valor }}</p>
+    @if (kpi().detalle) {
+      <p class="detalle">{{ kpi().detalle }}</p>
+    }
+  </div>
+</div>

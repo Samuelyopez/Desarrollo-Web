@@ -3,18 +3,21 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { catchError, concatMap, debounceTime, distinctUntilChanged, EMPTY, map, startWith, Subject, switchMap } from 'rxjs';
-import { PageTitleComponent } from '../mascota-table-page/components/page-title/page-title.component';
+import { PageTitleComponent } from '../../components/page-title/page-title.component';
 import { VeterinarioTableComponent } from './components/veterinario-table/veterinario-table.component';
 import { Veterinario } from '../../models/veterinario.model';
 import { VeterinarioService } from '../../service/veterinario.service';
 import { mensajeError } from '../../utils/mensaje-error';
+import { AlertaFlashComponent } from '../../components/alerta-flash/alerta-flash.component';
+import { CargandoComponent } from '../../components/cargando/cargando.component';
+import { BuscadorComponent } from '../../components/buscador/buscador.component';
 
 type FiltroEstado = 'todos' | 'activos' | 'inactivos';
 
 // Portal administrador (AC26-AC28): veterinarios registrados, búsqueda y estado laboral
 @Component({
   selector: 'app-veterinario-table-page',
-  imports: [PageTitleComponent, VeterinarioTableComponent, RouterLink],
+  imports: [PageTitleComponent, VeterinarioTableComponent, RouterLink, AlertaFlashComponent, CargandoComponent, BuscadorComponent],
   templateUrl: './veterinario-table-page.component.html',
   styleUrl: './veterinario-table-page.component.scss',
 })
@@ -105,9 +108,6 @@ export class VeterinarioTablePageComponent {
     this.cambioEstado$.next(veterinario);
   }
 
-  cerrarMensaje() {
-    this.mensaje = '';
-  }
 
   private mostrarMensaje(texto: string, tipo: 'success' | 'danger') {
     this.mensaje = texto;

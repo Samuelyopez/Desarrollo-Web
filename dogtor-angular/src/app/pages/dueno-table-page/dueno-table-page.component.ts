@@ -14,17 +14,19 @@ import {
   Subject,
   switchMap,
 } from 'rxjs';
-import { PageTitleComponent } from '../mascota-table-page/components/page-title/page-title.component';
+import { PageTitleComponent } from '../../components/page-title/page-title.component';
 import { DuenoTableComponent } from './components/dueno-table/dueno-table.component';
 import { Dueno } from '../../models/dueno.model';
 import { DuenoService } from '../../service/dueno.service';
 import { mensajeError } from '../../utils/mensaje-error';
+import { AlertaFlashComponent } from '../../components/alerta-flash/alerta-flash.component';
+import { CargandoComponent } from '../../components/cargando/cargando.component';
+import { BuscadorComponent } from '../../components/buscador/buscador.component';
 
 @Component({
   selector: 'app-dueno-table-page',
-  imports: [PageTitleComponent, DuenoTableComponent, RouterLink],
+  imports: [PageTitleComponent, DuenoTableComponent, RouterLink, AlertaFlashComponent, CargandoComponent, BuscadorComponent],
   templateUrl: './dueno-table-page.component.html',
-  styleUrl: './dueno-table-page.component.scss',
 })
 export class DuenoTablePageComponent {
   //DI
@@ -100,9 +102,6 @@ export class DuenoTablePageComponent {
     this.eliminar$.next(dueno);
   }
 
-  cerrarMensaje() {
-    this.mensaje = '';
-  }
 
   private mostrarMensaje(texto: string, tipo: 'success' | 'danger') {
     this.mensaje = texto;

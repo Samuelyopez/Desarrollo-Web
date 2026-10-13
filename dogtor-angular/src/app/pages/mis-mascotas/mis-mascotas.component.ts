@@ -7,11 +7,15 @@ import { AuthService } from '../../service/auth.service';
 import { DuenoService } from '../../service/dueno.service';
 import { MascotaCardComponent } from './components/mascota-card/mascota-card.component';
 import { mensajeError } from '../../utils/mensaje-error';
+import { PageTitleComponent } from '../../components/page-title/page-title.component';
+import { CargandoComponent } from '../../components/cargando/cargando.component';
+import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error.component';
+import { EstadoVacioComponent } from '../../components/estado-vacio/estado-vacio.component';
 
 // Portal cliente (AC13): las mascotas del dueño que inició sesión, en tarjetas
 @Component({
   selector: 'app-mis-mascotas',
-  imports: [MascotaCardComponent],
+  imports: [MascotaCardComponent, PageTitleComponent, CargandoComponent, AlertaErrorComponent, EstadoVacioComponent],
   templateUrl: './mis-mascotas.component.html',
 })
 export class MisMascotasComponent {

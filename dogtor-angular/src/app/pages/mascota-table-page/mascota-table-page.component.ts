@@ -14,15 +14,18 @@ import {
   Subject,
   switchMap,
 } from 'rxjs';
-import { PageTitleComponent } from './components/page-title/page-title.component';
+import { PageTitleComponent } from '../../components/page-title/page-title.component';
 import { MascotaTableComponent } from './components/mascota-table/mascota-table.component';
 import { Mascota } from '../../models/mascota.model';
 import { MascotaService } from '../../service/mascota.service';
 import { mensajeError } from '../../utils/mensaje-error';
+import { AlertaFlashComponent } from '../../components/alerta-flash/alerta-flash.component';
+import { CargandoComponent } from '../../components/cargando/cargando.component';
+import { BuscadorComponent } from '../../components/buscador/buscador.component';
 
 @Component({
   selector: 'app-mascota-table-page',
-  imports: [PageTitleComponent, MascotaTableComponent, RouterLink],
+  imports: [PageTitleComponent, MascotaTableComponent, RouterLink, AlertaFlashComponent, CargandoComponent, BuscadorComponent],
   templateUrl: './mascota-table-page.component.html',
   styleUrl: './mascota-table-page.component.scss',
 })
@@ -101,9 +104,6 @@ export class MascotaTablePageComponent {
     this.cambioEstado$.next(mascota);
   }
 
-  cerrarMensaje() {
-    this.mensaje = '';
-  }
 
   private mostrarMensaje(texto: string, tipo: 'success' | 'danger') {
     this.mensaje = texto;

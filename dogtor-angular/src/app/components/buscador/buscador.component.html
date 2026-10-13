@@ -1,0 +1,12 @@
+<label [attr.for]="campoId()" class="visually-hidden">{{ etiqueta() }}</label>
+<div class="input-group">
+  <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+  <input
+    [id]="campoId()"
+    type="search"
+    class="form-control"
+    [placeholder]="placeholder()"
+    [value]="valor()"
+    (input)="buscar.emit($any($event.target).value)"
+  />
+</div>

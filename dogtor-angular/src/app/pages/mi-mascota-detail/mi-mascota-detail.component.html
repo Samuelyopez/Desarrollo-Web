@@ -1,12 +1,8 @@
 <div class="container py-5">
-  <a [routerLink]="['/cliente/mascotas']" class="small d-inline-block mb-4 text-decoration-none">
-    <i class="bi bi-arrow-left"></i> Volver a mis mascotas
-  </a>
+  <app-volver-link [ruta]="['/cliente/mascotas']" texto="Volver a mis mascotas"></app-volver-link>
 
   @if (cargando) {
-    <div class="text-center py-5">
-      <span class="spinner-border text-dogtor" role="status" aria-label="Cargando"></span>
-    </div>
+    <app-cargando></app-cargando>
   } @else if (mascota) {
     <div class="row justify-content-center">
       <div class="col-lg-10 col-xl-8">
@@ -17,16 +13,9 @@
       </div>
     </div>
   } @else {
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="alert alert-danger text-center">
-          @if (noEncontrada) {
-            No encontramos esa mascota entre las tuyas.
-          } @else {
-            {{ errorMensaje }}
-          }
-        </div>
-      </div>
-    </div>
+    <app-alerta-error
+      variante="pagina"
+      [mensaje]="noEncontrada ? 'No encontramos esa mascota entre las tuyas.' : errorMensaje"
+    ></app-alerta-error>
   }
 </div>

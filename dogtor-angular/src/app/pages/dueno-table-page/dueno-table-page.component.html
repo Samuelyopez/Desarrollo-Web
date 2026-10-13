@@ -9,34 +9,16 @@
     </a>
   </div>
 
-  @if (mensaje) {
-    <div class="alert alert-dismissible fade show" [class]="'alert-' + tipoMensaje" role="alert">
-      {{ mensaje }}
-      <button type="button" class="btn-close" aria-label="Cerrar" (click)="cerrarMensaje()"></button>
-    </div>
-  }
+  <app-alerta-flash [(mensaje)]="mensaje" [tipo]="tipoMensaje"></app-alerta-flash>
 
   <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
     <h3 class="h4 fw-bold mb-0">
       Dueños ({{ duenos.length }})
       @if (cargando) {
-        <span class="spinner-border spinner-border-sm text-dogtor ms-2" role="status" aria-label="Cargando"></span>
+        <app-cargando tamano="linea"></app-cargando>
       }
     </h3>
-    <div class="buscador">
-      <label for="buscarDueno" class="visually-hidden">Buscar dueño</label>
-      <div class="input-group">
-        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-        <input
-          id="buscarDueno"
-          type="search"
-          class="form-control"
-          placeholder="Buscar por nombre, cédula, celular o correo"
-          [value]="filtro"
-          (input)="buscar($any($event.target).value)"
-        />
-      </div>
-    </div>
+    <app-buscador campoId="buscarDueno" etiqueta="Buscar" placeholder="Buscar por nombre, cédula, celular o correo" [valor]="filtro" (buscar)="buscar($event)"></app-buscador>
   </div>
 
   <app-dueno-table [duenoArray]="duenos" (duenoEliminado)="eliminarDueno($event)"></app-dueno-table>

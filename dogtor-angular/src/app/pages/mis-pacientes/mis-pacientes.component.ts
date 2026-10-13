@@ -10,11 +10,15 @@ import { VeterinarioService } from '../../service/veterinario.service';
 import { MascotaAvatarComponent } from '../../components/mascota-avatar/mascota-avatar.component';
 import { EstadoBadgeComponent } from '../../components/estado-badge/estado-badge.component';
 import { mensajeError } from '../../utils/mensaje-error';
+import { PageTitleComponent } from '../../components/page-title/page-title.component';
+import { CargandoComponent } from '../../components/cargando/cargando.component';
+import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error.component';
+import { EstadoVacioComponent } from '../../components/estado-vacio/estado-vacio.component';
 
 // AC32: mascotas a las que el veterinario logueado les ha dado tratamiento
 @Component({
   selector: 'app-mis-pacientes',
-  imports: [RouterLink, DatePipe, MascotaAvatarComponent, EstadoBadgeComponent],
+  imports: [RouterLink, DatePipe, MascotaAvatarComponent, EstadoBadgeComponent, PageTitleComponent, CargandoComponent, AlertaErrorComponent, EstadoVacioComponent],
   templateUrl: './mis-pacientes.component.html',
 })
 export class MisPacientesComponent {

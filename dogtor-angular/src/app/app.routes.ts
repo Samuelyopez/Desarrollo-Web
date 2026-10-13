@@ -19,7 +19,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
 import { rolGuard } from './guards/rol.guard';
 import { invitadoGuard } from './guards/invitado.guard';
-import { AccesoPortal } from './pages/portal-inicio/portal-inicio.component';
+import { AccesoPortal } from './components/acceso-card/acceso-card.component';
 
 // Accesos del inicio de cada portal (sin ruta = llega en un próximo sprint)
 const accesosCliente: AccesoPortal[] = [

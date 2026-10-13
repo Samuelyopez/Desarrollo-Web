@@ -1,26 +1,24 @@
 <div class="container py-5">
   <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-    <div>
-      <p class="text-uppercase small fw-bold text-dogtor mb-1">Portal veterinario</p>
-      <h1 class="fw-bold mb-1">Mis pacientes</h1>
-      <p class="text-muted mb-0">Mascotas a las que les has dado tratamiento.</p>
-    </div>
+    <app-page-title
+      seccion="Portal veterinario"
+      titulo="Mis pacientes"
+      subtitulo="Mascotas a las que les has dado tratamiento."
+    ></app-page-title>
     <a [routerLink]="['/vet/tratamiento/new']" class="btn btn-dogtor-secondary">
       <i class="bi bi-capsule"></i> Dar tratamiento
     </a>
   </div>
 
   @if (cargando) {
-    <div class="text-center py-5">
-      <span class="spinner-border text-dogtor" role="status" aria-label="Cargando"></span>
-    </div>
+    <app-cargando></app-cargando>
   } @else if (errorMensaje) {
-    <div class="alert alert-danger">{{ errorMensaje }}</div>
+    <app-alerta-error [mensaje]="errorMensaje"></app-alerta-error>
   } @else if (pacientes.length === 0) {
-    <div class="alert alert-light border text-muted">Aún no has dado tratamientos.</div>
+    <app-estado-vacio mensaje="Aún no has dado tratamientos."></app-estado-vacio>
   } @else {
     <div class="table-responsive bg-white rounded-3 shadow-sm border">
-      <table class="table table-hover align-middle mb-0">
+      <table class="table table-hover align-middle mb-0 tabla-dogtor">
         <thead>
           <tr>
             <th scope="col">Foto</th>

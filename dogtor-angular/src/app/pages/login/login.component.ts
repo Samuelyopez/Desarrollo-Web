@@ -7,12 +7,14 @@ import { catchError, EMPTY, filter, switchMap } from 'rxjs';
 import { AuthService } from '../../service/auth.service';
 import { mensajeError } from '../../utils/mensaje-error';
 import { CampoTextoComponent } from '../../components/campo-texto/campo-texto.component';
+import { FormCardComponent } from '../../components/form-card/form-card.component';
+import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error.component';
+import { FormAccionesComponent } from '../../components/form-acciones/form-acciones.component';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, CampoTextoComponent],
+  imports: [ReactiveFormsModule, CampoTextoComponent, FormCardComponent, AlertaErrorComponent, FormAccionesComponent],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
 })
 export class LoginComponent {
   //DI

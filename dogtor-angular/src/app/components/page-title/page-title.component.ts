@@ -1,5 +1,6 @@
 import { Component, input } from '@angular/core';
 
+// Encabezado de una página: sección opcional en mayúsculas (ej. "Portal cliente"), título y subtítulo
 @Component({
   selector: 'app-page-title',
   imports: [],
@@ -7,6 +8,7 @@ import { Component, input } from '@angular/core';
   styleUrl: './page-title.component.scss',
 })
 export class PageTitleComponent {
-  titulo = input<string>('');
-  subtitulo = input<string>('');
+  seccion = input('');
+  titulo = input('');
+  subtitulo = input('');
 }

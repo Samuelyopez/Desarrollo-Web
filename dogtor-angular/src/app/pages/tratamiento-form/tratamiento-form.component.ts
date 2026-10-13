@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, LOCALE_ID } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, formatCurrency } from '@angular/common';
 import { FormControl, FormGroup, FormSubmittedEvent, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, EMPTY, filter, forkJoin, map, switchMap } from 'rxjs';
 import { Mascota } from '../../models/mascota.model';
 import { Medicamento } from '../../models/medicamento.model';
@@ -13,13 +13,16 @@ import { MedicamentoService } from '../../service/medicamento.service';
 import { TratamientoService } from '../../service/tratamiento.service';
 import { CampoErrorComponent } from '../../components/campo-error/campo-error.component';
 import { mensajeError } from '../../utils/mensaje-error';
+import { FormCardComponent } from '../../components/form-card/form-card.component';
+import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error.component';
+import { FormAccionesComponent } from '../../components/form-acciones/form-acciones.component';
+import { CampoSelectComponent } from '../../components/campo-select/campo-select.component';
 
 // AC31: el veterinario logueado da un medicamento (de la lista desplegable) a una mascota activa con la fecha de hoy
 @Component({
   selector: 'app-tratamiento-form',
-  imports: [ReactiveFormsModule, RouterLink, CurrencyPipe, DatePipe, CampoErrorComponent],
+  imports: [ReactiveFormsModule, CurrencyPipe, DatePipe, CampoErrorComponent, FormCardComponent, AlertaErrorComponent, FormAccionesComponent, CampoSelectComponent],
   templateUrl: './tratamiento-form.component.html',
-  styleUrl: './tratamiento-form.component.scss',
 })
 export class TratamientoFormComponent {
   //DI
@@ -55,6 +58,14 @@ export class TratamientoFormComponent {
   };
   // El máximo depende del medicamento elegido: se actualiza cuando cambia
   mensajesCantidad = this.armarMensajesCantidad(1);
+
+  // Textos de las listas desplegables (app-campo-select)
+  private locale = inject(LOCALE_ID);
+  textoMascota = (mascota: Mascota) => `${mascota.nombre} — ${mascota.duenoNombre}`;
+  idMascota = (mascota: Mascota) => mascota.id; // el control guarda solo el id de la mascota
+  textoMedicamento = (medicamento: Medicamento) =>
+    `${medicamento.nombre} — ${formatCurrency(medicamento.precioVenta, this.locale, '$', 'COP', '1.0-0')} — ` +
+    `${medicamento.unidadesDisponibles} disponibles`;
 
   // Comparar por id: tras recargar la lista el select sigue mostrando el medicamento elegido
   compararMedicamentos = (a: Medicamento | null, b: Medicamento | null) => (a && b ? a.id === b.id : a === b);

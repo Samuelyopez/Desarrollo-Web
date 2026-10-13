@@ -1,0 +1,15 @@
+<button
+  type="submit"
+  class="btn w-100 py-2 rounded-3 mt-2"
+  [class.btn-dogtor]="estilo() === 'primario'"
+  [class.btn-dogtor-secondary]="estilo() === 'secundario'"
+  [disabled]="cargando() || deshabilitado()"
+>
+  @if (cargando()) {
+    <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+  }
+  {{ cargando() && textoCargando() ? textoCargando() : texto() }}
+</button>
+@if (rutaCancelar()) {
+  <a [routerLink]="rutaCancelar()" class="d-block text-center small text-muted mt-3 cancelar">Cancelar</a>
+}

@@ -1,0 +1,10 @@
+<a [routerLink]="ruta()" class="item d-flex align-items-center gap-3 p-3 mb-2 bg-white border rounded-3 shadow-sm">
+  <app-mascota-avatar [fotoUrl]="mascota().foto" [nombre]="mascota().nombre" [tamano]="56"></app-mascota-avatar>
+  <div class="flex-grow-1">
+    <p class="fw-bold text-dogtor mb-0">{{ mascota().nombre }}</p>
+    <p class="small text-muted mb-0">
+      {{ mascota().raza || 'Sin raza' }} · {{ mascota().edad != null ? mascota().edad + ' año(s)' : 'Edad sin registrar' }}
+    </p>
+  </div>
+  <app-estado-badge [activa]="mascota().activa"></app-estado-badge>
+</a>
