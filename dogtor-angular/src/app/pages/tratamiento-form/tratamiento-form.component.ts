@@ -4,7 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CurrencyPipe, DatePipe, formatCurrency } from '@angular/common';
 import { FormControl, FormGroup, FormSubmittedEvent, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, EMPTY, filter, forkJoin, map, switchMap } from 'rxjs';
+import { catchError, EMPTY, filter, forkJoin, ignoreElements, map, Observable, switchMap, tap } from 'rxjs';
 import { Mascota } from '../../models/mascota.model';
 import { Medicamento } from '../../models/medicamento.model';
 import { Veterinario } from '../../models/veterinario.model';
@@ -163,20 +163,25 @@ export class TratamientoFormComponent {
     };
   }
 
-  // Tras un 409 (sin unidades) se recargan los medicamentos para ver el stock real
-  private recargarMedicamentos() {
-    this.medicamentoService
-      .getMedicamentos(true)
-      .pipe(catchError(() => EMPTY))
-      .subscribe((medicamentos) => (this.medicamentos = medicamentos));
+  // Tras un 409 (sin unidades) se recargan los medicamentos para ver el stock real. Se encadena en el
+  // mismo flujo del guardar (sin subscribe aparte) y se vuelve a elegir el medicamento con sus nuevas
+  // unidades, o se limpia si ya no tiene: así el máximo de la cantidad queda al día
+  private recargarMedicamentos(): Observable<never> {
+    return this.medicamentoService.getMedicamentos(true).pipe(
+      tap((medicamentos) => {
+        this.medicamentos = medicamentos;
+        const elegido = this.tratamientoForm.controls.medicamento.value;
+        const actualizado = medicamentos.find((m) => m.id === elegido?.id) ?? null;
+        this.tratamientoForm.controls.medicamento.setValue(actualizado);
+      }),
+      ignoreElements(),
+      catchError(() => EMPTY),
+    );
   }
 
-  private manejarError(error: HttpErrorResponse, recargar = true) {
+  private manejarError(error: HttpErrorResponse, recargar = true): Observable<never> {
     this.cargando = false;
     this.errorMensaje = mensajeError(error, 'No se pudo registrar el tratamiento.');
-    if (recargar && error.status === 409) {
-      this.recargarMedicamentos();
-    }
-    return EMPTY;
+    return recargar && error.status === 409 ? this.recargarMedicamentos() : EMPTY;
   }
 }
