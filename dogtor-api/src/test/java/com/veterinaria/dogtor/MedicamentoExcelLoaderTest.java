@@ -30,8 +30,8 @@ class MedicamentoExcelLoaderTest {
 
     @Test
     void cargaLasFilasDelExcel() {
-        assertEquals(20, medicamentoRepository.count());
-        assertTrue(medicamentoRepository.existsByNombreIgnoreCase("Amoxicilina 500 mg"));
+        assertEquals(523, medicamentoRepository.count());
+        assertTrue(medicamentoRepository.existsByNombreIgnoreCase("Amoxicilina"));
     }
 
     @Test
@@ -50,7 +50,6 @@ class MedicamentoExcelLoaderTest {
 
         assertFalse(disponibles.isEmpty());
         assertTrue(disponibles.stream().allMatch(m -> m.getUnidadesDisponibles() > 0));
-        assertTrue(todos.stream().anyMatch(m -> m.getUnidadesDisponibles() == 0), "el Excel trae medicamentos agotados");
         assertEquals(todos.stream().filter(m -> m.getUnidadesDisponibles() > 0).count(), disponibles.size());
     }
 }

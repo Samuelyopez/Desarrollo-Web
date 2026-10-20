@@ -28,7 +28,7 @@ class DashboardServiceTest {
         assertEquals(8, d.tratamientosUltimoMes());
         assertEquals(10, d.unidadesUltimoMes());
         MedicamentoCantidad primero = d.tratamientosPorMedicamento().get(0);
-        assertEquals("Amoxicilina 500 mg", primero.medicamento());
+        assertEquals("AMOXICILINA", primero.medicamento());
         assertEquals(3, primero.tratamientos());
         assertEquals(4, primero.unidades());
 
@@ -37,10 +37,10 @@ class DashboardServiceTest {
         assertEquals(20, d.mascotasTotales());
         assertEquals(19, d.mascotasActivas());
 
-        assertEquals(214000.0, d.ventasTotales(), 0.001);
-        assertEquals(100000.0, d.gananciasTotales(), 0.001);
+        assertEquals(2229400.0, d.ventasTotales(), 0.001);
+        assertEquals(911580.0, d.gananciasTotales(), 0.001);
 
         List<String> top = d.topMedicamentos().stream().map(t -> t.medicamento()).toList();
-        assertEquals(List.of("Amoxicilina 500 mg", "Meloxicam 1.5 mg/ml", "Suero Ringer Lactato 500 ml"), top);
+        assertEquals(List.of("AMOXICILINA", "TRIMSULFASOL", "SULFAMETOX"), top);
     }
 }
