@@ -19,8 +19,11 @@ public interface VeterinarioService {
     // La cédula no se puede cambiar; la contraseña vacía se conserva; el estado no se toca
     Veterinario actualizar(String cedula, VeterinarioRequest request);
 
-    // Activa o desactiva (estado laboral). No se eliminan veterinarios
+    // Activa o desactiva (estado laboral). Un veterinario inactivo no puede iniciar sesión
     Veterinario cambiarEstado(String cedula, boolean activo);
+
+    // Elimina el veterinario y su usuario; sus tratamientos se conservan en el historial
+    void eliminar(String cedula);
 
     // Mascotas que ha tratado el veterinario (404 si no existe)
     List<PacienteResponse> pacientesDe(Long veterinarioId);

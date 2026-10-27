@@ -15,17 +15,20 @@ import com.veterinaria.dogtor.dto.PacienteResponse;
 import com.veterinaria.dogtor.dto.TopMedicamento;
 import com.veterinaria.dogtor.entities.Tratamiento;
 
-// Los finders que se envían al front traen medicamento y veterinario en el mismo SELECT
-// (@EntityGraph): el JSON usa medicamentoNombre y veterinarioNombre, y esas relaciones son LAZY
+// Los finders que se envían al front traen el medicamento en el mismo SELECT
+// (@EntityGraph): el JSON usa medicamentoNombre y esa relación es LAZY
 @Repository
 public interface TratamientoRepository extends JpaRepository<Tratamiento, Long> {
 
     // Historial de una mascota, del más reciente al más antiguo
-    @EntityGraph(attributePaths = { "medicamento", "veterinario" })
+    @EntityGraph(attributePaths = { "medicamento" })
     List<Tratamiento> findByMascota_IdOrderByFechaDescIdDesc(Long mascotaId);
 
     // Para desligar los tratamientos al eliminar un dueño
     List<Tratamiento> findByMascota_Dueno_Id(Long duenoId);
+
+    // Para desligar los tratamientos al eliminar un veterinario
+    List<Tratamiento> findByVeterinario_Id(Long veterinarioId);
 
     // "Mis pacientes": mascotas que trató el veterinario, con cuántos tratamientos y la fecha del último.
     // El join deja fuera los tratamientos cuya mascota se eliminó (mascota = null)

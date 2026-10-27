@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ import com.veterinaria.dogtor.service.VeterinarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
-// CRUD de veterinarios del portal administrador, por cédula. No hay DELETE: se activan o desactivan.
+// CRUD de veterinarios del portal administrador, por cédula. También se activan o desactivan.
 // Ojo: /{id}/pacientes usa el id interno (lo pide el portal veterinario con su perfilId)
 @RestController
 @RequestMapping("/api/veterinarios")
@@ -64,6 +65,13 @@ public class VeterinarioController {
     @PutMapping("/{cedula}/estado")
     public Veterinario cambiarEstado(@PathVariable String cedula, @Valid @RequestBody EstadoVeterinarioRequest request) {
         return veterinarioService.cambiarEstado(cedula, request.activo());
+    }
+
+    @Operation(summary = "Eliminar un veterinario y su usuario (su historial de tratamientos se conserva)")
+    @DeleteMapping("/{cedula}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void eliminar(@PathVariable String cedula) {
+        veterinarioService.eliminar(cedula);
     }
 
     @Operation(summary = "Mascotas que ha tratado un veterinario (Mis pacientes)")
