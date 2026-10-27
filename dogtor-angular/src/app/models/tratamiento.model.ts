@@ -1,5 +1,5 @@
 // Entidad Tratamiento (tabla tratamientos): medicamento que un veterinario da a una mascota.
-// La API no envía las relaciones: medicamentoNombre y veterinarioNombre salen de getters de Spring Boot
+// La API no envía las relaciones: medicamentoNombre sale de un getter de Spring Boot y veterinarioNombre es una copia guardada
 export interface Tratamiento {
   id: number;
   fecha: string; // LocalDate en formato ISO, ej. "2026-10-08"

@@ -26,10 +26,12 @@
         <option value="inactivos">Inactivos</option>
       </select>
       <app-buscador campoId="buscarVeterinario" etiqueta="Buscar" placeholder="Buscar por nombre, cédula, especialidad o correo" [valor]="filtro" (buscar)="buscar($event)"></app-buscador>
+    </div>
   </div>
 
   <app-veterinario-table
     [veterinarioArray]="veterinariosFiltrados"
     (estadoCambiado)="cambiarEstadoVeterinario($event)"
+    (eliminado)="eliminarVeterinario($event)"
   ></app-veterinario-table>
 </div>

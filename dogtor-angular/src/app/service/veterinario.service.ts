@@ -37,6 +37,11 @@ export class VeterinarioService {
     return this.http.put<Veterinario>(`${this.url}/${cedula}/estado`, { activo });
   }
 
+  // Elimina el veterinario y su usuario; sus tratamientos se conservan en el historial
+  deleteVeterinario(cedula: string): Observable<void> {
+    return this.http.delete<void>(`${this.url}/${cedula}`);
+  }
+
   // Mascotas que ha tratado el veterinario (id = perfilId del usuario logueado)
   getPacientes(veterinarioId: number): Observable<Paciente[]> {
     return this.http.get<Paciente[]>(`${this.url}/${veterinarioId}/pacientes`);
