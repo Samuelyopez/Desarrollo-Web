@@ -7,18 +7,23 @@ import { Dueno } from '../../models/dueno.model';
 import { Mascota } from '../../models/mascota.model';
 import { DuenoService } from '../../service/dueno.service';
 import { DuenoCardComponent } from '../../components/dueno-card/dueno-card.component';
-import { MascotaAvatarComponent } from '../../components/mascota-avatar/mascota-avatar.component';
-import { EstadoBadgeComponent } from '../../components/estado-badge/estado-badge.component';
 import { mensajeError } from '../../utils/mensaje-error';
+import { VolverLinkComponent } from '../../components/volver-link/volver-link.component';
+import { AlertaFlashComponent } from '../../components/alerta-flash/alerta-flash.component';
+import { CargandoComponent } from '../../components/cargando/cargando.component';
+import { MascotaItemComponent } from '../../components/mascota-item/mascota-item.component';
+import { EstadoVacioComponent } from '../../components/estado-vacio/estado-vacio.component';
+import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error.component';
+import { injectPortal } from '../../utils/portal';
 
 @Component({
   selector: 'app-dueno-detail',
-  imports: [RouterLink, DuenoCardComponent, MascotaAvatarComponent, EstadoBadgeComponent],
+  imports: [RouterLink, DuenoCardComponent, VolverLinkComponent, AlertaFlashComponent, CargandoComponent, MascotaItemComponent, EstadoVacioComponent, AlertaErrorComponent],
   templateUrl: './dueno-detail.component.html',
-  styleUrl: './dueno-detail.component.scss',
 })
 export class DuenoDetailComponent {
   //DI
+  portal = injectPortal();
   private route = inject(ActivatedRoute);
   private duenoService = inject(DuenoService);
 

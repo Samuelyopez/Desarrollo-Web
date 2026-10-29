@@ -1,0 +1,16 @@
+<div class="mb-3">
+  <label [attr.for]="campoId()" class="form-label fw-bold">{{ etiqueta() }}</label>
+  <select
+    [id]="campoId()"
+    class="form-select"
+    [formControl]="control()"
+    [compareWith]="compararCon()"
+    [class.is-invalid]="control().touched && control().invalid"
+  >
+    <option [ngValue]="null" disabled>{{ placeholder() }}</option>
+    @for (opcion of opciones(); track $index) {
+      <option [ngValue]="valorOpcion()(opcion)">{{ textoOpcion()(opcion) }}</option>
+    }
+  </select>
+  <app-campo-error [control]="control()" [mensajes]="mensajes()"></app-campo-error>
+</div>

@@ -19,8 +19,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 // Medicamento que un veterinario da a una mascota en una fecha.
-// El historial nunca se borra: si se elimina el dueño, mascota queda en null y se conserva
-// una copia del nombre de la mascota y de los precios (para el dashboard de ventas).
+// El historial nunca se borra: si se elimina el dueño, mascota queda en null; si se elimina el
+// veterinario, veterinario queda en null. Por eso se guarda una copia del nombre de la mascota,
+// del veterinario y de los precios (para el historial y el dashboard de ventas).
 @Entity
 @Table(name = "tratamientos")
 @Getter
@@ -46,6 +47,10 @@ public class Tratamiento {
 
     private String mascotaNombre;
 
+    private String veterinarioNombre;
+
+    private String veterinarioEspecialidad;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mascota_id", nullable = true)
@@ -53,7 +58,7 @@ public class Tratamiento {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "veterinario_id", nullable = false)
+    @JoinColumn(name = "veterinario_id", nullable = true)
     private Veterinario veterinario;
 
     @JsonIgnore
@@ -62,7 +67,7 @@ public class Tratamiento {
     private Medicamento medicamento;
 
     // Toma la fecha, la mascota, el veterinario y el medicamento, y copia los datos que
-    // deben sobrevivir aunque luego se borre la mascota o cambie el precio del medicamento
+    // deben sobrevivir aunque luego se borre la mascota, el veterinario o cambie el precio del medicamento
     public Tratamiento(LocalDate fecha, Integer cantidad, Mascota mascota, Veterinario veterinario, Medicamento medicamento) {
         this.fecha = fecha;
         this.cantidad = cantidad;
@@ -70,24 +75,16 @@ public class Tratamiento {
         this.veterinario = veterinario;
         this.medicamento = medicamento;
         this.mascotaNombre = mascota.getNombre();
+        this.veterinarioNombre = veterinario.getNombre();
+        this.veterinarioEspecialidad = veterinario.getEspecialidad();
         this.precioVenta = medicamento.getPrecioVenta();
         this.precioCompra = medicamento.getPrecioCompra();
     }
 
-    // Datos para mostrar el historial. Requieren medicamento y veterinario cargados:
+    // Nombre del medicamento para mostrar el historial. Requiere el medicamento cargado:
     // por eso los finders de TratamientoRepository usan @EntityGraph
     @JsonProperty(value = "medicamentoNombre", access = JsonProperty.Access.READ_ONLY)
     public String getMedicamentoNombre() {
         return medicamento != null ? medicamento.getNombre() : null;
-    }
-
-    @JsonProperty(value = "veterinarioNombre", access = JsonProperty.Access.READ_ONLY)
-    public String getVeterinarioNombre() {
-        return veterinario != null ? veterinario.getNombre() : null;
-    }
-
-    @JsonProperty(value = "veterinarioEspecialidad", access = JsonProperty.Access.READ_ONLY)
-    public String getVeterinarioEspecialidad() {
-        return veterinario != null ? veterinario.getEspecialidad() : null;
     }
 }

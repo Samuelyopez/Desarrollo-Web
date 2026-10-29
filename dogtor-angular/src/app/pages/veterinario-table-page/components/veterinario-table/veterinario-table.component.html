@@ -1,8 +1,8 @@
 @if (veterinarioArray().length === 0) {
-  <div class="alert alert-light border text-center text-muted">No se encontraron veterinarios.</div>
+  <app-estado-vacio mensaje="No se encontraron veterinarios." [centrado]="true"></app-estado-vacio>
 } @else {
   <div class="table-responsive bg-white rounded-3 shadow-sm border">
-    <table class="table table-hover align-middle mb-0">
+    <table class="table table-hover align-middle mb-0 tabla-dogtor">
       <thead>
         <tr>
           <th scope="col"></th>
@@ -45,6 +45,9 @@
                     Activar
                   </button>
                 }
+                <button type="button" class="btn btn-sm btn-danger" (click)="eliminar(veterinario)">
+                  <i class="bi bi-trash"></i> Eliminar
+                </button>
               </div>
             </td>
           </tr>

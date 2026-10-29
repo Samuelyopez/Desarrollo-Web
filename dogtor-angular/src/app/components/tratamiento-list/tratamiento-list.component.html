@@ -1,8 +1,8 @@
 @if (tratamientos().length === 0) {
-  <div class="alert alert-light border text-muted">Esta mascota aún no tiene tratamientos registrados.</div>
+  <app-estado-vacio mensaje="Esta mascota aún no tiene tratamientos registrados."></app-estado-vacio>
 } @else {
   <div class="table-responsive bg-white rounded-3 shadow-sm border">
-    <table class="table align-middle mb-0">
+    <table class="table align-middle mb-0 tabla-dogtor">
       <thead>
         <tr>
           <th scope="col">Fecha</th>

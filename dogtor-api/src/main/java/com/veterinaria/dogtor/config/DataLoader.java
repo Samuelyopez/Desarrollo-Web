@@ -145,17 +145,17 @@ public class DataLoader implements CommandLineRunner {
     // Hay tratamientos de los últimos 30 días y otros más antiguos para el dashboard.
     // Los medicamentos vienen del Excel: si alguno no está, se omiten sus tratamientos
     private void cargarTratamientosDemo() {
-        tratar("1000000001", "Max", "800000001", "Suero Ringer Lactato 500 ml", 2, 2);
-        tratar("1000000001", "Max", "800000001", "Metronidazol 250 mg", 1, 5);
-        tratar("1000000001", "Max", "800000002", "Amoxicilina 500 mg", 1, 12);
-        tratar("1000000001", "Luna", "800000001", "Amoxicilina 500 mg", 2, 3);
-        tratar("1000000001", "Luna", "800000003", "Meloxicam 1.5 mg/ml", 1, 45);
-        tratar("1000000002", "Rocky", "800000004", "Prednisolona 5 mg", 1, 8);
-        tratar("1000000002", "Bella", "800000003", "Amoxicilina 500 mg", 1, 20);
-        tratar("1000000004", "Felix", "800000005", "Metronidazol 250 mg", 1, 60);
-        tratar("1000000004", "Simba", "800000005", "Meloxicam 1.5 mg/ml", 2, 90);
-        tratar("1000000003", "Toby", "800000003", "Prednisolona 5 mg", 1, 15);
-        tratar("1000000007", "Buddy", "800000002", "Ivermectina 1%", 1, 1);
+        tratar("1000000001", "Max", "800000001", "SULFAMETOX", 2, 2);
+        tratar("1000000001", "Max", "800000001", "CEFAMAX", 1, 5);
+        tratar("1000000001", "Max", "800000002", "AMOXICILINA", 1, 12);
+        tratar("1000000001", "Luna", "800000001", "AMOXICILINA", 2, 3);
+        tratar("1000000001", "Luna", "800000003", "TRIMSULFASOL", 1, 45);
+        tratar("1000000002", "Rocky", "800000004", "DEXABIOPEN", 1, 8);
+        tratar("1000000002", "Bella", "800000003", "AMOXICILINA", 1, 20);
+        tratar("1000000004", "Felix", "800000005", "CEFAMAX", 1, 60);
+        tratar("1000000004", "Simba", "800000005", "TRIMSULFASOL", 2, 90);
+        tratar("1000000003", "Toby", "800000003", "DEXABIOPEN", 1, 15);
+        tratar("1000000007", "Buddy", "800000002", "GENTACEN", 1, 1);
     }
 
     // Los ids son generados: se busca por cédula y nombre. Si algo ya no existe se omite

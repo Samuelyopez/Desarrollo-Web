@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.veterinaria.dogtor.dto.PacienteResponse;
 import com.veterinaria.dogtor.dto.VeterinarioRequest;
 import com.veterinaria.dogtor.entities.Rol;
+import com.veterinaria.dogtor.entities.Tratamiento;
 import com.veterinaria.dogtor.entities.Usuario;
 import com.veterinaria.dogtor.entities.Veterinario;
 import com.veterinaria.dogtor.errors.BadRequestException;
@@ -99,6 +100,23 @@ public class VeterinarioServiceImpl implements VeterinarioService {
         Veterinario veterinario = buscarPorCedula(cedula);
         veterinario.getUsuario().setActivo(activo);
         return veterinario;
+    }
+
+    @Override
+    @Transactional
+    public void eliminar(String cedula) {
+        Veterinario veterinario = buscarPorCedula(cedula);
+
+        // 1. El historial de tratamientos se conserva: se desliga del veterinario
+        //    (su nombre y especialidad ya están copiados en cada tratamiento)
+        List<Tratamiento> tratamientos = tratamientoRepository.findByVeterinario_Id(veterinario.getId());
+        tratamientos.forEach(tratamiento -> tratamiento.setVeterinario(null));
+
+        // 2. Se escriben esos UPDATE antes del DELETE para no violar la llave foránea
+        tratamientoRepository.flush();
+
+        // 3. La cascada borra también su usuario
+        veterinarioRepository.delete(veterinario);
     }
 
     @Override

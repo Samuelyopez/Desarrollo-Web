@@ -1,47 +1,55 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, LOCALE_ID } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, formatCurrency } from '@angular/common';
 import { FormControl, FormGroup, FormSubmittedEvent, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { catchError, EMPTY, filter, forkJoin, map, switchMap } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { catchError, EMPTY, filter, forkJoin, ignoreElements, map, Observable, switchMap, tap } from 'rxjs';
 import { Mascota } from '../../models/mascota.model';
 import { Medicamento } from '../../models/medicamento.model';
-import { AuthService } from '../../service/auth.service';
+import { Veterinario } from '../../models/veterinario.model';
 import { MascotaService } from '../../service/mascota.service';
 import { MedicamentoService } from '../../service/medicamento.service';
 import { TratamientoService } from '../../service/tratamiento.service';
+import { VeterinarioService } from '../../service/veterinario.service';
 import { CampoErrorComponent } from '../../components/campo-error/campo-error.component';
 import { mensajeError } from '../../utils/mensaje-error';
+import { injectPortal } from '../../utils/portal';
+import { FormCardComponent } from '../../components/form-card/form-card.component';
+import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error.component';
+import { FormAccionesComponent } from '../../components/form-acciones/form-acciones.component';
+import { CampoSelectComponent } from '../../components/campo-select/campo-select.component';
 
-// AC31: el veterinario logueado da un medicamento (de la lista desplegable) a una mascota activa con la fecha de hoy
+// AC31: el veterinario del portal da un medicamento (de la lista desplegable) a una mascota activa con la fecha de hoy
 @Component({
   selector: 'app-tratamiento-form',
-  imports: [ReactiveFormsModule, RouterLink, CurrencyPipe, DatePipe, CampoErrorComponent],
+  imports: [ReactiveFormsModule, CurrencyPipe, DatePipe, CampoErrorComponent, FormCardComponent, AlertaErrorComponent, FormAccionesComponent, CampoSelectComponent],
   templateUrl: './tratamiento-form.component.html',
-  styleUrl: './tratamiento-form.component.scss',
 })
 export class TratamientoFormComponent {
   //DI
+  portal = injectPortal();
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private mascotaService = inject(MascotaService);
   private medicamentoService = inject(MedicamentoService);
   private tratamientoService = inject(TratamientoService);
+  private veterinarioService = inject(VeterinarioService);
 
-  // El veterinario es quien inició sesión y la fecha es hoy: solo se muestran (la fecha real la pone la API)
-  veterinario = inject(AuthService).usuario()!;
+  // El veterinario es el del portal (cédula en la URL) y la fecha es hoy: solo se muestran (la fecha real la pone la API)
+  veterinario: Veterinario | null = null;
   hoy = new Date();
 
   // Si se llega desde el detalle de una mascota (?mascota=id) se preselecciona y se vuelve allá
   mascotaInicial = Number(this.route.snapshot.queryParams['mascota']) || undefined;
-  rutaVolver = this.mascotaInicial ? ['/vet/mascota', this.mascotaInicial] : ['/vet'];
+  rutaVolver = this.mascotaInicial ? [this.portal.base + '/mascota', this.mascotaInicial] : [this.portal.base];
 
   mascotas: Mascota[] = [];
   medicamentos: Medicamento[] = [];
   cargando = true;
   errorMensaje = '';
   avisoMascota = '';
+  avisoVeterinario = '';
 
   tratamientoForm = new FormGroup({
     mascota: new FormControl<number | null>(null, [Validators.required]),
@@ -55,6 +63,14 @@ export class TratamientoFormComponent {
   };
   // El máximo depende del medicamento elegido: se actualiza cuando cambia
   mensajesCantidad = this.armarMensajesCantidad(1);
+
+  // Textos de las listas desplegables (app-campo-select)
+  private locale = inject(LOCALE_ID);
+  textoMascota = (mascota: Mascota) => `${mascota.nombre} — ${mascota.duenoNombre}`;
+  idMascota = (mascota: Mascota) => mascota.id; // el control guarda solo el id de la mascota
+  textoMedicamento = (medicamento: Medicamento) =>
+    `${medicamento.nombre} — ${formatCurrency(medicamento.precioVenta, this.locale, '$', 'COP', '1.0-0')} — ` +
+    `${medicamento.unidadesDisponibles} disponibles`;
 
   // Comparar por id: tras recargar la lista el select sigue mostrando el medicamento elegido
   compararMedicamentos = (a: Medicamento | null, b: Medicamento | null) => (a && b ? a.id === b.id : a === b);
@@ -86,7 +102,7 @@ export class TratamientoFormComponent {
           return this.tratamientoService
             .createTratamiento({
               mascotaId: mascota!,
-              veterinarioId: this.veterinario.perfilId,
+              veterinarioId: this.veterinario!.id,
               medicamentoId: medicamento!.id,
               cantidad,
             })
@@ -99,7 +115,7 @@ export class TratamientoFormComponent {
       )
       .subscribe(({ tratamiento, mascotaId }) => {
         const mensaje = `Se registró ${tratamiento.medicamentoNombre} x${tratamiento.cantidad} para ${tratamiento.mascotaNombre}.`;
-        this.router.navigate(['/vet/mascota', mascotaId], { state: { mensaje } });
+        this.router.navigate([this.portal.base + '/mascota', mascotaId], { state: { mensaje } });
       });
   }
 
@@ -109,9 +125,10 @@ export class TratamientoFormComponent {
     return medicamento ? medicamento.precioVenta * (cantidad || 0) : 0;
   }
 
-  // forkJoin: mascotas activas y medicamentos con unidades llegan en paralelo
+  // forkJoin: el veterinario, las mascotas activas y los medicamentos con unidades llegan en paralelo
   private cargarDatos() {
     forkJoin({
+      veterinario: this.veterinarioService.getVeterinarioByCedula(this.portal.cedula),
       mascotas: this.mascotaService.getMascotas().pipe(map((mascotas) => mascotas.filter((m) => m.activa))),
       medicamentos: this.medicamentoService.getMedicamentos(true),
     })
@@ -119,7 +136,11 @@ export class TratamientoFormComponent {
         catchError((error: HttpErrorResponse) => this.manejarError(error, false)),
         takeUntilDestroyed(),
       )
-      .subscribe(({ mascotas, medicamentos }) => {
+      .subscribe(({ veterinario, mascotas, medicamentos }) => {
+        this.veterinario = veterinario;
+        if (!veterinario.activo) {
+          this.avisoVeterinario = 'Este veterinario está inactivo (vacaciones o incapacidad): no puede dar tratamientos.';
+        }
         this.mascotas = mascotas;
         this.medicamentos = medicamentos;
         if (this.mascotaInicial) {
@@ -142,20 +163,25 @@ export class TratamientoFormComponent {
     };
   }
 
-  // Tras un 409 (sin unidades) se recargan los medicamentos para ver el stock real
-  private recargarMedicamentos() {
-    this.medicamentoService
-      .getMedicamentos(true)
-      .pipe(catchError(() => EMPTY))
-      .subscribe((medicamentos) => (this.medicamentos = medicamentos));
+  // Tras un 409 (sin unidades) se recargan los medicamentos para ver el stock real. Se encadena en el
+  // mismo flujo del guardar (sin subscribe aparte) y se vuelve a elegir el medicamento con sus nuevas
+  // unidades, o se limpia si ya no tiene: así el máximo de la cantidad queda al día
+  private recargarMedicamentos(): Observable<never> {
+    return this.medicamentoService.getMedicamentos(true).pipe(
+      tap((medicamentos) => {
+        this.medicamentos = medicamentos;
+        const elegido = this.tratamientoForm.controls.medicamento.value;
+        const actualizado = medicamentos.find((m) => m.id === elegido?.id) ?? null;
+        this.tratamientoForm.controls.medicamento.setValue(actualizado);
+      }),
+      ignoreElements(),
+      catchError(() => EMPTY),
+    );
   }
 
-  private manejarError(error: HttpErrorResponse, recargar = true) {
+  private manejarError(error: HttpErrorResponse, recargar = true): Observable<never> {
     this.cargando = false;
     this.errorMensaje = mensajeError(error, 'No se pudo registrar el tratamiento.');
-    if (recargar && error.status === 409) {
-      this.recargarMedicamentos();
-    }
-    return EMPTY;
+    return recargar && error.status === 409 ? this.recargarMedicamentos() : EMPTY;
   }
 }

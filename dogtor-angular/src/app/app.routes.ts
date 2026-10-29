@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { LandingComponent } from './pages/landing/landing.component';
 import { LoginComponent } from './pages/login/login.component';
-import { AccesoDenegadoComponent } from './pages/acceso-denegado/acceso-denegado.component';
 import { PortalInicioComponent } from './pages/portal-inicio/portal-inicio.component';
 import { MascotaTablePageComponent } from './pages/mascota-table-page/mascota-table-page.component';
 import { MascotaFormComponent } from './pages/mascota-form/mascota-form.component';
@@ -16,30 +15,27 @@ import { MisPacientesComponent } from './pages/mis-pacientes/mis-pacientes.compo
 import { VeterinarioTablePageComponent } from './pages/veterinario-table-page/veterinario-table-page.component';
 import { VeterinarioFormComponent } from './pages/veterinario-form/veterinario-form.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { authGuard } from './guards/auth.guard';
-import { rolGuard } from './guards/rol.guard';
-import { invitadoGuard } from './guards/invitado.guard';
-import { AccesoPortal } from './pages/portal-inicio/portal-inicio.component';
+import { AccesoPortal } from './components/acceso-card/acceso-card.component';
 
-// Accesos del inicio de cada portal (sin ruta = llega en un próximo sprint)
+// Accesos del inicio de cada portal. Las rutas son relativas al portal (ej. /vet/800000001 + /duenos)
 const accesosCliente: AccesoPortal[] = [
-  { icono: 'bi-heart', titulo: 'Mis mascotas', descripcion: 'Consulta tus mascotas y sus tratamientos.', ruta: '/cliente/mascotas' },
+  { icono: 'bi-heart', titulo: 'Mis mascotas', descripcion: 'Consulta tus mascotas y sus tratamientos.', ruta: 'mascotas' },
 ];
 
 const accesosVeterinario: AccesoPortal[] = [
-  { icono: 'bi-people', titulo: 'Dueños', descripcion: 'Registra y gestiona a los clientes.', ruta: '/vet/duenos' },
-  { icono: 'bi-heart-pulse', titulo: 'Mascotas', descripcion: 'Pacientes de la clínica.', ruta: '/vet/mascotas' },
-  { icono: 'bi-capsule', titulo: 'Dar tratamiento', descripcion: 'Suministra medicamentos a las mascotas activas.', ruta: '/vet/tratamiento/new' },
-  { icono: 'bi-clipboard2-pulse', titulo: 'Mis pacientes', descripcion: 'Mascotas a las que les has dado tratamiento.', ruta: '/vet/pacientes' },
+  { icono: 'bi-people', titulo: 'Dueños', descripcion: 'Registra y gestiona a los clientes.', ruta: 'duenos' },
+  { icono: 'bi-heart-pulse', titulo: 'Mascotas', descripcion: 'Pacientes de la clínica.', ruta: 'mascotas' },
+  { icono: 'bi-capsule', titulo: 'Dar tratamiento', descripcion: 'Suministra medicamentos a las mascotas activas.', ruta: 'tratamiento/new' },
+  { icono: 'bi-clipboard2-pulse', titulo: 'Mis pacientes', descripcion: 'Mascotas a las que les has dado tratamiento.', ruta: 'pacientes' },
 ];
 
 const accesosAdmin: AccesoPortal[] = [
-  { icono: 'bi-graph-up', titulo: 'Dashboard', descripcion: 'Indicadores del negocio.', ruta: '/admin/dashboard' },
-  { icono: 'bi-person-badge', titulo: 'Veterinarios', descripcion: 'Registra, edita y activa veterinarios.', ruta: '/admin/veterinarios' },
+  { icono: 'bi-graph-up', titulo: 'Dashboard', descripcion: 'Indicadores del negocio.', ruta: 'dashboard' },
+  { icono: 'bi-person-badge', titulo: 'Veterinarios', descripcion: 'Registra, edita y activa veterinarios.', ruta: 'veterinarios' },
 ];
 
-// Control de acceso por rol (AC34): cada portal exige sesión (authGuard) y su rol (rolGuard, data.roles).
-// canActivateChild repite la revisión en cada página hija del portal (defensa en profundidad)
+// Sin sesión ni guards: cualquier pantalla se abre solo con su ruta.
+// La cédula del cliente o del veterinario va en la URL del portal (ver utils/portal.ts)
 export const routes: Routes = [
   {
     path: '',
@@ -48,19 +44,11 @@ export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
-    canActivate: [invitadoGuard],
-  },
-  {
-    path: 'acceso-denegado',
-    component: AccesoDenegadoComponent,
   },
 
-  // Portal cliente (dueño)
+  // Portal cliente (dueño): /cliente/<cédula del dueño>/...
   {
-    path: 'cliente',
-    canActivate: [authGuard, rolGuard],
-    canActivateChild: [authGuard, rolGuard],
-    data: { roles: ['DUENO'] },
+    path: 'cliente/:cliente',
     children: [
       { path: '', component: PortalInicioComponent, data: { titulo: 'Portal cliente', accesos: accesosCliente } },
       { path: 'mascotas', component: MisMascotasComponent },
@@ -68,12 +56,9 @@ export const routes: Routes = [
     ],
   },
 
-  // Portal veterinario
+  // Portal veterinario: /vet/<cédula del veterinario>/...
   {
-    path: 'vet',
-    canActivate: [authGuard, rolGuard],
-    canActivateChild: [authGuard, rolGuard],
-    data: { roles: ['VETERINARIO'] },
+    path: 'vet/:veterinario',
     children: [
       { path: '', component: PortalInicioComponent, data: { titulo: 'Portal veterinario', accesos: accesosVeterinario } },
       { path: 'mascotas', component: MascotaTablePageComponent },
@@ -89,12 +74,9 @@ export const routes: Routes = [
     ],
   },
 
-  // Portal administrador
+  // Portal administrador: /admin/...
   {
     path: 'admin',
-    canActivate: [authGuard, rolGuard],
-    canActivateChild: [authGuard, rolGuard],
-    data: { roles: ['ADMIN'] },
     children: [
       { path: '', component: PortalInicioComponent, data: { titulo: 'Portal administrador', accesos: accesosAdmin } },
       { path: 'dashboard', component: DashboardComponent },

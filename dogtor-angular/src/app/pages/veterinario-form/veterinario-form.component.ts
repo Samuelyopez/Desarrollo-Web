@@ -9,14 +9,16 @@ import { VeterinarioService } from '../../service/veterinario.service';
 import { CampoTextoComponent } from '../../components/campo-texto/campo-texto.component';
 import { FotoPreviewComponent } from '../../components/foto-preview/foto-preview.component';
 import { mensajeError } from '../../utils/mensaje-error';
+import { FormCardComponent } from '../../components/form-card/form-card.component';
+import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error.component';
+import { FormAccionesComponent } from '../../components/form-acciones/form-acciones.component';
 
 // Portal administrador: registrar (AC26) y actualizar por cédula (AC27) un veterinario.
 // El estado laboral (AC28) se cambia desde la tabla
 @Component({
   selector: 'app-veterinario-form',
-  imports: [ReactiveFormsModule, RouterLink, CampoTextoComponent, FotoPreviewComponent],
+  imports: [ReactiveFormsModule, RouterLink, CampoTextoComponent, FotoPreviewComponent, FormCardComponent, AlertaErrorComponent, FormAccionesComponent],
   templateUrl: './veterinario-form.component.html',
-  styleUrl: './veterinario-form.component.scss',
 })
 export class VeterinarioFormComponent {
   //DI

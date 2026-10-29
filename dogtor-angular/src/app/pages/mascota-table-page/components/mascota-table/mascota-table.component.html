@@ -1,8 +1,8 @@
 @if (mascotaArray().length === 0) {
-  <div class="alert alert-light border text-center text-muted">No hay mascotas en esta lista.</div>
+  <app-estado-vacio mensaje="No hay mascotas en esta lista." [centrado]="true"></app-estado-vacio>
 } @else {
   <div class="table-responsive bg-white rounded-3 shadow-sm border">
-    <table class="table table-hover align-middle mb-0">
+    <table class="table table-hover align-middle mb-0 tabla-dogtor">
       <thead>
         <tr>
           <th scope="col">Foto</th>
@@ -28,7 +28,7 @@
             <td>{{ mascota.enfermedad || '—' }}</td>
             <td>
               @if (mascota.duenoCedula) {
-                <a [routerLink]="['/vet/dueno', mascota.duenoCedula]" class="enlace-dueno">{{ mascota.duenoNombre }}</a>
+                <a [routerLink]="[portal.base + '/dueno', mascota.duenoCedula]" class="enlace-dueno">{{ mascota.duenoNombre }}</a>
               } @else {
                 —
               }
@@ -38,7 +38,7 @@
                 <button type="button" class="btn btn-sm btn-dogtor" (click)="verDetalleMascota(mascota)">
                   <i class="bi bi-eye"></i> Ver
                 </button>
-                <a [routerLink]="['/vet/mascota/update', mascota.id]" class="btn btn-sm btn-dogtor-accent">
+                <a [routerLink]="[portal.base + '/mascota/update', mascota.id]" class="btn btn-sm btn-dogtor-accent">
                   <i class="bi bi-pencil"></i> Editar
                 </a>
                 @if (areMascotasActivas()) {

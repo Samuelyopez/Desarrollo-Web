@@ -3,18 +3,21 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { catchError, concatMap, debounceTime, distinctUntilChanged, EMPTY, map, startWith, Subject, switchMap } from 'rxjs';
-import { PageTitleComponent } from '../mascota-table-page/components/page-title/page-title.component';
+import { PageTitleComponent } from '../../components/page-title/page-title.component';
 import { VeterinarioTableComponent } from './components/veterinario-table/veterinario-table.component';
 import { Veterinario } from '../../models/veterinario.model';
 import { VeterinarioService } from '../../service/veterinario.service';
 import { mensajeError } from '../../utils/mensaje-error';
+import { AlertaFlashComponent } from '../../components/alerta-flash/alerta-flash.component';
+import { CargandoComponent } from '../../components/cargando/cargando.component';
+import { BuscadorComponent } from '../../components/buscador/buscador.component';
 
 type FiltroEstado = 'todos' | 'activos' | 'inactivos';
 
-// Portal administrador (AC26-AC28): veterinarios registrados, búsqueda y estado laboral
+// Portal administrador (AC26-AC28): veterinarios registrados, búsqueda, estado laboral y eliminación
 @Component({
   selector: 'app-veterinario-table-page',
-  imports: [PageTitleComponent, VeterinarioTableComponent, RouterLink],
+  imports: [PageTitleComponent, VeterinarioTableComponent, RouterLink, AlertaFlashComponent, CargandoComponent, BuscadorComponent],
   templateUrl: './veterinario-table-page.component.html',
   styleUrl: './veterinario-table-page.component.scss',
 })
@@ -30,13 +33,14 @@ export class VeterinarioTablePageComponent {
   totalActivos = 0;
   cargando = true;
 
-  // Mensaje flash: llega desde el formulario (history.state), tras cambiar el estado o si falla la API
+  // Mensaje flash: llega desde el formulario (history.state), tras cambiar el estado, eliminar o si falla la API
   mensaje = '';
   tipoMensaje: 'success' | 'danger' = 'success';
 
   // Eventos de la vista convertidos en flujos (RXJS)
   private busqueda$ = new Subject<string>();
   private cambioEstado$ = new Subject<Veterinario>();
+  private eliminar$ = new Subject<Veterinario>();
 
   constructor() {
     // 1. Lista: se vuelve a pedir cuando cambia la búsqueda (debounce + switchMap)
@@ -74,6 +78,23 @@ export class VeterinarioTablePageComponent {
         const estado = actualizado.activo ? 'quedó activo' : 'quedó inactivo (no puede iniciar sesión)';
         this.mostrarMensaje(`${actualizado.nombre} ${estado}.`, 'success');
       });
+
+    // 3. Eliminar: concatMap atiende una eliminación a la vez; la fila se quita de la lista
+    this.eliminar$
+      .pipe(
+        concatMap((veterinario) =>
+          this.veterinarioService.deleteVeterinario(veterinario.cedula).pipe(
+            map(() => veterinario),
+            catchError((error) => this.manejarError(error)),
+          ),
+        ),
+        takeUntilDestroyed(),
+      )
+      .subscribe((eliminado) => {
+        this.veterinarios = this.veterinarios.filter((v) => v.cedula !== eliminado.cedula);
+        this.aplicarFiltro();
+        this.mostrarMensaje(`Se eliminó a ${eliminado.nombre}. Su historial de tratamientos se conserva.`, 'success');
+      });
   }
 
   ngOnInit() {
@@ -105,8 +126,8 @@ export class VeterinarioTablePageComponent {
     this.cambioEstado$.next(veterinario);
   }
 
-  cerrarMensaje() {
-    this.mensaje = '';
+  eliminarVeterinario(veterinario: Veterinario) {
+    this.eliminar$.next(veterinario);
   }
 
   private mostrarMensaje(texto: string, tipo: 'success' | 'danger') {

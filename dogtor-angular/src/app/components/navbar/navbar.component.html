@@ -40,12 +40,11 @@
             </li>
           }
 
-          @if (auth.usuario(); as usuario) {
+          @if (portal(); as actual) {
             <li class="nav-item d-flex align-items-center gap-2 py-2 py-lg-0">
               <span class="small">
                 <i class="bi bi-person-circle text-dogtor"></i>
-                <span class="fw-bold">{{ usuario.nombre }}</span>
-                <span class="text-muted ms-1">({{ nombreRol[usuario.rol] }})</span>
+                <span class="fw-bold">{{ nombrePortal[actual.tipo] }}</span>
               </span>
               <button type="button" class="btn btn-sm btn-outline-secondary" (click)="salir()">
                 <i class="bi bi-box-arrow-right"></i> Salir

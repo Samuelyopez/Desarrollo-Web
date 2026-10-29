@@ -67,7 +67,8 @@ public class MedicamentoExcelLoader implements CommandLineRunner {
         try (InputStream entrada = excel.getInputStream(); Workbook libro = new XSSFWorkbook(entrada)) {
             Sheet hoja = libro.getSheet("Medicamentos") != null ? libro.getSheet("Medicamentos") : libro.getSheetAt(0);
             cargarHoja(hoja);
-        } catch (IOException e) {
+        } catch (IOException | RuntimeException e) {
+            // RuntimeException: POI lanza NotOfficeXmlFileException si el archivo no es un .xlsx válido
             log.error("No se pudo leer el Excel de medicamentos ({})", rutaExcel, e);
         }
     }

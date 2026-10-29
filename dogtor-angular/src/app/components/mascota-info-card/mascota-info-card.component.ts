@@ -5,6 +5,7 @@ import { Dueno } from '../../models/dueno.model';
 import { MascotaAvatarComponent } from '../mascota-avatar/mascota-avatar.component';
 import { EstadoBadgeComponent } from '../estado-badge/estado-badge.component';
 import { DuenoCardComponent } from '../dueno-card/dueno-card.component';
+import { injectPortal } from '../../utils/portal';
 
 // Ficha de la mascota. La usan el portal veterinario (con dueño y botones de gestión)
 // y el portal cliente (solo los datos de la mascota)
@@ -15,6 +16,7 @@ import { DuenoCardComponent } from '../dueno-card/dueno-card.component';
   styleUrl: './mascota-info-card.component.scss',
 })
 export class MascotaInfoCardComponent {
+  portal = injectPortal();
   // Entradas: la mascota (el padre ya verificó que existe) y su dueño, que se pide aparte
   mascota = input.required<Mascota>();
   dueno = input<Dueno | undefined>();

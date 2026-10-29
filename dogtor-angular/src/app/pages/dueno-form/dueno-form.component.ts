@@ -8,15 +8,19 @@ import { DuenoRequest } from '../../models/dueno.model';
 import { DuenoService } from '../../service/dueno.service';
 import { CampoTextoComponent } from '../../components/campo-texto/campo-texto.component';
 import { mensajeError } from '../../utils/mensaje-error';
+import { FormCardComponent } from '../../components/form-card/form-card.component';
+import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error.component';
+import { FormAccionesComponent } from '../../components/form-acciones/form-acciones.component';
+import { injectPortal } from '../../utils/portal';
 
 @Component({
   selector: 'app-dueno-form',
-  imports: [ReactiveFormsModule, RouterLink, CampoTextoComponent],
+  imports: [ReactiveFormsModule, RouterLink, CampoTextoComponent, FormCardComponent, AlertaErrorComponent, FormAccionesComponent],
   templateUrl: './dueno-form.component.html',
-  styleUrl: './dueno-form.component.scss',
 })
 export class DuenoFormComponent {
   //DI
+  portal = injectPortal();
   private duenoService = inject(DuenoService);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
@@ -99,7 +103,7 @@ export class DuenoFormComponent {
       .subscribe((dueno) => {
         const mensaje = this.isEdit ? `Se actualizaron los datos de ${dueno.nombre}.` : `Se registró a ${dueno.nombre}.`;
         // El mensaje viaja en el state de la navegación y lo muestra la tabla
-        this.router.navigate(['/vet/duenos'], { state: { mensaje } });
+        this.router.navigate([this.portal.base + '/duenos'], { state: { mensaje } });
       });
   }
 

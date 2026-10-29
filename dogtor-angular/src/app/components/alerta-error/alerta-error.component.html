@@ -1,0 +1,17 @@
+@switch (variante()) {
+  @case ('formulario') {
+    <div class="alert alert-danger small" role="alert">
+      <i class="bi bi-exclamation-triangle"></i> {{ mensaje() }}
+    </div>
+  }
+  @case ('pagina') {
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="alert alert-danger text-center" role="alert">{{ mensaje() }}</div>
+      </div>
+    </div>
+  }
+  @default {
+    <div class="alert alert-danger" role="alert">{{ mensaje() }}</div>
+  }
+}

@@ -11,15 +11,20 @@ import { DuenoService } from '../../service/dueno.service';
 import { MascotaInfoCardComponent } from '../../components/mascota-info-card/mascota-info-card.component';
 import { TratamientoListComponent } from '../../components/tratamiento-list/tratamiento-list.component';
 import { mensajeError } from '../../utils/mensaje-error';
+import { VolverLinkComponent } from '../../components/volver-link/volver-link.component';
+import { AlertaFlashComponent } from '../../components/alerta-flash/alerta-flash.component';
+import { CargandoComponent } from '../../components/cargando/cargando.component';
+import { AlertaErrorComponent } from '../../components/alerta-error/alerta-error.component';
+import { injectPortal } from '../../utils/portal';
 
 @Component({
   selector: 'app-mascota-detail',
-  imports: [RouterLink, MascotaInfoCardComponent, TratamientoListComponent],
+  imports: [RouterLink, MascotaInfoCardComponent, TratamientoListComponent, VolverLinkComponent, AlertaFlashComponent, CargandoComponent, AlertaErrorComponent],
   templateUrl: './mascota-detail.component.html',
-  styleUrl: './mascota-detail.component.scss',
 })
 export class MascotaDetailComponent {
   //DI
+  portal = injectPortal();
   private route = inject(ActivatedRoute);
   private mascotaService = inject(MascotaService);
   private duenoService = inject(DuenoService);
