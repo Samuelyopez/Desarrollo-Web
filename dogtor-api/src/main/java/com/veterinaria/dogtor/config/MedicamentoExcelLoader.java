@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -34,7 +35,9 @@ import com.veterinaria.dogtor.repository.MedicamentoRepository;
 // Solo INSERTA los que no existen (por nombre): la BD es un archivo y si se actualizaran los que ya
 // están, cada reinicio borraría las unidades vendidas por la app. El Excel es la carga inicial.
 // Corre antes que DataLoader (@Order), que usa estos medicamentos en los tratamientos de prueba
+// No corre con el perfil test: las pruebas crean sus propios datos
 @Component
+@Profile("!test")
 @Order(1)
 public class MedicamentoExcelLoader implements CommandLineRunner {
 

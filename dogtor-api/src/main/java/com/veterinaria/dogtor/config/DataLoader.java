@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +32,9 @@ import com.veterinaria.dogtor.repository.VeterinarioRepository;
 // Datos de prueba. Solo se cargan si faltan (la BD es un archivo y sobrevive a los reinicios).
 // Para volver a sembrar: detener la API y borrar la carpeta data/.
 // Corre después de MedicamentoExcelLoader (@Order): los tratamientos de prueba usan sus medicamentos
+// No corre con el perfil test: las pruebas crean sus propios datos
 @Component
+@Profile("!test")
 @Order(2)
 public class DataLoader implements CommandLineRunner {
 
