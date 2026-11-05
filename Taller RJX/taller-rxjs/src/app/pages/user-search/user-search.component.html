@@ -1,0 +1,68 @@
+<main class="container py-4">
+  <header class="mb-4 text-center">
+    <h1 class="fw-bold">
+      <i class="bi bi-people-fill text-primary"></i> Buscar usuario
+    </h1>
+    <p class="text-body-secondary mb-0">Busca un perfil por su nombre de usuario</p>
+  </header>
+
+  <!-- Sección 1: barra de búsqueda -->
+  <form [formGroup]="userForm" (ngSubmit)="userForm.markAllAsTouched()" class="mx-auto mb-4 search-form">
+    <label for="username" class="form-label fw-semibold">Username:</label>
+    <div class="input-group input-group-lg">
+      <span class="input-group-text"><i class="bi bi-at"></i></span>
+      <input
+        type="text"
+        class="form-control"
+        id="username"
+        name="username"
+        formControlName="username"
+        placeholder="Ej: emilys, stellas, averya"
+        autocomplete="off"
+        [class.is-invalid]="userForm.controls.username.invalid && userForm.controls.username.touched"
+      />
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-search"></i> Buscar usuario
+      </button>
+    </div>
+    @if (userForm.controls.username.invalid && userForm.controls.username.touched) {
+      <div class="form-text text-danger">Escribe un nombre de usuario.</div>
+    }
+  </form>
+
+  @if (loading) {
+    <div class="text-center my-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="mt-2 text-body-secondary">Buscando…</p>
+    </div>
+  }
+
+  @if (notFound) {
+    <div class="alert alert-warning text-center mx-auto search-form" role="alert">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      El usuario <strong>{{ searchedUsername }}</strong> no existe.
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger text-center mx-auto search-form" role="alert">
+      <i class="bi bi-x-octagon-fill"></i> {{ errorMessage }}
+    </div>
+  }
+
+  @if (user) {
+    <div class="row g-4">
+      <!-- Sección 2: datos del usuario -->
+      <div class="col-lg-4">
+        <app-user-info [user]="user" />
+      </div>
+
+      <!-- Sección 3: posts del usuario con sus comentarios -->
+      <div class="col-lg-8">
+        @if (!loading) {
+          <app-user-posts [posts]="posts" />
+        }
+      </div>
+    </div>
+  }
+</main>

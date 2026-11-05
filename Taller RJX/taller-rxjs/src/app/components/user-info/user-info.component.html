@@ -1,0 +1,29 @@
+<div class="card shadow-sm h-100">
+  <div class="card-body text-center">
+    <img [src]="user.image" [alt]="user.username" class="avatar rounded-circle border mb-3" />
+    <h2 class="h4 mb-0">{{ user.firstName }} {{ user.lastName }}</h2>
+    <p class="text-primary mb-2">&#64;{{ user.username }}</p>
+    <span class="badge text-bg-secondary">{{ user.company.title }}</span>
+  </div>
+
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      <i class="bi bi-envelope me-2 text-primary"></i>{{ user.email }}
+    </li>
+    <li class="list-group-item">
+      <i class="bi bi-telephone me-2 text-primary"></i>{{ user.phone }}
+    </li>
+    <li class="list-group-item">
+      <i class="bi bi-cake2 me-2 text-primary"></i>{{ user.age }} años ({{ user.birthDate }})
+    </li>
+    <li class="list-group-item">
+      <i class="bi bi-geo-alt me-2 text-primary"></i>{{ user.address.city }}, {{ user.address.state }}, {{ user.address.country }}
+    </li>
+    <li class="list-group-item">
+      <i class="bi bi-building me-2 text-primary"></i>{{ user.company.name }} · {{ user.company.department }}
+    </li>
+    <li class="list-group-item">
+      <i class="bi bi-mortarboard me-2 text-primary"></i>{{ user.university }}
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,27 @@
+body {
+  background-color: #f5f5f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.search-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+}
+
+.search-container h1 {
+  color: white;
+  font-weight: 300;
+}
+
+.search-container .form-control {
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 1.1rem;
+}
+
+.search-container .btn {
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
+  border-radius: 0.5rem;
+}
