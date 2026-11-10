@@ -75,24 +75,24 @@ Cómo funciona el acceso:
 - **Limitación conocida:** sin sesión ni token no hay control de acceso por rol real (AC34): la API no sabe quién la
   llama. La mejora natural es Spring Security con JWT y `@PreAuthorize` por rol.
 
-## Pruebas e2e (Cypress)
+## Pruebas e2e (Selenium)
 
-Las pruebas de extremo a extremo están en `dogtor-angular/cypress/e2e/` y recorren la aplicación real en el
-navegador (Angular + API). Cubren los dos casos del sprint:
+Las pruebas de extremo a extremo están en `dogtor-api/src/test/java/com/veterinaria/dogtor/e2e/` (JUnit 5 +
+Selenium WebDriver). Abren Chrome y recorren la aplicación real (Angular + API). Cubren los dos casos del sprint:
 
-| Spec | Caso |
+| Clase | Caso |
 |---|---|
-| `caso1-registro-cliente-mascota.cy.ts` | El veterinario entra (falla el primer intento), registra un dueño (se equivoca en un campo y corrige) y su mascota; el dueño entra a su portal y ve los datos de la mascota |
-| `caso2-tratamiento-dashboard.cy.ts` | El veterinario busca una mascota, le da un tratamiento y lo verifica en el detalle; el administrador comprueba en el dashboard los medicamentos suministrados y las ganancias |
+| `Caso1RegistroClienteMascotaTest` | El veterinario entra (falla el primer intento), registra un dueño (se equivoca en un campo y corrige) y su mascota; el dueño entra a su portal y ve los datos de la mascota |
+| `Caso2TratamientoDashboardTest` | El veterinario busca una mascota, le da un tratamiento y lo verifica en el detalle; el administrador comprueba en el dashboard los medicamentos suministrados y las ganancias |
 
-Para correrlas (tres terminales):
+Para correrlas (tres terminales; se abre una ventana de Chrome):
 
 ```bash
 cd dogtor-api && ./mvnw spring-boot:run -Dspring-boot.run.profiles=e2e   # API con H2 en memoria y datos de prueba
 cd dogtor-angular && npm start                                             # Angular en el 4200
-cd dogtor-angular && npm run e2e                                           # Cypress headless (o npm run e2e:open)
+cd dogtor-api && ./mvnw test -Pe2e                                         # pruebas e2e (-Ddogtor.e2e.headless=true sin ventana)
 ```
 
-El perfil `e2e` usa una base en memoria para que las pruebas no modifiquen `dogtor-api/data/`. También funcionan
-contra la API normal: el caso 1 crea un dueño con cédula y correo únicos por ejecución y el caso 2 compara el
-dashboard antes y después del tratamiento.
+Las e2e están en el grupo JUnit `e2e` y no corren con `./mvnw test` a secas. El perfil `e2e` de la API usa una
+base en memoria para que las pruebas no modifiquen `dogtor-api/data/`. También funcionan contra la API normal: el
+caso 1 crea un dueño con cédula y correo únicos por ejecución y el caso 2 compara el dashboard antes y después.

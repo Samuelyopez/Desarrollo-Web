@@ -18,6 +18,9 @@
 		<java.version>17</java.version>
 		<springdoc.version>2.8.9</springdoc.version>
 		<poi.version>5.4.1</poi.version>
+		<selenium.version>4.27.0</selenium.version>
+		<!-- Las pruebas e2e (Selenium, @Tag("e2e")) no corren con ./mvnw test: se activan con -Pe2e -->
+		<excludedGroups>e2e</excludedGroups>
 	</properties>
 
 	<dependencies>
@@ -73,6 +76,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>${selenium.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -103,4 +112,15 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<!-- ./mvnw test -Pe2e: solo las pruebas de extremo a extremo (necesitan la API y Angular encendidos) -->
+		<profile>
+			<id>e2e</id>
+			<properties>
+				<groups>e2e</groups>
+				<excludedGroups>none</excludedGroups>
+			</properties>
+		</profile>
+	</profiles>
 </project>

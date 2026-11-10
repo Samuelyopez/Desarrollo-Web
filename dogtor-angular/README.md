@@ -15,26 +15,6 @@ npm install
 npm start      # http://localhost:4200
 ```
 
-## Pruebas e2e (Cypress)
-
-`cypress/e2e/` tiene un spec por caso del sprint (registro de cliente y mascota; tratamiento y dashboard).
-Cypress abre la aplicación real, así que antes hay que tener encendidas la API (`./mvnw spring-boot:run
--Dspring-boot.run.profiles=e2e`, H2 en memoria) y Angular (`npm start`).
-
-```bash
-npm run e2e        # headless (Electron)
-npm run e2e:open   # con la interfaz de Cypress, para ver cada paso
-npm run e2e:ci     # levanta ng serve, corre las pruebas y lo apaga (la API debe estar encendida)
-```
-
-- `cypress.config.ts`: `baseUrl` (4200) y `env.apiUrl` (8090), la misma URL de `api.config.ts`.
-- `cypress/support/commands.ts`: comando `cy.login(correo, password)`. `utils.ts`: ayudas para comparar los
-  números que pintan los pipes es-CO con los de la API.
-- Las pruebas leen el estado de la API con `cy.request` (dashboard y medicamentos) antes de actuar y comparan
-  lo que muestra la pantalla con lo esperado; nunca dependen de ids fijos (se generan en la BD).
-- `cypress/tsconfig.json` tiene sus propios tipos; la carpeta está excluida del `tsconfig.json` raíz para que no
-  choque con Jasmine.
-
 ## Estructura
 
 ```

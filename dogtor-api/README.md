@@ -20,8 +20,25 @@ Requiere JDK 17 o superior.
 La base de datos queda en `data/dogtordb.mv.db` (ignorada por git) y sobrevive a los reinicios.
 Borra la carpeta `data/` (con la API detenida) para volver a los datos de prueba.
 
-Para las pruebas e2e de Cypress hay un perfil `e2e` (`./mvnw spring-boot:run -Dspring-boot.run.profiles=e2e`): misma API
-y mismos datos de prueba, pero en una H2 en memoria que se descarta al apagarla, así las pruebas no tocan `data/`.
+Para las pruebas e2e hay un perfil `e2e` (`./mvnw spring-boot:run -Dspring-boot.run.profiles=e2e`): misma API y mismos
+datos de prueba, pero en una H2 en memoria que se descarta al apagarla, así las pruebas no tocan `data/`.
+
+## Pruebas e2e (Selenium)
+
+`src/test/java/com/veterinaria/dogtor/e2e/` tiene una clase por caso del sprint (registro de cliente y mascota;
+tratamiento y dashboard) y una base común `E2eTestBase` (abre Chrome con Selenium Manager, esperas explícitas,
+`login`, lectura de la API con `HttpClient`). Necesitan la API (perfil `e2e`) y Angular encendidos.
+
+```bash
+./mvnw test -Pe2e                              # solo las e2e, con ventana de Chrome
+./mvnw test -Pe2e -Ddogtor.e2e.headless=true   # sin ventana (CI)
+```
+
+- Están en el grupo JUnit `e2e` (`@Tag`), excluido por defecto en el `pom.xml`: `./mvnw test` corre solo las
+  unitarias y de integración. El perfil Maven `e2e` invierte la selección.
+- Propiedades opcionales: `dogtor.e2e.frontUrl` (4200) y `dogtor.e2e.apiUrl` (8090/api).
+- Las pruebas leen el estado real de la API antes de actuar (dashboard, medicamentos) y comparan lo que muestra la
+  pantalla con lo esperado; no dependen de ids fijos (se generan en la BD).
 
 ## Estructura
 
