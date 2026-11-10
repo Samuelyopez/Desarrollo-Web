@@ -20,6 +20,9 @@ Requiere JDK 17 o superior.
 La base de datos queda en `data/dogtordb.mv.db` (ignorada por git) y sobrevive a los reinicios.
 Borra la carpeta `data/` (con la API detenida) para volver a los datos de prueba.
 
+Para las pruebas e2e de Cypress hay un perfil `e2e` (`./mvnw spring-boot:run -Dspring-boot.run.profiles=e2e`): misma API
+y mismos datos de prueba, pero en una H2 en memoria que se descarta al apagarla, así las pruebas no tocan `data/`.
+
 ## Estructura
 
 `controller` (REST, `@CrossOrigin` para `localhost:4200`) → `service` (interfaz + implementación) → `repository` (JPA) → `entities`.
